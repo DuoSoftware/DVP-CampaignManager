@@ -4,7 +4,7 @@
 
 
 module.exports = function(sequelize, DataTypes) {
-    var CampaignInfo = sequelize.define('DB_CAMP_CampaignInfo', {
+    var CampCampaignInfo = sequelize.define('DB_CAMP_CampaignInfo', {
             CampaignName: DataTypes.STRING,
             CampaignnMode: DataTypes.STRING,
             CampaignChannel:DataTypes.STRING,
@@ -20,5 +20,5 @@ module.exports = function(sequelize, DataTypes) {
     );
 
 
-    return CampaignInfo;
+    return CampCampaignInfo;
 };

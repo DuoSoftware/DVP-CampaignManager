@@ -4,7 +4,7 @@
 
 
 module.exports = function(sequelize, DataTypes) {
-    var Configurations = sequelize.define('DB_CAMP_Configurations', {
+    var CampConfigurations = sequelize.define('DB_CAMP_Configurations', {
             CampaignId: DataTypes.INTEGER,
             ChannelConcurrency: DataTypes.INTEGER,
             AllowCallBack:DataTypes.BOOLEAN,
@@ -13,6 +13,6 @@ module.exports = function(sequelize, DataTypes) {
             Status:DataTypes.BOOLEAN
         }
     );
-    return Configurations;
+    return CampConfigurations;
 };
 

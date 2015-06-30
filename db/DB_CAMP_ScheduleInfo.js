@@ -4,7 +4,7 @@
 
 
 module.exports = function(sequelize, DataTypes) {
-    var ScheduleInfo = sequelize.define('DB_CAMP_ScheduleInfo', {
+    var CampScheduleInfo = sequelize.define('DB_CAMP_ScheduleInfo', {
             CampaignId: DataTypes.INTEGER,
             ScheduleId: DataTypes.INTEGER,
             ScheduleType:DataTypes.BOOLEAN,
@@ -12,6 +12,6 @@ module.exports = function(sequelize, DataTypes) {
             Status:DataTypes.BOOLEAN
         }
     );
-    return ScheduleInfo;
+    return CampScheduleInfo;
 };
 

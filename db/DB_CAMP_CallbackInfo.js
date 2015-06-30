@@ -6,7 +6,7 @@
 
 
 module.exports = function(sequelize, DataTypes) {
-    var CallbackInfo = sequelize.define('DB_CAMP_CallbackInfo', {
+    var CampCallbackInfo = sequelize.define('DB_CAMP_CallbackInfo', {
             CampaignId: DataTypes.INTEGER,
             ContactId: DataTypes.STRING,
             CamScheduleId:DataTypes.INTEGER,
@@ -15,5 +15,5 @@ module.exports = function(sequelize, DataTypes) {
 
         }
     );
-    return CallbackInfo;
+    return CampCallbackInfo;
 };
