@@ -5,12 +5,12 @@
 
 
 module.exports = function(sequelize, DataTypes) {
-    var CampContactInfo = sequelize.define('DB_CAMP_ContactSchedule', {
+    var CampContactSchedule = sequelize.define('DB_CAMP_ContactSchedule', {
             CampaignId: DataTypes.INTEGER,
             CamScheduleId: DataTypes.INTEGER,
             CamContactId:DataTypes.INTEGER,
             ContactScheduleId:DataTypes.INTEGER
         }
     );
-    return CampContactInfo;
+    return CampContactSchedule;
 };
