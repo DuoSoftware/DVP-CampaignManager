@@ -4,39 +4,39 @@
 
 var List = require("collections/list");
 
-function UploadContacts(contacts,tenantId,companyId,callBack){
+function UploadContacts(contacts, tenantId, companyId, callBack) {
 
 }
 
-function UploadContactsToCampaign(contacts,campaignId,tenantId,companyId,callBack){
+function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, callBack) {
 
 }
 
-function UploadContactsToCampaignWithSchedule(contacts,campaignId,CamScheduleId,tenantId,companyId,callBack){
+function UploadContactsToCampaignWithSchedule(contacts, campaignId, CamScheduleId, tenantId, companyId, callBack) {
 
 }
 
-function EditContacts(contacts,campaignId,tenantId,companyId,callBack){
+function EditContacts(contacts, campaignId, tenantId, companyId, callBack) {
 
 }
 
-function DeleteContacts(contacts,tenantId,companyId,callBack){
+function DeleteContacts(contacts, tenantId, companyId, callBack) {
 
 }
 
-function DeleteContacts(contacts,campaignId,tenantId,companyId,callBack){
+function DeleteContacts(contacts, campaignId, tenantId, companyId, callBack) {
 
 }
 
-function AssingScheduleToCampaign(campaignId,CamScheduleId,tenantId,companyId,callBack){
+function AssingScheduleToCampaign(campaignId, CamScheduleId, tenantId, companyId, callBack) {
 
 }
 
-function GetAllContact(tenantId,companyId,callBack){
+function GetAllContact(tenantId, companyId, callBack) {
 
 }
 
-function GetAllContactByCampaignId(campaignId,tenantId,companyId,callBack){
+function GetAllContactByCampaignId(campaignId, tenantId, companyId, callBack) {
 
 }
 

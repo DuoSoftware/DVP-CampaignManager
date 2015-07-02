@@ -3,35 +3,35 @@
  */
 
 
-function CreateSchedule(campaignId,scheduleId,scheduleType,callback){
+function CreateSchedule(campaignId, scheduleId, scheduleType, callback) {
 
 }
 
-function EditSchedule(camscheduleId,campaignId,scheduleId,scheduleType,callback){
+function EditSchedule(camscheduleId, campaignId, scheduleId, scheduleType, callback) {
 
 }
 
-function DeleteSchedule(camScheduleId,callback){
+function DeleteSchedule(camScheduleId, callback) {
 
 }
 
-function GetAllSchedule(callback){
+function GetAllSchedule(callback) {
 
 }
 
-function GetSchedule(camScheduleId,callback){
+function GetSchedule(camScheduleId, callback) {
 
 }
 
-function GetScheduleByCampaignId(campaignId,callback){
+function GetScheduleByCampaignId(campaignId, callback) {
 
 }
 
-function GetScheduleByScheduleType(scheduleType,callback){
+function GetScheduleByScheduleType(scheduleType, callback) {
 
 }
 
-function GetScheduleByCampaignIdScheduleType(campaignId,scheduleType,callback){
+function GetScheduleByCampaignIdScheduleType(campaignId, scheduleType, callback) {
 
 }
 
