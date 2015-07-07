@@ -5,7 +5,7 @@ var messageFormatter = require('DVP-Common/CommonMessageGenerator/ClientMessageJ
 var logger = require('DVP-Common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('DVP-DBModels');
 
-function CreateConfiguration(campaignId, channelConcurrency, allowCallBack, maxCallBackCount, status, callBack) {
+function CreateConfiguration(campaignId, channelConcurrency, allowCallBack, maxCallBackCount,tenantId,companyId, status, callBack) {
     DbConn.CampConfigurations
         .create(
         {
@@ -13,18 +13,22 @@ function CreateConfiguration(campaignId, channelConcurrency, allowCallBack, maxC
             ChannelConcurrency: channelConcurrency,
             AllowCallBack: allowCallBack,
             MaxCallBackCount: maxCallBackCount,
+            TenantId:tenantId,
+            CompanyId:companyId,
             Status: Boolean(status)
         }
     ).complete(function (err, cmp) {
 
             if (err) {
 
-                logger.error('[DVP-CampaignOperations.CreateConfiguration] - [%s] - [PGSQL] - insertion  failed', campaignId, err);
-                callBack(err, undefined);
+                logger.error('[DVP-CampConfigurations.CreateConfiguration] - [%s] - [PGSQL] - insertion  failed', campaignId, err);
+                var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                callBack.end(jsonString, undefined);
             }
             else {
-                logger.debug('[DVP-CampaignOperations.CreateConfiguration] - [%s] - [PGSQL] - inserted successfully ', campaignId);
-                callBack(undefined, cmp);
+                logger.debug('[DVP-CampConfigurations.CreateConfiguration] - [%s] - [PGSQL] - inserted successfully ', campaignId);
+                var jsonString = messageFormatter.FormatMessage(cmp, "success", true, undefined);
+                callBack.end(undefined, jsonString);
             }
         });
 
@@ -32,7 +36,7 @@ function CreateConfiguration(campaignId, channelConcurrency, allowCallBack, maxC
 
 function EditConfiguration(configureId, campaignId, channelConcurrency, allowCallBack, status, callBack) {
 
-    DbConn.CampCampaignInfo
+    DbConn.CampConfigurations
         .update(
         {
             CampaignId: campaignId,
@@ -49,17 +53,19 @@ function EditConfiguration(configureId, campaignId, channelConcurrency, allowCal
     ).then(function (results) {
 
 
-            logger.debug('[DVP-CampCampaignInfo.EditCampaign] - [%s] - [PGSQL] - Updated successfully', campaignId);
-            callBack(undefined, results);
+            logger.debug('[DVP-CampConfigurations.EditCampaign] - [%s] - [PGSQL] - Updated successfully', campaignId);
+            var jsonString = messageFormatter.FormatMessage(results, "success", true, undefined);
+            callBack.end(undefined, jsonString);
 
         }).error(function (err) {
-            logger.error('[DVP-CampCampaignInfo.EditCampaign] - [%s] - [PGSQL] - Updation failed', campaignId, err);
-            callBack(err, undefined);
+            logger.error('[DVP-CampConfigurations.EditCampaign] - [%s] - [PGSQL] - Updation failed', campaignId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callBack.end(jsonString, undefined);
         });
 }
 
 function DeleteConfiguration(configureId, callBack) {
-    DbConn.CampCampaignInfo
+    DbConn.CampConfigurations
         .update(
         {
             Status: false
@@ -72,21 +78,66 @@ function DeleteConfiguration(configureId, callBack) {
     ).then(function (results) {
 
 
-            logger.debug('[DVP-CampCampaignInfo.EditCampaign] - [%s] - [PGSQL] - Updated successfully', campaignId);
-            callBack(undefined, results);
+            logger.debug('[DVP-CampConfigurations.EditCampaign] - [%s] - [PGSQL] - Updated successfully', campaignId);
+            var jsonString = messageFormatter.FormatMessage(results, "success", true, undefined);
+            callBack.end(undefined, jsonString);
 
         }).error(function (err) {
-            logger.error('[DVP-CampCampaignInfo.EditCampaign] - [%s] - [PGSQL] - Updation failed', campaignId, err);
-            callBack(err, undefined);
+            logger.error('[DVP-CampConfigurations.EditCampaign] - [%s] - [PGSQL] - Updation failed', campaignId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callBack.end(jsonString, undefined);
         });
 }
 
-function GetAllConfiguration(callBack) {
+function GetAllConfiguration(tenantId,companyId,callBack) {
+    DbConn.CampConfigurations.find({where: [{CompanyId: companyId}, {TenantId: tenantId}]}).complete(function (err, CamObject) {
 
+        if (err) {
+            logger.error('[DVP-CampConfigurations.GetAllConfiguration] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callBack.end(jsonString, undefined);
+        }
+
+        else {
+
+            if (CamObject) {
+                logger.debug('[DVP-CampCampaignInfo.GetAllConfiguration] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+                var jsonString = messageFormatter.FormatMessage(CamObject, "success", true, undefined);
+                callBack.end(undefined, jsonString);
+            }
+            else {
+                logger.error('[DVP-CampCampaignInfo.GetAllConfiguration] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+                var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+                callBack.end(jsonString, undefined);
+            }
+        }
+    });
 }
 
-function GetConfiguration(ConfigureId, callBack) {
+function GetConfiguration(configureId,tenantId,companyId, callBack) {
 
+    DbConn.CampConfigurations.find({where: [{CompanyId: companyId}, {TenantId: tenantId},{ConfigureId:configureId}]}).complete(function (err, CamObject) {
+
+        if (err) {
+            logger.error('[DVP-CampConfigurations.GetConfiguration] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callBack.end(jsonString, undefined);
+        }
+
+        else {
+
+            if (CamObject) {
+                logger.debug('[DVP-CampCampaignInfo.GetConfiguration] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+                var jsonString = messageFormatter.FormatMessage(CamObject, "success", true, undefined);
+                callBack.end(undefined, jsonString);
+            }
+            else {
+                logger.error('[DVP-CampCampaignInfo.GetConfiguration] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+                var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+                callBack.end(jsonString, undefined);
+            }
+        }
+    });
 }
 
 
