@@ -33,8 +33,8 @@ function UploadContacts(contacts, tenantId, companyId, callBack) {
 
     }
 
-    var jsonString = messageFormatter.FormatMessage(ids, "success", true, undefined);
-    callBack.end(undefined, jsonString);
+    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, ids);
+    callBack.end(jsonString);
 
 
 }
@@ -83,8 +83,8 @@ function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, cal
             });
 
     }
-    var jsonString = messageFormatter.FormatMessage(ids, "success", true, undefined);
-    callBack.end(undefined, jsonString);
+    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, ids);
+    callBack.end(jsonString);
 }
 
 function UploadContactsToCampaignWithSchedule(contacts, campaignId, camScheduleId, tenantId, companyId, callBack) {
@@ -132,11 +132,11 @@ function UploadContactsToCampaignWithSchedule(contacts, campaignId, camScheduleI
             });
 
     }
-    var jsonString = messageFormatter.FormatMessage(ids, "success", true, undefined);
-    callBack.end(undefined, jsonString);
+    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, ids);
+    callBack.end(jsonString);
 }
 
-function EditContacts(contact, campaignId, tenantId, companyId, callBack) {
+function EditContact(contact, campaignId, tenantId, companyId, callBack) {
     DbConn.CampContactInfo
         .update(
         {
@@ -154,14 +154,49 @@ function EditContacts(contact, campaignId, tenantId, companyId, callBack) {
 
 
             logger.debug('[DVP-CampCampaignInfo.EditContacts] - [%s] - [PGSQL] - Updated successfully', contact);
-            var jsonString = messageFormatter.FormatMessage(results, "success", true, undefined);
-            callBack.end(undefined, jsonString);
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+            callBack.end(jsonString);
 
         }).error(function (err) {
             logger.error('[DVP-CampCampaignInfo.EditContacts] - [%s] - [PGSQL] - Updation failed', contact, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callBack.end(jsonString, undefined);
+            callBack.end(jsonString);
         });
+}
+
+function EditContacts(contacts, campaignId, tenantId, companyId, callBack) {
+
+    var ids = [];
+    for (var i = 0; i < contacts.length; i++) {
+        DbConn.CampContactInfo
+            .update(
+            {
+                ContactId: contact,
+                TenantId: tenantId,
+                CompanyId: companyId,
+                Status: true
+            },
+            {
+                where: {
+                    CompanyId: campaignId
+                }
+            }
+        ).then(function (results) {
+
+
+                logger.debug('[DVP-CampCampaignInfo.EditContacts] - [%s] - [PGSQL] - Updated successfully', contact);
+                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+
+
+            }).error(function (err) {
+                logger.error('[DVP-CampCampaignInfo.EditContacts] - [%s] - [PGSQL] - Updation failed', contact, err);
+                var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                ids.push(contacts[i]);
+
+            });
+    }
+    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+    callBack.end(jsonString);
 }
 
 function DeleteContacts(contacts, campaignId, tenantId, companyId, callBack) {
@@ -186,8 +221,8 @@ function DeleteContacts(contacts, campaignId, tenantId, companyId, callBack) {
                 ids.add(contacts[i])
             });
     }
-    var jsonString = messageFormatter.FormatMessage(ids, "success", true, undefined);
-    callBack.end(undefined, jsonString);
+    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, ids);
+    callBack.end(jsonString);
 }
 
 function AssingScheduleToCampaign(campaignId, CamScheduleId, tenantId, companyId, callBack) {
@@ -204,13 +239,13 @@ function AssingScheduleToCampaign(campaignId, CamScheduleId, tenantId, companyId
 
 
             logger.debug('[DVP-CampCampaignInfo.EditContacts] - [%s] - [PGSQL] - Updated successfully', contact);
-            var jsonString = messageFormatter.FormatMessage(results, "success", true, undefined);
-            callBack.end(undefined, jsonString);
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+            callBack.end(jsonString);
 
         }).error(function (err) {
             logger.error('[DVP-CampCampaignInfo.EditContacts] - [%s] - [PGSQL] - Updation failed', contact, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callBack.end(jsonString, undefined);
+            callBack.end(jsonString);
         });
 }
 
@@ -220,20 +255,20 @@ function GetAllContact(tenantId, companyId, callBack) {
         if (err) {
             logger.error('[DVP-CampCampaignInfo.GetAllContact] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callBack.end(jsonString, undefined);
+            callBack.end(jsonString);
         }
 
         else {
 
             if (CamObject) {
                 logger.debug('[DVP-CampCampaignInfo.GetAllContact] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
-                var jsonString = messageFormatter.FormatMessage(CamObject, "success", true, undefined);
-                callBack.end(undefined, jsonString);
+                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+                callBack.end(jsonString);
             }
             else {
                 logger.error('[DVP-CampCampaignInfo.GetAllContact] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
                 var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
-                callBack.end(jsonString, undefined);
+                callBack.end(jsonString);
             }
         }
     });
@@ -245,20 +280,20 @@ function GetAllContactByCampaignId(campaignId, tenantId, companyId, callBack) {
         if (err) {
             logger.error('[DVP-CampCampaignInfo.GetAllContactByCampaignId] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callBack.end(jsonString, undefined);
+            callBack.end(jsonString);
         }
 
         else {
 
             if (CamObject) {
                 logger.debug('[DVP-CampCampaignInfo.GetAllContactByCampaignId] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
-                var jsonString = messageFormatter.FormatMessage(CamObject, "success", true, undefined);
-                callBack.end(undefined, jsonString);
+                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+                callBack.end(jsonString);
             }
             else {
                 logger.error('[DVP-CampCampaignInfo.GetAllContactByCampaignId] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
                 var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
-                callBack.end(jsonString, undefined);
+                callBack.end(jsonString);
             }
         }
     });
@@ -295,6 +330,7 @@ module.exports.UploadContacts = UploadContacts;
 module.exports.UploadContactsToCampaign = UploadContactsToCampaign;
 module.exports.UploadContactsToCampaignWithSchedule = UploadContactsToCampaignWithSchedule;
 module.exports.EditContacts = EditContacts;
+module.exports.EditContact = EditContact;
 module.exports.DeleteContacts = DeleteContacts;
 module.exports.AssingScheduleToCampaign = AssingScheduleToCampaign;
 module.exports.GetAllContact = GetAllContact;
