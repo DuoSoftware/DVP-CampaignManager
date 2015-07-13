@@ -22,14 +22,14 @@ function CreateSchedule(campaignId, scheduleId, scheduleType,tenantId,companyId,
 
             if (err) {
 
-                logger.error('[DVP-CampScheduleInfo.CreateSchedule] - [%s] - [PGSQL] - insertion  failed', campaignName, err);
+                logger.error('[DVP-CampScheduleInfo.CreateSchedule] - [%s] - [PGSQL] - insertion  failed', campaignId, err);
                 var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-                callBack(jsonString);
+                callBack.end(jsonString);
             }
             else {
-                logger.debug('[DVP-CampScheduleInfo.CreateSchedule] - [%s] - [PGSQL] - inserted successfully ', campaignName);
+                logger.debug('[DVP-CampScheduleInfo.CreateSchedule] - [%s] - [PGSQL] - inserted successfully ', campaignId);
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-                callBack(undefined,jsonString);
+                callBack.end(jsonString);
             }
         });
 }
@@ -51,12 +51,12 @@ function EditSchedule(camscheduleId, campaignId, scheduleId, scheduleType,tenant
 
             logger.debug('[DVP-CampScheduleInfo.EditSchedule] - [%s] - [PGSQL] - Updated successfully', camscheduleId);
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            callBack(jsonString);
+            callBack.end(jsonString);
 
         }).error(function (err) {
             logger.error('[DVP-CampScheduleInfo.EditSchedule] - [%s] - [PGSQL] - Updation failed', camscheduleId, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callBack(jsonString);
+            callBack.end(jsonString);
         });
 }
 
@@ -74,12 +74,12 @@ function DeleteSchedule(camScheduleId,tenantId,companyId, callBack) {
 
             logger.debug('[DVP-CampScheduleInfo.DeleteSchedule] - [%s] - [PGSQL] - Updated successfully', camscheduleId);
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            callBack(jsonString);
+            callBack.end(jsonString);
 
         }).error(function (err) {
             logger.error('[DVP-CampScheduleInfo.DeleteSchedule] - [%s] - [PGSQL] - Updation failed', camscheduleId, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callBack(jsonString);
+            callBack.end(jsonString);
         });
 }
 
@@ -89,7 +89,7 @@ function GetAllSchedule(tenantId,companyId,callBack) {
         if (err) {
             logger.error('[DVP-CampScheduleInfo.GetAllSchedule] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callBack(jsonString);
+            callBack.end(jsonString);
         }
 
         else {
@@ -97,12 +97,12 @@ function GetAllSchedule(tenantId,companyId,callBack) {
             if (CamObject) {
                 logger.debug('[DVP-CampScheduleInfo.GetAllSchedule] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
-                callBack(jsonString);
+                callBack.end(jsonString);
             }
             else {
                 logger.error('[DVP-CampScheduleInfo.GetAllSchedule] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
                 var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
-                callBack(jsonString);
+                callBack.end(jsonString);
             }
         }
     });
@@ -114,7 +114,7 @@ function GetSchedule(camScheduleId, callBack) {
         if (err) {
             logger.error('[DVP-CampScheduleInfo.GetSchedule] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
             var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
-            callBack(jsonString);
+            callBack.end(jsonString);
         }
 
         else {
@@ -122,12 +122,12 @@ function GetSchedule(camScheduleId, callBack) {
             if (CamObject) {
                 logger.debug('[DVP-CampScheduleInfo.GetSchedule] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
-                callBack(jsonString);
+                callBack.end(jsonString);
             }
             else {
                 logger.error('[DVP-CampScheduleInfo.GetSchedule] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
                 var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
-                callBack(jsonString);
+                callBack.end(jsonString);
             }
         }
     });
@@ -139,7 +139,7 @@ function GetScheduleByCampaignId(campaignId,tenantId,companyId, callBack) {
         if (err) {
             logger.error('[DVP-CampScheduleInfo.GetScheduleByCampaignId] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callBack(jsonString);
+            callBack.end(jsonString);
         }
 
         else {
@@ -147,12 +147,12 @@ function GetScheduleByCampaignId(campaignId,tenantId,companyId, callBack) {
             if (CamObject) {
                 logger.debug('[DVP-CampScheduleInfo.GetScheduleByCampaignId] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
-                callBack(jsonString);
+                callBack.end(jsonString);
             }
             else {
                 logger.error('[DVP-CampScheduleInfo.GetScheduleByCampaignId] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
                 var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
-                callBack(jsonString);
+                callBack.end(jsonString);
             }
         }
     });
@@ -164,7 +164,7 @@ function GetScheduleByScheduleType(scheduleType,tenantId,companyId, callBack) {
         if (err) {
             logger.error('[DVP-CampScheduleInfo.GetScheduleByScheduleType] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callBack(jsonString);
+            callBack.end(jsonString);
         }
 
         else {
@@ -172,12 +172,12 @@ function GetScheduleByScheduleType(scheduleType,tenantId,companyId, callBack) {
             if (CamObject) {
                 logger.debug('[DVP-CampScheduleInfo.GetScheduleByScheduleType] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
-                callBack(jsonString);
+                callBack.end(jsonString);
             }
             else {
                 logger.error('[DVP-CampScheduleInfo.GetScheduleByScheduleType] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
                 var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
-                callBack(jsonString);
+                callBack.end(jsonString);
             }
         }
     });
@@ -189,7 +189,7 @@ function GetScheduleByCampaignIdScheduleType(campaignId, scheduleType,tenantId,c
         if (err) {
             logger.error('[DVP-CampScheduleInfo.GetScheduleByCampaignIdScheduleType] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callBack(jsonString);
+            callBack.end(jsonString);
         }
 
         else {
@@ -197,12 +197,12 @@ function GetScheduleByCampaignIdScheduleType(campaignId, scheduleType,tenantId,c
             if (CamObject) {
                 logger.debug('[DVP-CampScheduleInfo.GetScheduleByCampaignIdScheduleType] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
-                callBack(jsonString);
+                callBack.end(jsonString);
             }
             else {
                 logger.error('[DVP-CampScheduleInfo.GetScheduleByCampaignIdScheduleType] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
                 var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
-                callBack(jsonString);
+                callBack.end(jsonString);
             }
         }
     });

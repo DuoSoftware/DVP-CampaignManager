@@ -158,7 +158,7 @@ function GetAllCampaign(tenantId, companyId, callback) {
 
         //DbConn.CampCampaignInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}]}).complete(function (err, CamObject) {
 
-        DbConn.CampCampaignInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}]}).complete(function (err, CamObject) {
+        DbConn.CampCampaignInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}] ,include:[{model:DbConn.CampContactSchedule, as :"CampContactSchedule"}]}).complete(function (err, CamObject) {
 
             if (err) {
                 logger.error('[DVP-CampCampaignInfo.GetAllCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
@@ -192,6 +192,8 @@ function GetAllCampaign(tenantId, companyId, callback) {
 function GetAllCampaignPage(tenantId, companyId,count, callback) {
 
     try {
+
+
         DbConn.CampCampaignInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}],limit :count,order: 'id DESC' }).complete(function (err, CamObject) {
 
             if (err) {
