@@ -24,8 +24,13 @@ var RestServer = restify.createServer({
 
 });
 restify.CORS.ALLOW_HEADERS.push('api_key');
+
 RestServer.use(restify.CORS());
 RestServer.use(restify.fullResponse());
+//Enable request body parsing(access)
+RestServer.use(restify.bodyParser());
+RestServer.use(restify.acceptParser(RestServer.acceptable));
+RestServer.use(restify.queryParser());
 
 //Server listen
 RestServer.listen(port, function () {
@@ -33,10 +38,7 @@ RestServer.listen(port, function () {
 
 
 });
-//Enable request body parsing(access)
-RestServer.use(restify.bodyParser());
-RestServer.use(restify.acceptParser(RestServer.acceptable));
-RestServer.use(restify.queryParser());
+
 
 
 //-------------------------  Restify Server ------------------------- \\
