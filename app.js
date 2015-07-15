@@ -23,12 +23,15 @@ var RestServer = restify.createServer({
 }, function (req, res) {
 
 });
+restify.CORS.ALLOW_HEADERS.push('api_key');
+RestServer.use(restify.CORS());
+RestServer.use(restify.fullResponse());
 
 //Server listen
 RestServer.listen(port, function () {
     console.log('%s listening at %s', RestServer.name, RestServer.url);
 
-   
+
 });
 //Enable request body parsing(access)
 RestServer.use(restify.bodyParser());
@@ -46,9 +49,17 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Handler', function (re
         logger.info('[DVP-campaignmanager.CreateCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
+        var auth = req.header('authorization');
+        var res = auth.split("#");
         var tenantId = 1;
         var companyId = 1;
-        campaignHandler.CreateCampaign(cmp.CampaignName, cmp.CampaignMode, cmp.CampaignChannel, cmp.DialoutMechanism, tenantId, companyId, cmp.Class, cmp.Type, cmp.Category,cmp.Extension, res);
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
+
+        campaignHandler.CreateCampaign(cmp.CampaignName, cmp.CampaignMode, cmp.CampaignChannel, cmp.DialoutMechanism, tenantId, companyId, cmp.Class, cmp.Type, cmp.Category, cmp.Extension, res);
 
     }
     catch (ex) {
@@ -67,9 +78,16 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Handler', function (req
         logger.info('[DVP-campaignmanager.EditCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
+        var auth = req.header('authorization');
+        var res = auth.split("#");
         var tenantId = 1;
         var companyId = 1;
-        campaignHandler.EditCampaign(cmp.CampaignId,cmp.CampaignName, cmp.CampaignMode, cmp.CampaignChannel, cmp.DialoutMechanism, tenantId, companyId, cmp.Class, cmp.Type, cmp.Category,cmp.Extension, res)
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
+        campaignHandler.EditCampaign(cmp.CampaignId, cmp.CampaignName, cmp.CampaignMode, cmp.CampaignChannel, cmp.DialoutMechanism, tenantId, companyId, cmp.Class, cmp.Type, cmp.Category, cmp.Extension, res)
 
     }
     catch (ex) {
@@ -86,8 +104,15 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Handler/Start', functio
         logger.info('[DVP-campaignmanager.StartCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
+        var auth = req.header('authorization');
+        var res = auth.split("#");
         var tenantId = 1;
         var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignHandler.StartCampaign(cmp.CampaignId, tenantId, companyId, res)
 
     }
@@ -105,8 +130,15 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Handler/:CampaignId', f
         logger.info('[DVP-campaignmanager.DeleteCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
         var cmpId = req.params.CampaignId;
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignHandler.DeleteCampaign(cmpId, tenantId, companyId, res);
 
     }
@@ -124,8 +156,15 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Handler', function (req
 
         logger.info('[DVP-campaignmanager.GetAllCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignHandler.GetAllCampaign(tenantId, companyId, res);
 
     }
@@ -145,8 +184,15 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Handler/:CampaignId', f
         logger.info('[DVP-campaignmanager.GetAllCampaignByCampaignId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
         var cmpId = req.params.CampaignId;
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignHandler.GetAllCampaignByCampaignId(tenantId, companyId, cmpId, res);
 
     }
@@ -166,8 +212,15 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Handler/State/:Campaign
         logger.info('[DVP-campaignmanager.GetAllCampaignByCampaignState] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmpState = req.params.CampaignState;
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignHandler.GetAllCampaignByCampaignState(tenantId, companyId, cmpState, res);
 
     }
@@ -185,9 +238,16 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Handler/pending/:Count'
 
         logger.info('[DVP-campaignmanager.GetAllCampaignp] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
         var count = req.params.Count;
-        var tenantId = "1";
-        var companyId = "1";
-        campaignHandler.GetPendingCampaign(tenantId, companyId,count, res);
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
+        campaignHandler.GetPendingCampaign(tenantId, companyId, count, res);
 
     }
     catch (ex) {
@@ -205,9 +265,15 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Handler/Page/:Count', f
 
         logger.info('[DVP-campaignmanager.GetAllCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
         var count = req.params.Count;
-        var tenantId = "1";
-        var companyId = "1";
-        campaignHandler.GetAllCampaignPage(tenantId, companyId,count, res);
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+        campaignHandler.GetAllCampaignPage(tenantId, companyId, count, res);
 
     }
     catch (ex) {
@@ -225,8 +291,15 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Handler/Ongoing', funct
 
         logger.info('[DVP-campaignmanager.GetOngoingCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignHandler.GetOngoingCampaign(tenantId, companyId, res);
 
     }
@@ -244,8 +317,15 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Handler/Offline', funct
 
         logger.info('[DVP-campaignmanager.GetOfflineCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignHandler.GetOfflineCampaign(tenantId, companyId, res);
 
     }
@@ -355,7 +435,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Operations/OperationSta
         var dialerId = req.params.DialerId;
         var campaignState = req.params.CampaignState;
 
-        campaignOperations.UpdateOperationState(campaignId,dialerId,campaignState, res);
+        campaignOperations.UpdateOperationState(campaignId, dialerId, campaignState, res);
     }
     catch (ex) {
 
@@ -371,9 +451,15 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Operations/Pending', fu
 
         logger.info('[DVP-campaignmanager.GetPendingCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
-        var dialerId = req.params.DialerId;
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignOperations.GetPendingCampaign(tenantId, companyId, res);
 
     }
@@ -392,8 +478,15 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Operations/Pending/:Dia
         logger.info('[DVP-campaignmanager.GetPendingCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
         var dialerId = req.params.DialerId;
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignOperations.GetPendingCampaignByDialerId(tenantId, companyId, dialerId, res);
 
     }
@@ -416,9 +509,17 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Configurations', funct
         logger.info('[DVP-CampaignConfigurations.CreateConfiguration] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
-        var tenantId = "1";
-        var companyId = "1";
-        campaignConfigurations.CreateConfiguration(cmp.CampaignId, cmp.CampaignChannel, cmp.AllowCallBack, cmp.MaxCallBackCount, tenantId, companyId, true, res);
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
+        campaignConfigurations.CreateConfiguration(cmp.CampaignId, cmp.ChannelConcurrent, cmp.AllowCallBack, cmp.MaxCallBackCount, tenantId, companyId, true, cmp.Caller, cmp.StartDate, cmp.EndDate, res);
+
     }
     catch (ex) {
 
@@ -469,8 +570,15 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Configurations/', funct
 
         logger.info('[DVP-CampaignConfigurations.GetAllConfiguration] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignConfigurations.GetAllConfiguration(tenantId, companyId, res);
 
     }
@@ -488,8 +596,15 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Configurations/:Configu
 
         logger.info('[DVP-CampaignConfigurations.GetConfiguration] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         var configureId = req.params.ConfigureId;
         campaignConfigurations.GetConfiguration(configureId, tenantId, companyId, res);
 
@@ -514,8 +629,15 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/NumberUpload', functio
         logger.info('[DVP-CampaignNumberUpload.UploadContacts] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignNumberUpload.UploadContacts(cmp.Contacts, tenantId, companyId, res);
 
     }
@@ -534,8 +656,15 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/NumberUpload/ToCampaig
         logger.info('[DVP-CampaignNumberUpload.UploadContactsToCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignNumberUpload.UploadContactsToCampaign(cmp.Contacts, cmp.CampaignId, tenantId, companyId, res);
 
     }
@@ -554,8 +683,15 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/NumberUpload/WithSched
         logger.info('[DVP-CampaignNumberUpload.UploadContactsToCampaignWithSchedule] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignNumberUpload.UploadContactsToCampaignWithSchedule(cmp.Contacts, cmp.CampaignId, cmp.CamScheduleId, tenantId, companyId, res);
 
     }
@@ -574,8 +710,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/NumberUpload/ExistingC
         logger.info('[DVP-CampaignNumberUpload.AddExistingContactsToCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
-        var tenantId = "1";
-        var companyId = "1";
+
         campaignNumberUpload.AddExistingContactsToCampaign(cmp.ContactIds, cmp.CampaignId, res);
 
     }
@@ -588,16 +723,21 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/NumberUpload/ExistingC
 });
 
 
-
-
 RestServer.put('/DVP/API/' + version + '/CampaignManager/NumberUpload', function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.EditContacts] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignNumberUpload.EditContact(cmp.Contact, cmp.CampaignId, tenantId, companyId, res);
 
     }
@@ -616,8 +756,15 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/NumberUpload', function
         logger.info('[DVP-CampaignNumberUpload.EditContacts] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignNumberUpload.EditContacts(cmp.Contacts, cmp.CampaignId, tenantId, companyId, res);
 
     }
@@ -637,8 +784,15 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/NumberUpload/:Contacts/
 
         var contacts = req.params.Contacts;
         var campaignId = req.params.CampaignId;
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignNumberUpload.DeleteContacts(contacts, campaignId, tenantId, companyId, res);
 
     }
@@ -657,8 +811,15 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/NumberUpload', functio
         logger.info('[DVP-CampaignNumberUpload.AssingScheduleToCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignNumberUpload.AssingScheduleToCampaign(cmp.CampaignId, cmp.CamScheduleId, tenantId, companyId, res);
 
     }
@@ -676,8 +837,15 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/NumberUpload', function
 
         logger.info('[DVP-CampaignNumberUpload.GetAllContact] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignNumberUpload.GetAllContact(tenantId, companyId, res);
 
     }
@@ -696,8 +864,15 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/NumberUpload/:CampaignI
         logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var campaignId = req.params.CampaignId;
-        var tenantId = "1";
-        var companyId = "1";
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
         campaignNumberUpload.GetAllContactByCampaignId(campaignId, tenantId, companyId, res);
 
     }
@@ -716,12 +891,19 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/NumberUpload/:CampaignI
         logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var campaignId = req.params.CampaignId;
-        var scheduleId= req.params.ScheduleId;
-    var rowCount= req.params.RowCount;
-        var pageNo= req.params.PageNo;
-        var tenantId = "1";
-        var companyId = "1";
-        campaignNumberUpload.GetAllContactByCampaignIdScheduleId(campaignId,scheduleId,rowCount,pageNo,tenantId, companyId, res)
+        var scheduleId = req.params.ScheduleId;
+        var rowCount = req.params.RowCount;
+        var pageNo = req.params.PageNo;
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
+        campaignNumberUpload.GetAllContactByCampaignIdScheduleId(campaignId, scheduleId, rowCount, pageNo, tenantId, companyId, res)
 
     }
     catch (ex) {
@@ -743,9 +925,16 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Schedule', function (r
         logger.info('[DVP-CampaignSchedule.CreateSchedule] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
-        var tenantId = "1";
-        var companyId = "1";
-        campaignSchedule.CreateSchedule(cmp.CampaignId, cmp.ScheduleId, cmp.ScheduleType,tenantId,companyId, res);
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
+        campaignSchedule.CreateSchedule(cmp.CampaignId, cmp.ScheduleId, cmp.ScheduleType, tenantId, companyId, res);
 
     }
     catch (ex) {
@@ -763,9 +952,16 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Schedule', function (re
         logger.info('[DVP-CampaignSchedule.EditSchedule] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
-        var tenantId = "1";
-        var companyId = "1";
-        campaignSchedule.EditSchedule(cmp.CamScheduleId, cmp.CampaignId, cmp.ScheduleId, cmp.ScheduleType,tenantId,companyId, res);
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
+        campaignSchedule.EditSchedule(cmp.CamScheduleId, cmp.CampaignId, cmp.ScheduleId, cmp.ScheduleType, tenantId, companyId, res);
 
     }
     catch (ex) {
@@ -783,9 +979,16 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Schedule/:CamScheduleId
         logger.info('[DVP-CampaignSchedule.DeleteSchedule] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var camScheduleId = req.params.CamScheduleId;
-        var tenantId = "1";
-        var companyId = "1";
-        campaignSchedule.DeleteSchedule(camScheduleId,tenantId,companyId, res);
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
+        campaignSchedule.DeleteSchedule(camScheduleId, tenantId, companyId, res);
     }
     catch (ex) {
 
@@ -801,9 +1004,16 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Schedule', function (re
 
         logger.info('[DVP-CampaignSchedule.GetAllSchedule] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-        var tenantId = "1";
-        var companyId = "1";
-        campaignSchedule.GetAllSchedule(tenantId,companyId,res);
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
+        campaignSchedule.GetAllSchedule(tenantId, companyId, res);
 
     }
     catch (ex) {
@@ -820,8 +1030,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Schedule/:CamScheduleId
 
         logger.info('[DVP-CampaignSchedule.GetSchedule] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
         var camScheduleId = req.params.CamScheduleId;
-        var tenantId = "1";
-        var companyId = "1";
+
         campaignSchedule.GetSchedule(camScheduleId, res);
 
     }
@@ -839,9 +1048,16 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Schedule/:CampaignId', 
 
         logger.info('[DVP-CampaignSchedule.GetScheduleByCampaignId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
         var campaignId = req.params.CampaignId;
-        var tenantId = "1";
-        var companyId = "1";
-        campaignSchedule.GetScheduleByCampaignId(campaignId,tenantId,companyId, res);
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
+        campaignSchedule.GetScheduleByCampaignId(campaignId, tenantId, companyId, res);
 
     }
     catch (ex) {
@@ -858,9 +1074,15 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Schedule/:ScheduleId', 
 
         logger.info('[DVP-CampaignSchedule.GetScheduleByScheduleType] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
         var scheduleType = req.params.ScheduleId;
-        var tenantId = "1";
-        var companyId = "1";
-        campaignSchedule. GetScheduleByScheduleType(scheduleType,tenantId,companyId, res);
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+        campaignSchedule.GetScheduleByScheduleType(scheduleType, tenantId, companyId, res);
 
     }
     catch (ex) {
@@ -878,9 +1100,16 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Schedule/CampaignId:Cam
         logger.info('[DVP-CampaignSchedule.GetScheduleByCampaignIdScheduleType] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
         var campaignId = req.params.CampaignId;
         var scheduleType = req.params.ScheduleType;
-        var tenantId = "1";
-        var companyId = "1";
-        campaignSchedule.GetScheduleByCampaignIdScheduleType(campaignId, scheduleType,tenantId,companyId, res);
+        var auth = req.header('authorization');
+        var res = auth.split("#");
+        var tenantId = 1;
+        var companyId = 1;
+        if (res.length >= 2) {
+            tenantId = res[0];
+            companyId = res[1];
+        }
+
+        campaignSchedule.GetScheduleByCampaignIdScheduleType(campaignId, scheduleType, tenantId, companyId, res);
 
     }
     catch (ex) {

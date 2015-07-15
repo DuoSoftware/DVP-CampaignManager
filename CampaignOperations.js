@@ -372,7 +372,7 @@ function GetPendingCampaignByDialerId(tenantId, companyId, dialerId, callback) {
     }
 }
 
-
+module.exports.StartCampaign = StartCampaign;
 module.exports.StopCampaign = StopCampaign;
 module.exports.PauseCampaign = PauseCampaign;
 module.exports.ResumeCampaign = ResumeCampaign;

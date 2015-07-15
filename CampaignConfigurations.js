@@ -5,20 +5,19 @@ var messageFormatter = require('DVP-Common/CommonMessageGenerator/ClientMessageJ
 var logger = require('DVP-Common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('DVP-DBModels');
 
-function CreateConfiguration(campaignId, channelConcurrency, allowCallBack, maxCallBackCount,tenantId,companyId, status,concurrent,caller,startDate,endDate, callBack) {
+function CreateConfiguration(campaignId, channelConcurrent, allowCallBack, maxCallBackCount, tenantId, companyId, status, caller, startDate, endDate, callBack) {
     DbConn.CampConfigurations
         .create(
         {
             CampaignId: campaignId,
-            ChannelConcurrency: channelConcurrency,
+            ChannelConcurrency: channelConcurrent,
             AllowCallBack: allowCallBack,
             MaxCallBackCount: maxCallBackCount,
-            TenantId:tenantId,
-            CompanyId:companyId,
-            Concurrent:concurrent,
-            Caller:caller,
-            StartDate:startDate,
-            EndDate:endDate,
+            TenantId: tenantId,
+            CompanyId: companyId,
+            Caller: caller,
+            StartDate: startDate,
+            EndDate: endDate,
             Status: Boolean(status)
         }
     ).complete(function (err, cmp) {
@@ -47,10 +46,10 @@ function EditConfiguration(configureId, campaignId, channelConcurrency, allowCal
             ChannelConcurrency: channelConcurrency,
             AllowCallBack: allowCallBack,
             MaxCallBackCount: maxCallBackCount,
-            Concurrent:concurrent,
-            Caller:caller,
-            StartDate:startDate,
-            EndDate:endDate,
+            Concurrent: concurrent,
+            Caller: caller,
+            StartDate: startDate,
+            EndDate: endDate,
             Status: Boolean(status)
         },
         {
@@ -97,7 +96,7 @@ function DeleteConfiguration(configureId, callBack) {
         });
 }
 
-function GetAllConfiguration(tenantId,companyId,callBack) {
+function GetAllConfiguration(tenantId, companyId, callBack) {
     DbConn.CampConfigurations.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}]}).complete(function (err, CamObject) {
 
         if (err) {
@@ -122,9 +121,9 @@ function GetAllConfiguration(tenantId,companyId,callBack) {
     });
 }
 
-function GetConfiguration(configureId,tenantId,companyId, callBack) {
+function GetConfiguration(configureId, tenantId, companyId, callBack) {
 
-    DbConn.CampConfigurations.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId},{ConfigureId:configureId}]}).complete(function (err, CamObject) {
+    DbConn.CampConfigurations.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {ConfigureId: configureId}]}).complete(function (err, CamObject) {
 
         if (err) {
             logger.error('[DVP-CampConfigurations.GetConfiguration] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
