@@ -11,7 +11,7 @@ var Sequelize = require('sequelize');
 /*
  Campaign has dialout mechanism, channel class and campaign modes, User can select combinations and validation should made from backend and UI components
  */
-function CreateCampaign(campaignName, campaignMode, campaignChannel, dialoutMechanism, tenantId, companyId, campaignClass, campaignType, campaignCategory,extension,concurrent,caller,startDate,endDate, callback) {
+function CreateCampaign(campaignName, campaignMode, campaignChannel, dialoutMechanism, tenantId, companyId, campaignClass, campaignType, campaignCategory, extension, callback) {
 
 
     DbConn.CampCampaignInfo
@@ -26,12 +26,8 @@ function CreateCampaign(campaignName, campaignMode, campaignChannel, dialoutMech
             Class: campaignClass,
             Type: campaignType,
             Category: campaignCategory,
-            Extensions:extension,
-            Concurrent:concurrent,
-            Caller:caller,
-            OperationalStatus:"create",
-            StartDate:startDate,
-            EndDate:endDate,
+            Extensions: extension,
+            OperationalStatus: "create",
             Status: true
         }
     ).complete(function (err, cmp) {
@@ -82,17 +78,17 @@ function CreateCampaign(campaignName, campaignMode, campaignChannel, dialoutMech
      });*/
 }
 
-function StartCampaign(campaignId,tenantId, companyId,callback) {
+function StartCampaign(campaignId, tenantId, companyId, callback) {
 
     DbConn.CampCampaignInfo
         .update(
         {
-            OperationalStatus:"start",
+            OperationalStatus: "start",
             Status: true
         },
         {
             where: {
-                id: campaignId
+                CampaignId: campaignId
             }
         }
     ).then(function (results) {
@@ -110,7 +106,7 @@ function StartCampaign(campaignId,tenantId, companyId,callback) {
 
 }
 
-function EditCampaign(campaignId, campaignName, campaignMode, campaignChannel, dialoutMechanism, tenantId, companyId, campaignClass, campaignType, campaignCategory,extension,concurrent,caller ,startDate,endDate,callback) {
+function EditCampaign(campaignId, campaignName, campaignMode, campaignChannel, dialoutMechanism, tenantId, companyId, campaignClass, campaignType, campaignCategory, extension, callback) {
 
     DbConn.CampCampaignInfo
         .update(
@@ -124,17 +120,13 @@ function EditCampaign(campaignId, campaignName, campaignMode, campaignChannel, d
             Class: campaignClass,
             Type: campaignType,
             Category: campaignCategory,
-            Extensions:extension,
-            Concurrent:concurrent,
-            Caller:caller,
-            OperationalStatus:"create",
-            StartDate:startDate,
-            EndDate:endDate,
+            Extensions: extension,
+            OperationalStatus: "create",
             Status: true
         },
         {
             where: {
-                id: campaignId
+                CampaignId: campaignId
             }
         }
     ).then(function (results) {
@@ -162,7 +154,7 @@ function DeleteCampaign(campaignId, tenantId, companyId, callback) {
                 Status: false
             },
             {
-                where: [{id: campaignId}, {TenantId: tenantId}, {CompanyId: companyId}]
+                where: [{CampaignId: campaignId}, {TenantId: tenantId}, {CompanyId: companyId}]
             }
         ).then(function (results) {
                 logger.info('[DVP-CampCampaignInfo.DeleteCampaign] - [%s] - [PGSQL] - Updated successfully', campaignId);
@@ -196,7 +188,10 @@ function GetAllCampaign(tenantId, companyId, callback) {
 
         //DbConn.CampCampaignInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}]}).complete(function (err, CamObject) {
 
-        DbConn.CampCampaignInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}] ,include:[{model:DbConn.CampContactSchedule, as :"CampContactSchedule"}]}).complete(function (err, CamObject) {
+        DbConn.CampCampaignInfo.findAll({
+            where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}],
+            include: [{model: DbConn.CampContactSchedule, as: "CampContactSchedule"},{model: DbConn.CampConfigurations, as: "CampConfigurations"}]
+        }).complete(function (err, CamObject) {
 
             if (err) {
                 logger.error('[DVP-CampCampaignInfo.GetAllCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
@@ -227,12 +222,16 @@ function GetAllCampaign(tenantId, companyId, callback) {
     }
 }
 
-function GetAllCampaignPage(tenantId, companyId,count, callback) {
+function GetAllCampaignPage(tenantId, companyId, count, callback) {
 
     try {
 
 
-        DbConn.CampCampaignInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}],limit :count,order: 'id DESC' }).complete(function (err, CamObject) {
+        DbConn.CampCampaignInfo.findAll({
+            where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}],
+            limit: count,
+            order: 'CampaignId DESC'
+        }).complete(function (err, CamObject) {
 
             if (err) {
                 logger.error('[DVP-CampCampaignInfo.GetAllCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
@@ -266,7 +265,10 @@ function GetAllCampaignPage(tenantId, companyId,count, callback) {
 function GetAllCampaignByCampaignId(tenantId, companyId, campaignId, callback) {
 
     try {
-        DbConn.CampCampaignInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {id: campaignId}],include:[{model:DbConn.CampContactSchedule, as :"CampContactSchedule"}]}).complete(function (err, CamObject) {
+        DbConn.CampCampaignInfo.findAll({
+            where: [{CompanyId: companyId}, {TenantId: tenantId}, {CampaignId: campaignId}],
+            include: [{model: DbConn.CampContactSchedule, as: "CampContactSchedule"}]
+        }).complete(function (err, CamObject) {
 
             if (err) {
                 logger.error('[DVP-CampCampaignInfo.GetAllCampaignByCampaignId] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
@@ -397,13 +399,17 @@ function GetOfflineCampaign(tenantId, companyId, callback) {
     });
 }
 
-function GetPendingCampaign(tenantId, companyId,count, callback) {
+function GetPendingCampaign(tenantId, companyId, count, callback) {
 
     try {
 
-//DbConn.CampCampaignInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}], required: true,attributes: ['id'] , include :[{model:DbConn.CampOngoingCampaign, as :"CampOngoingCampaign", required: true,attributes: []}]}).complete(function (err, CamObject) {
+//DbConn.CampCampaignInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}], required: true,attributes: ['CampaignId'] , include :[{model:DbConn.CampOngoingCampaign, as :"CampOngoingCampaign", required: true,attributes: []}]}).complete(function (err, CamObject) {
 
-        DbConn.CampCampaignInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true},{OperationalStatus:"start"}],include :[{model:DbConn.CampScheduleInfo, as :"CampScheduleInfo"}],limit: count }).complete(function (err, CamObject) {
+        DbConn.CampCampaignInfo.findAll({
+            where: [{Status: true}, {OperationalStatus: "start"}],
+            include: [{model: DbConn.CampScheduleInfo, as: "CampScheduleInfo"},{model: DbConn.CampConfigurations, as: "CampConfigurations"}],
+            limit: count
+        }).complete(function (err, CamObject) {
 
             if (err) {
                 logger.error('[DVP-CampCampaignInfo.GetAllCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
@@ -433,7 +439,6 @@ function GetPendingCampaign(tenantId, companyId,count, callback) {
         callback.end(jsonString);
     }
 }
-
 
 
 module.exports.CreateCampaign = CreateCampaign;

@@ -5,7 +5,7 @@ var messageFormatter = require('DVP-Common/CommonMessageGenerator/ClientMessageJ
 var logger = require('DVP-Common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('DVP-DBModels');
 
-function CreateConfiguration(campaignId, channelConcurrency, allowCallBack, maxCallBackCount,tenantId,companyId, status, callBack) {
+function CreateConfiguration(campaignId, channelConcurrency, allowCallBack, maxCallBackCount,tenantId,companyId, status,concurrent,caller,startDate,endDate, callBack) {
     DbConn.CampConfigurations
         .create(
         {
@@ -15,6 +15,10 @@ function CreateConfiguration(campaignId, channelConcurrency, allowCallBack, maxC
             MaxCallBackCount: maxCallBackCount,
             TenantId:tenantId,
             CompanyId:companyId,
+            Concurrent:concurrent,
+            Caller:caller,
+            StartDate:startDate,
+            EndDate:endDate,
             Status: Boolean(status)
         }
     ).complete(function (err, cmp) {
@@ -34,7 +38,7 @@ function CreateConfiguration(campaignId, channelConcurrency, allowCallBack, maxC
 
 }
 
-function EditConfiguration(configureId, campaignId, channelConcurrency, allowCallBack, status, callBack) {
+function EditConfiguration(configureId, campaignId, channelConcurrency, allowCallBack, status, concurrent, caller, startDate, endDate, callBack) {
 
     DbConn.CampConfigurations
         .update(
@@ -43,6 +47,10 @@ function EditConfiguration(configureId, campaignId, channelConcurrency, allowCal
             ChannelConcurrency: channelConcurrency,
             AllowCallBack: allowCallBack,
             MaxCallBackCount: maxCallBackCount,
+            Concurrent:concurrent,
+            Caller:caller,
+            StartDate:startDate,
+            EndDate:endDate,
             Status: Boolean(status)
         },
         {

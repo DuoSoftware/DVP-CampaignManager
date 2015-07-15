@@ -48,7 +48,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Handler', function (re
         var cmp = req.body;
         var tenantId = 1;
         var companyId = 1;
-        campaignHandler.CreateCampaign(cmp.CampaignName, cmp.CampaignMode, cmp.CampaignChannel, cmp.DialoutMechanism, tenantId, companyId, cmp.Class, cmp.Type, cmp.Category,cmp.Extension,cmp.Concurrent,cmp.Caller,cmp.StartDate,cmp.EndDate, res);
+        campaignHandler.CreateCampaign(cmp.CampaignName, cmp.CampaignMode, cmp.CampaignChannel, cmp.DialoutMechanism, tenantId, companyId, cmp.Class, cmp.Type, cmp.Category,cmp.Extension, res);
 
     }
     catch (ex) {
@@ -69,7 +69,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Handler', function (req
         var cmp = req.body;
         var tenantId = 1;
         var companyId = 1;
-        campaignHandler.EditCampaign(cmp.CampaignId,cmp.CampaignName, cmp.CampaignMode, cmp.CampaignChannel, cmp.DialoutMechanism, tenantId, companyId, cmp.Class, cmp.Type, cmp.Category,cmp.Extension,cmp.Concurrent,cmp.Caller ,cmp.StartDate,cmp.EndDate, res)
+        campaignHandler.EditCampaign(cmp.CampaignId,cmp.CampaignName, cmp.CampaignMode, cmp.CampaignChannel, cmp.DialoutMechanism, tenantId, companyId, cmp.Class, cmp.Type, cmp.Category,cmp.Extension, res)
 
     }
     catch (ex) {

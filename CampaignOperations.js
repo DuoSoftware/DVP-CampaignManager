@@ -69,10 +69,10 @@ function StartCampaign(campaignId, dialerId, callback) {
                             DbConn.CampCampaignInfo
                                 .update(
                                 {
-                                    OperationalStatus:"ongoing"
+                                    OperationalStatus: "ongoing"
                                 },
                                 {
-                                    where: [{id : campaignId}]
+                                    where: [{CampaignId: campaignId}]
                                 }
                             ).complete(function (err, cmp) {
 
@@ -105,7 +105,7 @@ function StopCampaign(campaignId, callback) {
             CampaignState: 'stop'
         },
         {
-            where: [{DialerId: dialerId}, {CampaignId: campaignId}]
+            where: [{CampaignId: campaignId}]
         }
     ).complete(function (err, cmp) {
 
@@ -130,7 +130,7 @@ function PauseCampaign(campaignId, callback) {
             CampaignState: 'pause'
         },
         {
-            where: [{DialerId: dialerId}, {CampaignId: campaignId}]
+            where: [{CampaignId: campaignId}]
         }
     ).complete(function (err, cmp) {
 
@@ -216,10 +216,10 @@ function EndCampaign(campaignId, callback) {
                 DbConn.CampCampaignInfo
                     .update(
                     {
-                        OperationalStatus:"done"
+                        OperationalStatus: "done"
                     },
                     {
-                        where: [{id : campaignId}]
+                        where: [{CampaignId: campaignId}]
                     }
                 ).complete(function (err, cmp) {
 
@@ -242,13 +242,13 @@ function EndCampaign(campaignId, callback) {
 /*
  Dialer should call this method every 5 min
  */
-function UpdateOperationState(campaignId, dialerId,campaignState, callback) {
+function UpdateOperationState(campaignId, dialerId, campaignState, callback) {
 
     DbConn.CampOngoingCampaign
         .update(
         {
             updatedAt: new Date(),
-            CampaignState:campaignState
+            CampaignState: campaignState
         },
         {
             where: [{CampaignId: campaignId}, {DialerId: dialerId}]
@@ -256,15 +256,25 @@ function UpdateOperationState(campaignId, dialerId,campaignState, callback) {
     ).complete(function (err, cmp) {
 
             if (err) {
-
-                logger.error('[DVP-CampaignOperations.EndCampaign] - [%s] - [PGSQL] - EndCampaign  failed', campaignId, err);
+                logger.error('[DVP-CampaignOperations.UpdateOperationState] - [%s] - [PGSQL] - UpdateOperationState  failed', campaignId, err);
                 var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
                 callback.end(jsonString);
             }
             else {
-                logger.debug('[DVP-CampaignOperations.EndCampaign] - [%s] - [PGSQL] - EndCampaign successfully ', campaignId);
-                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-                callback.end(jsonString);
+                logger.debug('[DVP-CampaignOperations.UpdateOperationState] - [%s] - [PGSQL] - UpdateOperationState successfully ', campaignId);
+                DbConn.CampOngoingCampaign.findAll({where: [{CampaignId: campaignId}, {DialerId: dialerId}],attributes: ['CampaignState']}).complete(function (err, cmp) {
+
+                    if (err) {
+                        logger.error('[DVP-CampaignOperations.UpdateOperationState-findAll] - [%s] - [PGSQL] - UpdateOperationState  failed', campaignId, err);
+                        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                        callback.end(jsonString);
+                    }
+                    else {
+                        logger.debug('[DVP-CampaignOperations.UpdateOperationState-findAll] - [%s] - [PGSQL] - UpdateOperationState successfully ', campaignId);
+                        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+                        callback.end(jsonString);
+                    }
+                });
             }
         });
 }
@@ -285,7 +295,7 @@ function GetPendingCampaign(tenantId, companyId, callback) {
          */
 
 
-        DbConn.CampOngoingCampaign.findAll({where: [Sequelize.and( {TenantId: tenantId},{CompanyId:companyId}, Sequelize.or({CampaignState: 'stop'}, {CampaignState: 'pause'}, {CampaignState: 'resume'}))]}).complete(function (err, CamObject) {
+        DbConn.CampOngoingCampaign.findAll({where: [Sequelize.and({TenantId: tenantId}, {CompanyId: companyId}, Sequelize.or({CampaignState: 'stop'}, {CampaignState: 'pause'}, {CampaignState: 'resume'}))]}).complete(function (err, CamObject) {
 
             if (err) {
                 logger.error('[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
@@ -332,9 +342,7 @@ function GetPendingCampaignByDialerId(tenantId, companyId, dialerId, callback) {
          */
 
 
-
-
-        DbConn.CampOngoingCampaign.findAll({where: [Sequelize.and({DialerId: dialerId}, {TenantId: tenantId},{CompanyId:companyId}, Sequelize.or({CampaignState: 'stop'}, {CampaignState: 'pause'}, {CampaignState: 'resume'}))]}).complete(function (err, CamObject) {
+        DbConn.CampOngoingCampaign.findAll({where: [Sequelize.and({DialerId: dialerId}, {TenantId: tenantId}, {CompanyId: companyId}, Sequelize.or({CampaignState: 'stop'}, {CampaignState: 'pause'}, {CampaignState: 'resume'}))]}).complete(function (err, CamObject) {
 
             if (err) {
                 logger.error('[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
@@ -365,7 +373,6 @@ function GetPendingCampaignByDialerId(tenantId, companyId, dialerId, callback) {
 }
 
 
-module.exports.StartCampaign = StartCampaign;
 module.exports.StopCampaign = StopCampaign;
 module.exports.PauseCampaign = PauseCampaign;
 module.exports.ResumeCampaign = ResumeCampaign;
