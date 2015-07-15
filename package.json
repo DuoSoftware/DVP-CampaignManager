@@ -1,0 +1,32 @@
+{
+  "name": "DVP-CampaignManager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "DVP-DBModels": "DuoSoftware/DVP-DBModels",
+    "restify": "^3.0.3",
+    "sequelize": "^3.3.2",
+    "config": "^1.14.0",
+    "stringify": "^3.1.0",
+    "moment": "^2.10.3",
+    "DVP-Common": "DuoSoftware/DVP-Common",
+    "redis": "^0.12.1",
+    "collections": "^1.2.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified \" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DuoSoftware/DVP-CampaignManager.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DuoSoftware/DVP-CampaignManager/issues"
+  },
+  "homepage": "https://github.com/DuoSoftware/DVP-CampaignManager"
+}
+
