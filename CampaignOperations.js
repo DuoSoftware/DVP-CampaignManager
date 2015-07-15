@@ -65,8 +65,29 @@ function StartCampaign(campaignId, dialerId, callback) {
                         }
                         else {
                             logger.debug('[DVP-CampaignOperations.StartCampaign-create] - [%s] - [PGSQL] - StartCampaign successfully ', campaignId);
-                            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-                            callback.end(jsonString);
+
+                            DbConn.CampCampaignInfo
+                                .update(
+                                {
+                                    OperationalStatus:"ongoing"
+                                },
+                                {
+                                    where: [{id : campaignId}]
+                                }
+                            ).complete(function (err, cmp) {
+
+                                    if (err) {
+
+                                        logger.error('[DVP-CampaignOperations.StartCampaign-create-update OperationalStatus] - [%s] - [PGSQL] - StartCampaign  failed', campaignId, err);
+                                        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                                        callback.end(jsonString);
+                                    }
+                                    else {
+                                        logger.debug('[DVP-CampaignOperations.StartCampaign-create-update OperationalStatus] - [%s] - [PGSQL] - StartCampaign successfully ', campaignId);
+                                        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+                                        callback.end(jsonString);
+                                    }
+                                });
                         }
                     });
             }
@@ -192,8 +213,28 @@ function EndCampaign(campaignId, callback) {
             }
             else {
                 logger.debug('[DVP-CampaignOperations.EndCampaign] - [%s] - [PGSQL] - EndCampaign successfully ', campaignId);
-                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
-                callback.end(jsonString);
+                DbConn.CampCampaignInfo
+                    .update(
+                    {
+                        OperationalStatus:"done"
+                    },
+                    {
+                        where: [{id : campaignId}]
+                    }
+                ).complete(function (err, cmp) {
+
+                        if (err) {
+
+                            logger.error('[DVP-CampaignOperations.EndCampaign-create-update OperationalStatus] - [%s] - [PGSQL] - EndCampaign  failed', campaignId, err);
+                            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                            callback.end(jsonString);
+                        }
+                        else {
+                            logger.debug('[DVP-CampaignOperations.EndCampaign-create-update OperationalStatus] - [%s] - [PGSQL] - EndCampaign successfully ', campaignId);
+                            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+                            callback.end(jsonString);
+                        }
+                    });
             }
         });
 }
@@ -228,6 +269,101 @@ function UpdateOperationState(campaignId, dialerId,campaignState, callback) {
         });
 }
 
+function GetPendingCampaign(tenantId, companyId, callback) {
+    try {
+
+        /*
+         var condition = {
+         where: Sequelize.and(
+         { name: 'a project' },
+         Sequelize.or(
+         { id: [1,2,3] },
+         { id: { lt: 10 } }
+         )
+         )
+         };
+         */
+
+
+        DbConn.CampOngoingCampaign.findAll({where: [Sequelize.and( {TenantId: tenantId},{CompanyId:companyId}, Sequelize.or({CampaignState: 'stop'}, {CampaignState: 'pause'}, {CampaignState: 'resume'}))]}).complete(function (err, CamObject) {
+
+            if (err) {
+                logger.error('[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
+                var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                callback.end(jsonString);
+            }
+
+            else {
+
+                if (CamObject) {
+                    logger.debug('[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+                    callback.end(jsonString);
+                }
+                else {
+                    logger.error('[DVP-CampCampaignInfo.GetPendingCampaign] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+                    var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+                    callback.end(jsonString);
+                }
+            }
+        });
+    }
+    catch (ex) {
+        logger.error('[DVP-CampCampaignInfo.GetAllCampaignByCampaignState] - [%s] - [PGSQL]  - Error %s - %s  ', tenantId, companyId, ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    }
+}
+
+
+function GetPendingCampaignByDialerId(tenantId, companyId, dialerId, callback) {
+    try {
+
+        /*
+         var condition = {
+         where: Sequelize.and(
+         { name: 'a project' },
+         Sequelize.or(
+         { id: [1,2,3] },
+         { id: { lt: 10 } }
+         )
+         )
+         };
+         */
+
+
+
+
+        DbConn.CampOngoingCampaign.findAll({where: [Sequelize.and({DialerId: dialerId}, {TenantId: tenantId},{CompanyId:companyId}, Sequelize.or({CampaignState: 'stop'}, {CampaignState: 'pause'}, {CampaignState: 'resume'}))]}).complete(function (err, CamObject) {
+
+            if (err) {
+                logger.error('[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
+                var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                callback.end(jsonString);
+            }
+
+            else {
+
+                if (CamObject) {
+                    logger.debug('[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+                    callback.end(jsonString);
+                }
+                else {
+                    logger.error('[DVP-CampCampaignInfo.GetPendingCampaign] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+                    var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+                    callback.end(jsonString);
+                }
+            }
+        });
+    }
+    catch (ex) {
+        logger.error('[DVP-CampCampaignInfo.GetAllCampaignByCampaignState] - [%s] - [PGSQL]  - Error %s - %s  ', tenantId, companyId, ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    }
+}
+
 
 module.exports.StartCampaign = StartCampaign;
 module.exports.StopCampaign = StopCampaign;
@@ -235,3 +371,5 @@ module.exports.PauseCampaign = PauseCampaign;
 module.exports.ResumeCampaign = ResumeCampaign;
 module.exports.EndCampaign = EndCampaign;
 module.exports.UpdateOperationState = UpdateOperationState;
+module.exports.GetPendingCampaign = GetPendingCampaign;
+module.exports.GetPendingCampaignByDialerId = GetPendingCampaignByDialerId;

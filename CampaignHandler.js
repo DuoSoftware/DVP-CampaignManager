@@ -11,7 +11,7 @@ var Sequelize = require('sequelize');
 /*
  Campaign has dialout mechanism, channel class and campaign modes, User can select combinations and validation should made from backend and UI components
  */
-function CreateCampaign(campaignName, campaignMode, campaignChannel, dialoutMechanism, tenantId, companyId, campaignClass, campaignType, campaignCategory,extension, callback) {
+function CreateCampaign(campaignName, campaignMode, campaignChannel, dialoutMechanism, tenantId, companyId, campaignClass, campaignType, campaignCategory,extension,concurrent,caller,startDate,endDate, callback) {
 
 
     DbConn.CampCampaignInfo
@@ -27,6 +27,11 @@ function CreateCampaign(campaignName, campaignMode, campaignChannel, dialoutMech
             Type: campaignType,
             Category: campaignCategory,
             Extensions:extension,
+            Concurrent:concurrent,
+            Caller:caller,
+            OperationalStatus:"create",
+            StartDate:startDate,
+            EndDate:endDate,
             Status: true
         }
     ).complete(function (err, cmp) {
@@ -77,7 +82,35 @@ function CreateCampaign(campaignName, campaignMode, campaignChannel, dialoutMech
      });*/
 }
 
-function EditCampaign(campaignId, campaignName, campaignMode, campaignChannel, dialoutMechanism, tenantId, companyId, campaignClass, campaignType, campaignCategory,extension, callback) {
+function StartCampaign(campaignId,tenantId, companyId,callback) {
+
+    DbConn.CampCampaignInfo
+        .update(
+        {
+            OperationalStatus:"start",
+            Status: true
+        },
+        {
+            where: {
+                id: campaignId
+            }
+        }
+    ).then(function (results) {
+
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+            logger.info('[DVP-CampCampaignInfo.StartCampaign] - [PGSQL] - Updated successfully.[%s] ', jsonString);
+            callback.end(jsonString);
+
+        }).error(function (err) {
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            logger.error('[DVP-CampCampaignInfo.StartCampaign] - [%s] - [PGSQL] - Updation failed', campaignId, err);
+            callback.end(jsonString);
+        });
+
+
+}
+
+function EditCampaign(campaignId, campaignName, campaignMode, campaignChannel, dialoutMechanism, tenantId, companyId, campaignClass, campaignType, campaignCategory,extension,concurrent,caller ,startDate,endDate,callback) {
 
     DbConn.CampCampaignInfo
         .update(
@@ -92,6 +125,11 @@ function EditCampaign(campaignId, campaignName, campaignMode, campaignChannel, d
             Type: campaignType,
             Category: campaignCategory,
             Extensions:extension,
+            Concurrent:concurrent,
+            Caller:caller,
+            OperationalStatus:"create",
+            StartDate:startDate,
+            EndDate:endDate,
             Status: true
         },
         {
@@ -225,12 +263,10 @@ function GetAllCampaignPage(tenantId, companyId,count, callback) {
     }
 }
 
-
-
 function GetAllCampaignByCampaignId(tenantId, companyId, campaignId, callback) {
 
     try {
-        DbConn.CampCampaignInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {id: campaignId}]}).complete(function (err, CamObject) {
+        DbConn.CampCampaignInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {id: campaignId}],include:[{model:DbConn.CampContactSchedule, as :"CampContactSchedule"}]}).complete(function (err, CamObject) {
 
             if (err) {
                 logger.error('[DVP-CampCampaignInfo.GetAllCampaignByCampaignId] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
@@ -326,54 +362,6 @@ function GetAllCampaignByCampaignState(tenantId, companyId, campaignState, callb
     }
 }
 
-function GetPendingCampaign(tenantId, companyId, dialerId, callback) {
-    try {
-
-        /*
-         var condition = {
-         where: Sequelize.and(
-         { name: 'a project' },
-         Sequelize.or(
-         { id: [1,2,3] },
-         { id: { lt: 10 } }
-         )
-         )
-         };
-         */
-        {where: [Sequelize.and({DialerId: dialerId}, {TenantId: tenantId},{CompanyId:companyId}, Sequelize.or({CampaignState: 'stop'}, {CampaignState: 'pause'}, {CampaignState: 'resume'}))]}
-
-
-
-        DbConn.CampOngoingCampaign.findAll().complete(function (err, CamObject) {
-
-            if (err) {
-                logger.error('[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
-                var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-                callback.end(jsonString);
-            }
-
-            else {
-
-                if (CamObject) {
-                    logger.debug('[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
-                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
-                    callback.end(jsonString);
-                }
-                else {
-                    logger.error('[DVP-CampCampaignInfo.GetPendingCampaign] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
-                    var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
-                    callback.end(jsonString);
-                }
-            }
-        });
-    }
-    catch (ex) {
-        logger.error('[DVP-CampCampaignInfo.GetAllCampaignByCampaignState] - [%s] - [PGSQL]  - Error %s - %s  ', tenantId, companyId, ex);
-        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
-        callback.end(jsonString);
-    }
-}
-
 function GetOfflineCampaign(tenantId, companyId, callback) {
 
     DbConn.CampOngoingCampaign.findAll({where: [{TenantId: tenantId}, {CompanyId: companyId}]}).complete(function (err, CamObject) {
@@ -409,13 +397,53 @@ function GetOfflineCampaign(tenantId, companyId, callback) {
     });
 }
 
+function GetPendingCampaign(tenantId, companyId,count, callback) {
+
+    try {
+
+//DbConn.CampCampaignInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}], required: true,attributes: ['id'] , include :[{model:DbConn.CampOngoingCampaign, as :"CampOngoingCampaign", required: true,attributes: []}]}).complete(function (err, CamObject) {
+
+        DbConn.CampCampaignInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true},{OperationalStatus:"start"}],include :[{model:DbConn.CampScheduleInfo, as :"CampScheduleInfo"}],limit: count }).complete(function (err, CamObject) {
+
+            if (err) {
+                logger.error('[DVP-CampCampaignInfo.GetAllCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
+                var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                callback.end(jsonString);
+            }
+            else {
+
+                if (CamObject) {
+                    logger.debug('[DVP-CampCampaignInfo.GetAllCampaign] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+
+                    callback.end(jsonString);
+                }
+                else {
+                    logger.error('[DVP-CampCampaignInfo.GetAllCampaign] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+                    var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+                    callback.end(jsonString);
+                }
+
+            }
+        });
+    }
+    catch (ex) {
+        logger.error('[DVP-CampCampaignInfo.GetAllCampaign] - [%s] - [PGSQL]  - Error %s - %s  ', tenantId, companyId, ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    }
+}
+
+
+
 module.exports.CreateCampaign = CreateCampaign;
 module.exports.EditCampaign = EditCampaign;
+module.exports.StartCampaign = StartCampaign;
 module.exports.DeleteCampaign = DeleteCampaign;
 module.exports.GetAllCampaign = GetAllCampaign;
 module.exports.GetAllCampaignPage = GetAllCampaignPage;
 module.exports.GetAllCampaignByCampaignId = GetAllCampaignByCampaignId;
 module.exports.GetOngoingCampaign = GetOngoingCampaign;
 module.exports.GetAllCampaignByCampaignState = GetAllCampaignByCampaignState;
-module.exports.GetPendingCampaign = GetPendingCampaign;
 module.exports.GetOfflineCampaign = GetOfflineCampaign;
+module.exports.GetPendingCampaign = GetPendingCampaign;
