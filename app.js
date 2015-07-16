@@ -57,7 +57,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Handler', function (re
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -90,7 +90,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Handler', function (req
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -122,7 +122,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Handler/Start', functio
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -154,7 +154,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Handler/:CampaignId', f
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -186,7 +186,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Handler', function (req
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -220,7 +220,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Handler/:CampaignId', f
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -253,7 +253,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Handler/State/:Campaign
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -285,7 +285,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Handler/pending/:Count'
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -318,7 +318,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Handler/Page/:Count', f
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -350,7 +350,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Handler/Ongoing', funct
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -382,7 +382,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Handler/Offline', funct
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -522,7 +522,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Operations/Pending', fu
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -555,7 +555,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Operations/Pending/:Dia
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -592,7 +592,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Configurations', funct
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -659,7 +659,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Configurations/', funct
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -691,7 +691,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Configurations/:Configu
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -718,11 +718,40 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Configurations/:Configu
 
 //------------------------- CampaignNumberUpload ------------------------- \\
 
+function onxml(req,res,next){
+
+
+    var xml='<?xml version=""1.0""?><!DOCTYPE cross-domain-policy SYSTEM ""http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd""> <cross-domain-policy>    <allow-access-from domain=""*"" />        </cross-domain-policy>';
+
+    /*var xml='<?xml version="1.0"?>\n';
+
+    xml+= '<!DOCTYPE cross-domain-policy SYSTEM "/xml/dtds/cross-domain-policy.dtd">\n';
+    xml+='';
+    xml+=' \n';
+    xml+='\n';
+    xml+='';*/
+    req.setEncoding('utf8');
+    res.end(xml);
+
+}
+
+function onxmlC(req,res,next){
+
+
+    var xml='<?xml version="1.0" encoding="utf-8" ?>       <access-policy>        <cross-domain-access>        <policy>        <allow-from http-request-headers="*">        <domain uri="*"/>        </allow-from>        <grant-to>        <resource include-subpaths="true" path="/"/>        </grant-to>        </policy>        </cross-domain-access>        </access-policy>';
+    req.setEncoding('utf8');
+    res.end(xml);
+
+}
+
+RestServer.get("/crossdomain.xml",onxml);
+RestServer.get("/clientaccesspolicy.xml",onxmlC);
+
 RestServer.post('/DVP/API/' + version + '/CampaignManager/NumberUpload', function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.UploadContacts] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-
+        res.setHeader('Access-Control-Allow-Origin','*');
         var cmp = req.body;
         var tenantId = 1;
         var companyId = 1;
@@ -730,7 +759,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/NumberUpload', functio
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -763,7 +792,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/NumberUpload/ToCampaig
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -796,7 +825,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/NumberUpload/WithSched
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -848,7 +877,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/NumberUpload', function
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -880,7 +909,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/NumberUpload', function
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -914,7 +943,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/NumberUpload/:Contacts/
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -947,7 +976,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/NumberUpload', functio
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -979,7 +1008,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/NumberUpload', function
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -1012,7 +1041,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/NumberUpload/:CampaignI
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -1048,7 +1077,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/NumberUpload/:CampaignI
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -1085,7 +1114,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Schedule', function (r
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -1117,7 +1146,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Schedule', function (re
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -1150,7 +1179,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Schedule/:CamScheduleId
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -1181,7 +1210,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Schedule', function (re
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -1231,7 +1260,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Schedule/:CampaignId', 
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -1263,7 +1292,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Schedule/:ScheduleId', 
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
@@ -1295,7 +1324,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Schedule/CampaignId:Cam
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
-            if (res.length >= 2) {
+            if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
