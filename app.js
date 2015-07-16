@@ -718,35 +718,6 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Configurations/:Configu
 
 //------------------------- CampaignNumberUpload ------------------------- \\
 
-function onxml(req,res,next){
-
-
-    var xml='<?xml version=""1.0""?><!DOCTYPE cross-domain-policy SYSTEM ""http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd""> <cross-domain-policy>    <allow-access-from domain=""*"" />        </cross-domain-policy>';
-
-    /*var xml='<?xml version="1.0"?>\n';
-
-    xml+= '<!DOCTYPE cross-domain-policy SYSTEM "/xml/dtds/cross-domain-policy.dtd">\n';
-    xml+='';
-    xml+=' \n';
-    xml+='\n';
-    xml+='';*/
-    req.setEncoding('utf8');
-    res.end(xml);
-
-}
-
-function onxmlC(req,res,next){
-
-
-    var xml='<?xml version="1.0" encoding="utf-8" ?>       <access-policy>        <cross-domain-access>        <policy>        <allow-from http-request-headers="*">        <domain uri="*"/>        </allow-from>        <grant-to>        <resource include-subpaths="true" path="/"/>        </grant-to>        </policy>        </cross-domain-access>        </access-policy>';
-    req.setEncoding('utf8');
-    res.end(xml);
-
-}
-
-RestServer.get("/crossdomain.xml",onxml);
-RestServer.get("/clientaccesspolicy.xml",onxmlC);
-
 RestServer.post('/DVP/API/' + version + '/CampaignManager/NumberUpload', function (req, res, next) {
     try {
 
@@ -1346,3 +1317,32 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Schedule/CampaignId:Cam
 });
 
 //------------------------- End-CampaignSchedule ------------------------- \\
+
+function onxml(req,res,next){
+
+
+    var xml='<?xml version=""1.0""?><!DOCTYPE cross-domain-policy SYSTEM ""http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd""> <cross-domain-policy>    <allow-access-from domain=""*"" />        </cross-domain-policy>';
+
+    /*var xml='<?xml version="1.0"?>\n';
+
+     xml+= '<!DOCTYPE cross-domain-policy SYSTEM "/xml/dtds/cross-domain-policy.dtd">\n';
+     xml+='';
+     xml+=' \n';
+     xml+='\n';
+     xml+='';*/
+    req.setEncoding('utf8');
+    res.end(xml);
+
+}
+
+function onxmlC(req,res,next){
+
+
+    var xml='<?xml version="1.0" encoding="utf-8" ?>       <access-policy>        <cross-domain-access>        <policy>        <allow-from http-request-headers="*">        <domain uri="*"/>        </allow-from>        <grant-to>        <resource include-subpaths="true" path="/"/>        </grant-to>        </policy>        </cross-domain-access>        </access-policy>';
+    req.setEncoding('utf8');
+    res.end(xml);
+
+}
+
+RestServer.get("/crossdomain.xml",onxml);
+RestServer.get("/clientaccesspolicy.xml",onxmlC);

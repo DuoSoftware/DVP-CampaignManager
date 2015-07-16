@@ -247,11 +247,10 @@ function UpdateOperationState(campaignId, dialerId, campaignState, callback) {
     DbConn.CampOngoingCampaign
         .update(
         {
-            updatedAt: new Date(),
-            CampaignState: campaignState
+            LastResponsTime: new Date()
         },
         {
-            where: [{CampaignId: campaignId}, {DialerId: dialerId}]
+            where: [{CampaignId: campaignId}, {DialerId: dialerId},{CampaignState: campaignState}]
         }
     ).complete(function (err, cmp) {
 
@@ -262,7 +261,7 @@ function UpdateOperationState(campaignId, dialerId, campaignState, callback) {
             }
             else {
                 logger.debug('[DVP-CampaignOperations.UpdateOperationState] - [%s] - [PGSQL] - UpdateOperationState successfully ', campaignId);
-                DbConn.CampOngoingCampaign.findAll({where: [{CampaignId: campaignId}, {DialerId: dialerId}],attributes: ['CampaignState']}).complete(function (err, cmp) {
+                DbConn.CampOngoingCampaign.find({where: [{CampaignId: campaignId}, {DialerId: dialerId}],attributes: ['CampaignId','DialerId','CampaignState']}).complete(function (err, sta) {
 
                     if (err) {
                         logger.error('[DVP-CampaignOperations.UpdateOperationState-findAll] - [%s] - [PGSQL] - UpdateOperationState  failed', campaignId, err);
@@ -271,7 +270,7 @@ function UpdateOperationState(campaignId, dialerId, campaignState, callback) {
                     }
                     else {
                         logger.debug('[DVP-CampaignOperations.UpdateOperationState-findAll] - [%s] - [PGSQL] - UpdateOperationState successfully ', campaignId);
-                        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+                        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, sta);
                         callback.end(jsonString);
                     }
                 });
