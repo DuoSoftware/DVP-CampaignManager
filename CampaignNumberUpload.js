@@ -109,7 +109,7 @@ function UploadContactsToCampaignWithSchedule(contacts, campaignId, camScheduleI
                         .create(
                         {
                             CampaignId: campaignId,
-                            CamScheduleId: cmp.CamContactId,
+                            CamContactId: cmp.CamContactId,
                             CamScheduleId: camScheduleId
                         }
                     ).complete(function (err, cmp) {
