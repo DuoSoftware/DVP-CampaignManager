@@ -5,11 +5,11 @@
 
 module.exports = function(sequelize, DataTypes) {
     var CampContactInfo = sequelize.define('DB_CAMP_ContactInfo', {
-            ContactId:DataTypes.STRING,
+            ContactId:{type:DataTypes.STRING,unique: 'ContactCompositeIndex'},
             //CamContactId:DataTypes.INTEGER,
             Status:DataTypes.BOOLEAN,
-            TenantId:DataTypes.INTEGER,
-            CompanyId:DataTypes.INTEGER,
+            TenantId:{type:DataTypes.INTEGER,unique: 'ContactCompositeIndex'},
+            CompanyId:{type:DataTypes.INTEGER,unique: 'ContactCompositeIndex'},
             CamContactId:{type:DataTypes.INTEGER, primaryKey:true,autoIncrement: true}
         }
     );
