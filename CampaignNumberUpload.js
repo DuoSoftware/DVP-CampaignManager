@@ -8,6 +8,8 @@ var messageFormatter = require('DVP-Common/CommonMessageGenerator/ClientMessageJ
 
 function UploadContacts(contacts, tenantId, companyId, callBack) {
 
+    var startTime = new Date();
+    logger.info('UploadContacts - 1 - %s ',contacts.length );
     var nos = [];
 
     for (var i = 0; i < contacts.length; i++) {
@@ -15,19 +17,38 @@ function UploadContacts(contacts, tenantId, companyId, callBack) {
         nos.add(no);
     }
 
+    logger.info('UploadContacts - 2 - %s ',contacts.length );
+
+    /*
+     DbConn.CampContactInfo.bulkCreate(
+     nos
+     ).then(function (results) {
+
+     var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+     logger.info('[DVP-CampCampaignInfo.UploadContacts] - [PGSQL] - Updated successfully.[%s] ', jsonString);
+     callBack.end(jsonString);
+
+     }).error(function (err) {
+     var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+     logger.error('[DVP-CampCampaignInfo.UploadContacts] - [%s] - [PGSQL] - Updation failed', companyId, err);
+     callBack.end(jsonString);
+     });
+
+
+     */
     DbConn.CampContactInfo.bulkCreate(
-        nos
-    ).then(function (results) {
-
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
-            logger.info('[DVP-CampCampaignInfo.UploadContacts] - [PGSQL] - Updated successfully.[%s] ', jsonString);
-            callBack.end(jsonString);
-
-        }).error(function (err) {
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            logger.error('[DVP-CampCampaignInfo.UploadContacts] - [%s] - [PGSQL] - Updation failed', companyId, err);
-            callBack.end(jsonString);
-        });
+        nos,{validate: false, individualHooks: false}
+    ).then(function(results) {
+        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+        logger.info('[DVP-CampCampaignInfo.UploadContacts] - [PGSQL] - Updated successfully.[%s] ', jsonString);
+        callBack.end(jsonString);
+    }).catch(function(err) {
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CampCampaignInfo.UploadContacts] - [%s] - [PGSQL] - Updation failed', companyId, err);
+        callBack.end(jsonString);
+    }).finally(function() {
+            logger.info('UploadContacts - %s - %s Done',contacts.length , (new Date()- startTime));
+    });
 }
 
 function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, callBack) {

@@ -1318,7 +1318,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Schedule/CampaignId:Cam
 
 //------------------------- End-CampaignSchedule ------------------------- \\
 
-function onxml(req,res,next){
+function Crossdomain(req,res,next){
 
 
     var xml='<?xml version=""1.0""?><!DOCTYPE cross-domain-policy SYSTEM ""http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd""> <cross-domain-policy>    <allow-access-from domain=""*"" />        </cross-domain-policy>';
@@ -1335,7 +1335,7 @@ function onxml(req,res,next){
 
 }
 
-function onxmlC(req,res,next){
+function Clientaccesspolicy(req,res,next){
 
 
     var xml='<?xml version="1.0" encoding="utf-8" ?>       <access-policy>        <cross-domain-access>        <policy>        <allow-from http-request-headers="*">        <domain uri="*"/>        </allow-from>        <grant-to>        <resource include-subpaths="true" path="/"/>        </grant-to>        </policy>        </cross-domain-access>        </access-policy>';
@@ -1344,5 +1344,5 @@ function onxmlC(req,res,next){
 
 }
 
-RestServer.get("/crossdomain.xml",onxml);
-RestServer.get("/clientaccesspolicy.xml",onxmlC);
+RestServer.get("/crossdomain.xml",Crossdomain);
+RestServer.get("/clientaccesspolicy.xml",Clientaccesspolicy);
