@@ -11,7 +11,6 @@ module.exports = {
   {
     "ip": "192.168.3.200",
     "port": 6379
-
   },
 
   "Host":

@@ -59,8 +59,8 @@ function UploadContacts(contacts, tenantId, companyId, categoryID, callBack) {
 
 function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, categoryID, callBack) {
 
-    var ids = [];
-    for (var i = 0; i < contacts.length; i++) {
+    var ids = [];var i = 0;
+    for ( i = 0; i < contacts.length; i++) {
 
         DbConn.CampContactInfo
             .create(
@@ -78,7 +78,7 @@ function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, cat
                     ids.add(contacts[i]);
                 }
                 else {
-                    logger.debug('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - inserted[CampContactInfo] successfully ', contacts[i]);
+                    logger.info('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - inserted[CampContactInfo] successfully ', contacts[i]);
 
                     DbConn.CampContactSchedule
                         .create(
@@ -94,7 +94,7 @@ function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, cat
                                 ids.add(contacts[i]);
                             }
                             else {
-                                logger.debug('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - inserted[CampContactSchedule] successfully ', contacts[i]);
+                                logger.info('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - inserted[CampContactSchedule] successfully ', contacts[i]);
                             }
                         });
                 }
@@ -112,7 +112,8 @@ function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, cat
 function UploadContactsToCampaignWithSchedule(contacts, campaignId, camScheduleId, tenantId, companyId, categoryID, callBack) {
 
     var ids = [];
-    for (var i = 0; i < contacts.length; i++) {
+    var i = 0;
+    for ( i = 0; i < contacts.length; i++) {
 
         DbConn.CampContactInfo
             .create(
@@ -131,7 +132,7 @@ function UploadContactsToCampaignWithSchedule(contacts, campaignId, camScheduleI
                     ids.push(contacts[i]);
                 }
                 else {
-                    logger.debug('[DVP-CampContactInfo.UploadContactsToCampaignWithSchedule] - [%s] - [PGSQL] - inserted[CampContactInfo] successfully ', contacts[i]);
+                    logger.info('[DVP-CampContactInfo.UploadContactsToCampaignWithSchedule] - [%s] - [PGSQL] - inserted[CampContactInfo] successfully ', contacts[i]);
 
                     DbConn.CampContactSchedule
                         .create(
@@ -148,7 +149,7 @@ function UploadContactsToCampaignWithSchedule(contacts, campaignId, camScheduleI
                                 ids.push(contacts[i]);
                             }
                             else {
-                                logger.debug('[DVP-CampaignNumberUpload.UploadContactsToCampaignWithSchedule] - [%s] - [PGSQL] - inserted[CampContactSchedule] successfully ', contacts[i]);
+                                logger.info('[DVP-CampaignNumberUpload.UploadContactsToCampaignWithSchedule] - [%s] - [PGSQL] - inserted[CampContactSchedule] successfully ', contacts[i]);
                             }
                         });
                 }
@@ -205,7 +206,7 @@ function EditContact(contact, campaignId, tenantId, companyId, categoryID, callB
     ).then(function (results) {
 
 
-            logger.debug('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', contact);
+            logger.info('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', contact);
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
             callBack.end(jsonString);
 
@@ -237,7 +238,7 @@ function EditContacts(contacts, campaignId, tenantId, companyId,categoryID, call
         ).then(function (results) {
 
 
-                logger.debug('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', contact);
+                logger.info('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', contact);
                 if (i >= contacts.length) {
                     var jsonString = messageFormatter.FormatMessage(undefined, "Operation SUCCESS", true, JSON.stringify(ids));
                     callBack.end(jsonString);
@@ -274,7 +275,7 @@ function DeleteContacts(contacts, campaignId, tenantId, companyId, callBack) {
         ).then(function (results) {
 
 
-                logger.debug('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', contact);
+                logger.info('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', contact);
                 if (i >= contacts.length) {
                     var jsonString = messageFormatter.FormatMessage(undefined, "Operation SUCCESS", true, JSON.stringify(ids));
                     callBack.end(jsonString);
@@ -306,7 +307,7 @@ function AssigningScheduleToCampaign(campaignId, CamScheduleId, tenantId, compan
     ).then(function (results) {
 
 
-            logger.debug('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', contact);
+            logger.info('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', contact);
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
             callBack.end(jsonString);
 
@@ -329,7 +330,7 @@ function GetAllContact(tenantId, companyId, callBack) {
         else {
 
             if (CamObject) {
-                logger.debug('[DVP-CampaignNumberUpload.GetAllContact] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+                logger.info('[DVP-CampaignNumberUpload.GetAllContact] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
                 callBack.end(jsonString);
             }
@@ -360,7 +361,7 @@ function GetAllContactByCampaignId(campaignId, tenantId, companyId, callBack) {
         else {
 
             if (CamObject) {
-                logger.debug('[DVP-CampaignNumberUpload.GetAllContactByCampaignId] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+                logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignId] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
                 callBack.end(jsonString);
             }
@@ -397,7 +398,7 @@ function GetAllContactByCampaignIdScheduleId(campaignId, scheduleId, rowCount, p
         else {
 
             if (CamObject) {
-                logger.debug('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+                logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
                 callBack.end(jsonString);
             }
@@ -480,7 +481,7 @@ function GetContactCategory(tenantId, companyId, callBack){
  else {
 
  if (CamObject) {
- logger.debug('[DVP-CampaignNumberUpload.GetAllContactByCampaignId] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+ logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignId] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
  console.log(CamObject);
  callBack.end(undefined, CamObject);
  }

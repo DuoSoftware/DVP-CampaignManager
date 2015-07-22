@@ -29,7 +29,7 @@ function CreateConfiguration(campaignId, channelConcurrent, allowCallBack, maxCa
                 callBack.end(jsonString);
             }
             else {
-                logger.debug('[DVP-CampConfigurations.CreateConfiguration] - [%s] - [PGSQL] - inserted successfully ', campaignId);
+                logger.info('[DVP-CampConfigurations.CreateConfiguration] - [%s] - [PGSQL] - inserted successfully ', campaignId);
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
                 callBack.end(jsonString);
             }
@@ -60,7 +60,7 @@ function EditConfiguration(configureId, campaignId, channelConcurrency, allowCal
     ).then(function (results) {
 
 
-            logger.debug('[DVP-CampConfigurations.EditCampaign] - [%s] - [PGSQL] - Updated successfully', campaignId);
+            logger.info('[DVP-CampConfigurations.EditCampaign] - [%s] - [PGSQL] - Updated successfully', campaignId);
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
             callBack.end(jsonString);
 
@@ -85,7 +85,7 @@ function DeleteConfiguration(configureId, callBack) {
     ).then(function (results) {
 
 
-            logger.debug('[DVP-CampConfigurations.EditCampaign] - [%s] - [PGSQL] - Updated successfully', campaignId);
+            logger.info('[DVP-CampConfigurations.EditCampaign] - [%s] - [PGSQL] - Updated successfully', campaignId);
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
             callBack.end(jsonString);
 
@@ -108,7 +108,7 @@ function GetAllConfiguration(tenantId, companyId, callBack) {
         else {
 
             if (CamObject) {
-                logger.debug('[DVP-CampCampaignInfo.GetAllConfiguration] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+                logger.info('[DVP-CampCampaignInfo.GetAllConfiguration] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
                 callBack.end(jsonString);
             }
@@ -134,7 +134,7 @@ function GetConfiguration(configureId, tenantId, companyId, callBack) {
         else {
 
             if (CamObject) {
-                logger.debug('[DVP-CampCampaignInfo.GetConfiguration] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+                logger.info('[DVP-CampCampaignInfo.GetConfiguration] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
                 callBack.end(jsonString);
             }

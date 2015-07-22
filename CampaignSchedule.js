@@ -27,7 +27,7 @@ function CreateSchedule(campaignId, scheduleId, scheduleType,tenantId,companyId,
                 callBack.end(jsonString);
             }
             else {
-                logger.debug('[DVP-CampScheduleInfo.CreateSchedule] - [%s] - [PGSQL] - inserted successfully ', campaignId);
+                logger.info('[DVP-CampScheduleInfo.CreateSchedule] - [%s] - [PGSQL] - inserted successfully ', campaignId);
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
                 callBack.end(jsonString);
             }
@@ -49,7 +49,7 @@ function EditSchedule(camscheduleId, campaignId, scheduleId, scheduleType,tenant
     ).then(function (results) {
 
 
-            logger.debug('[DVP-CampScheduleInfo.EditSchedule] - [%s] - [PGSQL] - Updated successfully', camscheduleId);
+            logger.info('[DVP-CampScheduleInfo.EditSchedule] - [%s] - [PGSQL] - Updated successfully', camscheduleId);
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
             callBack.end(jsonString);
 
@@ -72,7 +72,7 @@ function DeleteSchedule(camScheduleId,tenantId,companyId, callBack) {
     ).then(function (results) {
 
 
-            logger.debug('[DVP-CampScheduleInfo.DeleteSchedule] - [%s] - [PGSQL] - Updated successfully', camscheduleId);
+            logger.info('[DVP-CampScheduleInfo.DeleteSchedule] - [%s] - [PGSQL] - Updated successfully', camscheduleId);
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
             callBack.end(jsonString);
 
@@ -95,7 +95,7 @@ function GetAllSchedule(tenantId,companyId,callBack) {
         else {
 
             if (CamObject) {
-                logger.debug('[DVP-CampScheduleInfo.GetAllSchedule] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+                logger.info('[DVP-CampScheduleInfo.GetAllSchedule] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
                 callBack.end(jsonString);
             }
@@ -120,7 +120,7 @@ function GetSchedule(camScheduleId, callBack) {
         else {
 
             if (CamObject) {
-                logger.debug('[DVP-CampScheduleInfo.GetSchedule] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+                logger.info('[DVP-CampScheduleInfo.GetSchedule] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
                 callBack.end(jsonString);
             }
@@ -145,7 +145,7 @@ function GetScheduleByCampaignId(campaignId,tenantId,companyId, callBack) {
         else {
 
             if (CamObject) {
-                logger.debug('[DVP-CampScheduleInfo.GetScheduleByCampaignId] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+                logger.info('[DVP-CampScheduleInfo.GetScheduleByCampaignId] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
                 callBack.end(jsonString);
             }
@@ -170,7 +170,7 @@ function GetScheduleByScheduleType(scheduleType,tenantId,companyId, callBack) {
         else {
 
             if (CamObject) {
-                logger.debug('[DVP-CampScheduleInfo.GetScheduleByScheduleType] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+                logger.info('[DVP-CampScheduleInfo.GetScheduleByScheduleType] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
                 callBack.end(jsonString);
             }
@@ -195,7 +195,7 @@ function GetScheduleByCampaignIdScheduleType(campaignId, scheduleType,tenantId,c
         else {
 
             if (CamObject) {
-                logger.debug('[DVP-CampScheduleInfo.GetScheduleByCampaignIdScheduleType] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+                logger.info('[DVP-CampScheduleInfo.GetScheduleByCampaignIdScheduleType] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
                 callBack.end(jsonString);
             }

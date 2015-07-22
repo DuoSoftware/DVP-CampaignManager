@@ -38,7 +38,7 @@ function StartCampaign(campaignId, dialerId, callback) {
                             callback.end(jsonString);
                         }
                         else {
-                            logger.debug('[DVP-CampaignOperations.StartCampaign] - [%s] - [PGSQL] - StartCampaign successfully ', campaignId);
+                            logger.info('[DVP-CampaignOperations.StartCampaign] - [%s] - [PGSQL] - StartCampaign successfully ', campaignId);
                             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
                             callback.end(jsonString);
                         }
@@ -64,7 +64,7 @@ function StartCampaign(campaignId, dialerId, callback) {
                             callback.end(jsonString);
                         }
                         else {
-                            logger.debug('[DVP-CampaignOperations.StartCampaign-create] - [%s] - [PGSQL] - StartCampaign successfully ', campaignId);
+                            logger.info('[DVP-CampaignOperations.StartCampaign-create] - [%s] - [PGSQL] - StartCampaign successfully ', campaignId);
 
                             DbConn.CampCampaignInfo
                                 .update(
@@ -83,7 +83,7 @@ function StartCampaign(campaignId, dialerId, callback) {
                                         callback.end(jsonString);
                                     }
                                     else {
-                                        logger.debug('[DVP-CampaignOperations.StartCampaign-create-update OperationalStatus] - [%s] - [PGSQL] - StartCampaign successfully ', campaignId);
+                                        logger.info('[DVP-CampaignOperations.StartCampaign-create-update OperationalStatus] - [%s] - [PGSQL] - StartCampaign successfully ', campaignId);
                                         var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
                                         callback.end(jsonString);
                                     }
@@ -116,7 +116,7 @@ function StopCampaign(campaignId, callback) {
                 callback.end(jsonString);
             }
             else {
-                logger.debug('[DVP-CampaignOperations.StopCampaign] - [%s] - [PGSQL] - StopCampaign successfully ', campaignId);
+                logger.info('[DVP-CampaignOperations.StopCampaign] - [%s] - [PGSQL] - StopCampaign successfully ', campaignId);
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
                 callback.end(jsonString);
             }
@@ -141,7 +141,7 @@ function PauseCampaign(campaignId, callback) {
                 callback.end(jsonString);
             }
             else {
-                logger.debug('[DVP-CampaignOperations.PauseCampaign] - [%s] - [PGSQL] - PauseCampaign successfully ', campaignId);
+                logger.info('[DVP-CampaignOperations.PauseCampaign] - [%s] - [PGSQL] - PauseCampaign successfully ', campaignId);
                 var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
                 callback.end(jsonString);
             }
@@ -177,7 +177,7 @@ function ResumeCampaign(campaignId, callback) {
                             callback.end(jsonString);
                         }
                         else {
-                            logger.debug('[DVP-CampaignOperations.PauseCampaign] - [%s] - [PGSQL] - ResumeCampaign successfully ', campaignId);
+                            logger.info('[DVP-CampaignOperations.PauseCampaign] - [%s] - [PGSQL] - ResumeCampaign successfully ', campaignId);
                             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
                             callback.end(jsonString);
                         }
@@ -212,7 +212,7 @@ function EndCampaign(campaignId, callback) {
                 callback.end(jsonString);
             }
             else {
-                logger.debug('[DVP-CampaignOperations.EndCampaign] - [%s] - [PGSQL] - EndCampaign successfully ', campaignId);
+                logger.info('[DVP-CampaignOperations.EndCampaign] - [%s] - [PGSQL] - EndCampaign successfully ', campaignId);
                 DbConn.CampCampaignInfo
                     .update(
                     {
@@ -230,7 +230,7 @@ function EndCampaign(campaignId, callback) {
                             callback.end(jsonString);
                         }
                         else {
-                            logger.debug('[DVP-CampaignOperations.EndCampaign-create-update OperationalStatus] - [%s] - [PGSQL] - EndCampaign successfully ', campaignId);
+                            logger.info('[DVP-CampaignOperations.EndCampaign-create-update OperationalStatus] - [%s] - [PGSQL] - EndCampaign successfully ', campaignId);
                             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
                             callback.end(jsonString);
                         }
@@ -260,7 +260,7 @@ function UpdateOperationState(campaignId, dialerId, campaignState, callback) {
                 callback.end(jsonString);
             }
             else {
-                logger.debug('[DVP-CampaignOperations.UpdateOperationState] - [%s] - [PGSQL] - UpdateOperationState successfully ', campaignId);
+                logger.info('[DVP-CampaignOperations.UpdateOperationState] - [%s] - [PGSQL] - UpdateOperationState successfully ', campaignId);
                 DbConn.CampOngoingCampaign.find({where: [{CampaignId: campaignId}, {DialerId: dialerId}],attributes: ['CampaignId','DialerId','CampaignState']}).complete(function (err, sta) {
 
                     if (err) {
@@ -269,7 +269,7 @@ function UpdateOperationState(campaignId, dialerId, campaignState, callback) {
                         callback.end(jsonString);
                     }
                     else {
-                        logger.debug('[DVP-CampaignOperations.UpdateOperationState-findAll] - [%s] - [PGSQL] - UpdateOperationState successfully ', campaignId);
+                        logger.info('[DVP-CampaignOperations.UpdateOperationState-findAll] - [%s] - [PGSQL] - UpdateOperationState successfully ', campaignId);
                         var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, sta);
                         callback.end(jsonString);
                     }
@@ -305,7 +305,7 @@ function GetPendingCampaign(tenantId, companyId, callback) {
             else {
 
                 if (CamObject) {
-                    logger.debug('[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+                    logger.info('[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
                     var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
                     callback.end(jsonString);
                 }
@@ -352,7 +352,7 @@ function GetPendingCampaignByDialerId(tenantId, companyId, dialerId, callback) {
             else {
 
                 if (CamObject) {
-                    logger.debug('[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+                    logger.info('[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
                     var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
                     callback.end(jsonString);
                 }

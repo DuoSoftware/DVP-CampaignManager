@@ -1084,6 +1084,8 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/NumberUpload/Category'
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
             }
+        } catch (ex){
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
         campaignNumberUpload.CreateContactCategory(cmp.CategoryName,tenantId, companyId, res);
 
