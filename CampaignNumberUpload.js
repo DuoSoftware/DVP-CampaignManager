@@ -413,7 +413,7 @@ function GetAllContactByCampaignIdScheduleId(campaignId, scheduleId, rowCount, p
             model: DbConn.CampContactInfo,
             as: "CampContactInfo",
             attributes: ['ContactId'],
-            order: 'CamContactId DESC'
+            order: '"CamContactId" DESC'
         }]
     }).complete(function (err, CamObject) {
         if (err) {

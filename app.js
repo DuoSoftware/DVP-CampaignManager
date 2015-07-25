@@ -15,6 +15,7 @@ var campaignOperations = require('./CampaignOperations');
 var campaignConfigurations = require('./CampaignConfigurations');
 var campaignNumberUpload = require('./CampaignNumberUpload');
 var campaignSchedule = require('./CampaignSchedule');
+var campaignDialoutInfo = require('./CampaignDialoutInfo');
 
 //-------------------------  Restify Server ------------------------- \\
 var RestServer = restify.createServer({
@@ -181,7 +182,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId', 
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/:Count', function (req, res, next) {
     try {
 
         logger.info('[DVP-campaignmanager.GetAllCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -201,8 +202,8 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns', function (r
             logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
 
-        if (req.body.Count) {
-            var count = req.body.Count;
+        if (req.params.Count) {
+            var count = req.params.Count;
             campaignHandler.GetAllCampaignPage(tenantId, companyId, count, res);
         }
         else {
@@ -253,7 +254,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId', 
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/State/:Command', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/State/:Command/:Count', function (req, res, next) {
     try {
 
         logger.info('[DVP-campaignmanager.Campaign/State] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
@@ -281,7 +282,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/State/:Comman
                 campaignHandler.GetOngoingCampaign(tenantId, companyId, res);
                 break;
             case "Pending":
-                var count = req.body.Count;
+                var count = req.params.Count;
                 campaignHandler.GetPendingCampaign(tenantId, companyId, count, res);
                 break;
             default :
@@ -642,7 +643,6 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/N
     return next();
 });
 
-
 RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/Category', function (req, res, next) {
     try {
 
@@ -770,7 +770,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/all', function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.GetAllContact] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
@@ -1174,7 +1174,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Session', fun
         catch (ex) {
             logger.error('[DVP-DialoutInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
-        campaignSchedule.CreateDialoutInfo(cmp.CampaignId, cmp.DialerId, cmp.DialerStatus, cmp.Dialtime, cmp.Reason, cmp.SessionId, cmp.TryCount, tenantId, companyId, res);
+        campaignDialoutInfo.CreateDialoutInfo(cmp.CampaignId, cmp.DialerId, cmp.DialerStatus, cmp.Dialtime, cmp.Reason, cmp.SessionId, cmp.TryCount, tenantId, companyId, res);
 
     }
     catch (ex) {
@@ -1303,7 +1303,7 @@ function Crossdomain(req, res, next) {
 function Clientaccesspolicy(req, res, next) {
 
 
-    var xml = '<?xml version="1.0" encoding="utf-8" ?>       <access-policy>        <cross-domain-access>        <policy>        <allow-from http-request-headers="*">        <domain uri="*"/>        </allow-from>        <grant-to>        <resource include-subpaths="true" path="/"/>        </grant-to>        </policy>        </cross-domain-access>        </access-policy>';
+    var xml = '<?xml version="1.0" encoding="utf-8" ?>       <access-policy>        <cross-domain-access>        <policy>        <allow-from http-request-headers="*" http-methods="*">        <domain uri="*"/>        </allow-from>        <grant-to>        <resource include-subpaths="true" path="/"/>        </grant-to>        </policy>        </cross-domain-access>        </access-policy>';
     req.setEncoding('utf8');
     res.end(xml);
 

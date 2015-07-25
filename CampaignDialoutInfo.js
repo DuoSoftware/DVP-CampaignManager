@@ -2,6 +2,10 @@
  * Created by Rajinda on 7/20/2015.
  */
 
+var messageFormatter = require('DVP-Common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
+var logger = require('DVP-Common/LogHandler/CommonLogHandler.js').logger;
+var DbConn = require('DVP-DBModels');
+
 function CreateDialoutInfo(campaignId,dialerId,dialerStatus,dialtime,reason,sessionId,tryCount,tenantId, companyId, callBack){
     DbConn.CampDialoutInfo
         .create(
