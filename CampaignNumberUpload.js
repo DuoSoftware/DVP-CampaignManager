@@ -123,7 +123,7 @@ function UploadContactsToCampaignWithSchedule(contacts, campaignId, camScheduleI
         DbConn.CampContactInfo
             .create(
             {
-                ContactId: contacts[j],
+                ContactId: contacts[i],
                 Status: true,
                 TenantId: tenantId,
                 CompanyId: companyId,
