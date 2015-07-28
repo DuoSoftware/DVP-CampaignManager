@@ -1057,7 +1057,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamS
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Schedule', function (req, res, next) {
     try {
 
-        logger.info('[DVP-CampaignSchedule.GetScheduleByCampaignId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+        logger.info('[DVP-CampaignSchedule.GetScheduleByCampaignId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
         var campaignId = req.params.CampaignId;
         var tenantId = 1;
         var companyId = 1;
