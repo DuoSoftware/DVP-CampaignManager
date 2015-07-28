@@ -84,7 +84,7 @@ function DeleteSchedule(camScheduleId,tenantId,companyId, callBack) {
 }
 
 function GetAllSchedule(tenantId,companyId,callBack) {
-    DbConn.CampScheduleInfo.find({where: [{CompanyId: companyId}, {TenantId: tenantId}]}).complete(function (err, CamObject) {
+    DbConn.CampScheduleInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}]}).complete(function (err, CamObject) {
 
         if (err) {
             logger.error('[DVP-CampScheduleInfo.GetAllSchedule] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
@@ -134,7 +134,7 @@ function GetSchedule(camScheduleId, callBack) {
 }
 
 function GetScheduleByCampaignId(campaignId,tenantId,companyId, callBack) {
-    DbConn.CampScheduleInfo.find({where: [{CompanyId: companyId}, {TenantId: tenantId},{CampaignId: campaignId}]}).complete(function (err, CamObject) {
+    DbConn.CampScheduleInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId},{CampaignId: campaignId}]}).complete(function (err, CamObject) {
 
         if (err) {
             logger.error('[DVP-CampScheduleInfo.GetScheduleByCampaignId] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
@@ -159,7 +159,7 @@ function GetScheduleByCampaignId(campaignId,tenantId,companyId, callBack) {
 }
 
 function GetScheduleByScheduleType(scheduleType,tenantId,companyId, callBack) {
-    DbConn.CampScheduleInfo.find({where: [{CompanyId: companyId}, {TenantId: tenantId},{ScheduleType: scheduleType}]}).complete(function (err, CamObject) {
+    DbConn.CampScheduleInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId},{ScheduleType: scheduleType}]}).complete(function (err, CamObject) {
 
         if (err) {
             logger.error('[DVP-CampScheduleInfo.GetScheduleByScheduleType] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
@@ -184,7 +184,7 @@ function GetScheduleByScheduleType(scheduleType,tenantId,companyId, callBack) {
 }
 
 function GetScheduleByCampaignIdScheduleType(campaignId, scheduleType,tenantId,companyId, callBack) {
-    DbConn.CampScheduleInfo.find({where: [{CompanyId: companyId}, {TenantId: tenantId},{CampaignId:campaignId},{ScheduleType: scheduleType}]}).complete(function (err, CamObject) {
+    DbConn.CampScheduleInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId},{CampaignId:campaignId},{ScheduleType: scheduleType}]}).complete(function (err, CamObject) {
 
         if (err) {
             logger.error('[DVP-CampScheduleInfo.GetScheduleByCampaignIdScheduleType] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);

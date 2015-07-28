@@ -346,7 +346,7 @@ function AssigningScheduleToCampaign(campaignId, CamScheduleId, tenantId, compan
 }
 
 function GetAllContact(tenantId, companyId, callBack) {
-    DbConn.CampContactInfo.find({where: [{CompanyId: companyId}, {TenantId: tenantId}]}).complete(function (err, CamObject) {
+    DbConn.CampContactInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}]}).complete(function (err, CamObject) {
 
         if (err) {
             logger.error('[DVP-CampaignNumberUpload.GetAllContact] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
