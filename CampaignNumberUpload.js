@@ -454,7 +454,7 @@ function CreateContactCategory(categoryName, tenantId, companyId, callBack) {
 
         }).error(function (err) {
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            logger.error('[DVP-CampContactCategory.CreateContactCategory] - [%s] - [PGSQL] - CreateContactCategory failed- [%s]', CategoryName, err);
+            logger.error('[DVP-CampContactCategory.CreateContactCategory] - [%s] - [PGSQL] - CreateContactCategory failed- [%s]', categoryName, err);
             callBack.end(jsonString);
         });
 }
