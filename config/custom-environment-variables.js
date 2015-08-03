@@ -6,7 +6,15 @@ module.exports = {
     "Port":"SYS_SQL_POR",
     "Host":"SYS_DATABASE_HOST",
     "Database":"SYS_DATABASE_POSTGRES_USER"
-  }
+  },
+    "Host":
+    {
+        "domain": "HOST_NAME",
+        "port": "HOST_CAMPAIGNMANAGER_PORT",
+        "version": "HOST_VERSION",
+        "hostpath":"HOST_PATH",
+        "logfilepath": "LOG4JS_CONFIG"
+    }
 
 };
 
