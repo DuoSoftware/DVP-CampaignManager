@@ -442,7 +442,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration
             logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
 
-        campaignConfigurations.CreateConfiguration(cmp.CampaignId, cmp.ChannelConcurrent, cmp.AllowCallBack, cmp.MaxCallBackCount, tenantId, companyId, true, cmp.Caller, cmp.StartDate, cmp.EndDate, res);
+        campaignConfigurations.CreateConfiguration(cmp.CampaignId, cmp.ChannelConcurrency, cmp.AllowCallBack, cmp.MaxCallBackCount, tenantId, companyId, true, cmp.Caller, cmp.StartDate, cmp.EndDate, res);
 
     }
     catch (ex) {
