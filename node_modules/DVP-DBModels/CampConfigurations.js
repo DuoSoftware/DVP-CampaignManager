@@ -8,7 +8,7 @@ module.exports = function(sequelize, DataTypes) {
             CampaignId: DataTypes.INTEGER,
             ChannelConcurrency: DataTypes.INTEGER,
             AllowCallBack:DataTypes.BOOLEAN,
-            MaxCallBackCount:DataTypes.INTEGER,
+            //MaxCallBackCount:DataTypes.INTEGER,
             Caller: DataTypes.STRING,
             //ConfigureId:DataTypes.INTEGER,
             Status:DataTypes.BOOLEAN,
