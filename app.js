@@ -16,6 +16,7 @@ var campaignConfigurations = require('./CampaignConfigurations');
 var campaignNumberUpload = require('./CampaignNumberUpload');
 var campaignSchedule = require('./CampaignSchedule');
 var campaignDialoutInfo = require('./CampaignDialoutInfo');
+var campaignCallBackHandler = require('./CampaignCallBackHandler');
 
 //-------------------------  Restify Server ------------------------- \\
 var RestServer = restify.createServer({
@@ -1174,7 +1175,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Session', fun
         catch (ex) {
             logger.error('[DVP-DialoutInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
-        campaignDialoutInfo.CreateDialoutInfo(cmp.CampaignId, cmp.DialerId, cmp.DialerStatus, cmp.Dialtime, cmp.Reason, cmp.SessionId, cmp.TryCount, tenantId, companyId, res);
+        campaignCallBackHandler.CreateDialoutInfo(cmp.CampaignId, cmp.DialerId, cmp.DialerStatus, cmp.Dialtime, cmp.Reason, cmp.SessionId, cmp.TryCount, tenantId, companyId, res);
 
     }
     catch (ex) {
@@ -1282,6 +1283,477 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Session/:Dialo
 });
 
 //------------------------- End-DialoutInfo ------------------------- \\
+
+//------------------------- CallBack ------------------------- \\
+
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Callback', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-CreateCallbackInfo] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+
+        var cmp = req.body;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-CreateCallbackInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignCallBackHandler.CreateCallbackInfo(cmp.CampaignId,cmp.ContactId,cmp.CamScheduleId,cmp.CallBackCount, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CreateCallbackInfo] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Callback', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-EditCallbackInfo] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+
+        var cmp = req.body;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-DialoutInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
+        campaignCallBackHandler.EditCallbackInfo(cmp.CallBackId,cmp.CampaignId,cmp.ContactId,cmp.CamScheduleId,cmp.CallBackCount, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-EditCallbackInfo] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.del('/DVP/API/' + version + '/CampaignManager/Callback/:CallBackId', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-DeleteCallbackInfo] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+
+        var callBackId = req.params.CallBackId;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
+        campaignCallBackHandler.DeleteCallbackInfo(callBackId,tenantId, companyId, res);
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-DeleteCallbackInfo] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Callback', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-GetAllCallbackInfos] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-DialoutInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignCallBackHandler.GetAllCallbackInfos(tenantId, companyId, res);
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-GetAllCallbackInfos] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Callback/:CallBackId', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-GetCallbackInfo] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+        var callBackId = req.params.CallBackId;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-DialoutInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignCallBackHandler.GetCallbackInfo(callBackId, tenantId, companyId, res);
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-GetCallbackInfo] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Callback/Campaign/:CampaignId', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-GetCallbackInfosByCampaignId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+        var campaignId = req.params.CampaignId;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-DialoutInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignCallBackHandler.GetCallbackInfosByCampaignId(campaignId, tenantId, companyId, res);
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-GetCallbackInfosByCampaignId] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Callback/Schedule/:CamScheduleId', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-GetCallbackInfosByCamScheduleId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+        var camScheduleId = req.params.CamScheduleId;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-DialoutInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignCallBackHandler.GetCallbackInfosByCamScheduleId(camScheduleId, tenantId, companyId, res);
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-GetCallbackInfosByCamScheduleId] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Callback/Configuration', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-CreateCallbackConfiguration] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+
+        var cmp = req.body;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-CreateCallbackInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignCallBackHandler.CreateCallbackConfiguration(cmp.ConfigureId,cmp.MaxCallBackCount,cmp.ReasonId, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CreateCallbackConfiguration] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Callback/Configuration', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-EditCallbackConfiguration] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+
+        var cmp = req.body;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-EditCallbackConfiguration] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
+        campaignCallBackHandler.EditCallbackConfiguration(cmp.CallBackConfId,cmp.ConfigureId,cmp.MaxCallBackCount,cmp.ReasonId, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-EditCallbackConfiguration] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Callback/Configuration', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-GetAllCallbackConfigurations] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-DialoutInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignCallBackHandler.GetAllCallbackConfigurations(tenantId, companyId, res);
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-GetAllCallbackConfigurations] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Callback/Configuration/:CallBackConfId', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-GetAllCallbackConfigurations] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+        var callBackConfId = req.params.CallBackConfId;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-DialoutInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignCallBackHandler.GetCallbackConfiguration(callBackConfId, tenantId, companyId, res);
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-GetAllCallbackConfigurations] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Callback/Event', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-CreateCallBackReason] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+
+        var cmp = req.body;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-CreateCallBackReason] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignCallBackHandler.CreateCallBackReason(cmp.Reason, tenantId, companyId,  res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CreateCallBackReason] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Callback/Event', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-EditCallBackReason] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+
+        var cmp = req.body;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-EditCallBackReason] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
+        campaignCallBackHandler.EditCallBackReason(cmp.ReasonId,cmp.Reason, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-EditCallBackReason] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Callback/Event', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-GetAllCallBackReasons] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-DialoutInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignCallBackHandler.GetAllCallBackReasons(tenantId, companyId, res);
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-GetAllCallBackReasons] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Callback/Event/:ReasonId', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-GetCallBackReason] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+        var reasonId = req.params.ReasonId;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-DialoutInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignCallBackHandler.GetCallBackReason(reasonId, tenantId, companyId, res);
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-GetCallBackReason] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+//------------------------- End-CallBack ------------------------- \\
 
 function Crossdomain(req, res, next) {
 

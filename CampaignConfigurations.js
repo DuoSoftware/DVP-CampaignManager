@@ -12,7 +12,7 @@ function CreateConfiguration(campaignId, channelConcurrent, allowCallBack, maxCa
             CampaignId: campaignId,
             ChannelConcurrency: channelConcurrent,
             AllowCallBack: allowCallBack,
-            MaxCallBackCount: maxCallBackCount,
+            //MaxCallBackCount: maxCallBackCount,
             TenantId: tenantId,
             CompanyId: companyId,
             Caller: caller,

@@ -11,7 +11,7 @@ module.exports = function(sequelize, DataTypes) {
             ContactId: {type:DataTypes.STRING,unique: 'CampCallbackInfoCompositeIndex'},
             CamScheduleId:{type:DataTypes.INTEGER,unique: 'CampCallbackInfoCompositeIndex'},
             CallBackCount:DataTypes.INTEGER,
-            Status:DataTypes.BOOLEAN,
+            CallbackStatus:DataTypes.BOOLEAN,
             CallBackId:{type:DataTypes.INTEGER, primaryKey:true,autoIncrement: true}
 
         }
