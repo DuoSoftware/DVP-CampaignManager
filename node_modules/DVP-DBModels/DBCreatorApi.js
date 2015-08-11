@@ -17,7 +17,7 @@ var createDB = function(forcefully, callback){
         });
 };
 
-createDB(false, function(err, res){
+createDB(true, function(err, res){
 
     console.log(res);
 
