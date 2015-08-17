@@ -5,7 +5,7 @@
 
 module.exports = function(sequelize, DataTypes) {
     var CampConfigurations = sequelize.define('DB_CAMP_Configurations', {
-            CampaignId: DataTypes.INTEGER,
+            CampaignId: {type: DataTypes.INTEGER, allowNull: false, unique: true},
             ChannelConcurrency: DataTypes.INTEGER,
             AllowCallBack:DataTypes.BOOLEAN,
             //MaxCallBackCount:DataTypes.INTEGER,
