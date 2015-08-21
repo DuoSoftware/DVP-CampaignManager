@@ -270,11 +270,11 @@ function GetAllCallbackConfigurations(tenantId, companyId, callBack) {
 
 }
 
-function GetAllConfigurationSetting(tenantId, companyId, callBack) {
+function GetAllConfigurationSetting(configureId,tenantId, companyId, callBack) {
 
     DbConn.CampConfigurations.findAll({
-        where: [{CompanyId: companyId}, {TenantId: tenantId}],
-        include: [{model: DbConn.CampCallbackConfigurations, as: "CampCallbackConfigurations"},{model: DbConn.CampCallBackReasons, as: "CampCallBackReasons"}]
+        where: [{CompanyId: companyId}, {TenantId: tenantId},{ConfigureId:configureId}],
+        include: [{model: DbConn.CampCallbackConfigurations, as: "CampCallbackConfigurations",include:[{model: DbConn.CampCallBackReasons, as: "CampCallBackReasons"}]}]
     }).complete(function (err, CamObject) {
 
         if (err) {
@@ -305,7 +305,7 @@ function GetAllConfigurationSettingByCampaignId(campaignId,tenantId, companyId, 
 
     DbConn.CampConfigurations.find({
         where: [{CompanyId: companyId}, {TenantId: tenantId},{CampaignId:campaignId}],
-        include: [{model: DbConn.CampCallbackConfigurations, as: "CampCallbackConfigurations"},{model: DbConn.CampCallBackReasons, as: "CampCallBackReasons"}]
+        include: [{model: DbConn.CampCallbackConfigurations, as: "CampCallbackConfigurations",include:[{model: DbConn.CampCallBackReasons, as: "CampCallBackReasons"}]}]
     }).complete(function (err, CamObject) {
 
         if (err) {

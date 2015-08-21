@@ -653,6 +653,39 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Configuration', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-CampaignConfigurations.GetAllConfigurationSettingByCampaignId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
+        var campaignId = req.params.CampaignId;
+        campaignConfigurations.GetAllConfigurationSettingByCampaignId(campaignId, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CampaignConfigurations.GetAllConfigurationSettingByCampaignId] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configurations/:ConfigureId/Callback', function (req, res, next) {
     try {
 
