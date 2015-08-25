@@ -443,6 +443,9 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/Operations/St
                     campaignOperations.GetPendingCampaign(tenantId, companyId, res);
                 }
                 break;
+            case "Ongoing":
+                campaignOperations.GetOngoingCampaign(tenantId, companyId, res);
+                break;
         }
 
 
@@ -706,7 +709,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration
         catch (ex) {
             logger.error('[DVP-CreateCallbackInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
-        campaignConfigurations.CreateCallbackConfiguration(req.params.ConfigureId,cmp.MaxCallBackCount,cmp.ReasonId, tenantId, companyId, res);
+        campaignConfigurations.CreateCallbackConfiguration(req.params.ConfigureId,cmp.MaxCallBackCount,cmp.ReasonId,cmp.CallbackInterval, tenantId, companyId, res);
 
     }
     catch (ex) {
@@ -1894,6 +1897,36 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Callback/Campaign/:Camp
 
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
         logger.error('[DVP-GetCallbackInfosByCampaignId] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Callback/:CallbackClass/:CallbackType/:CallbackCategory', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-GetCallbackInfosByClassTypeCategory] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+        var cmp = req.params;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-DialoutInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignCallBackHandler.GetCallbackInfosByClassTypeCategory(tenantId, companyId,cmp.CallbackClass,cmp.CallbackType,cmp.CallbackCategory, res);
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-GetCallbackInfosByClassTypeCategory] - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();

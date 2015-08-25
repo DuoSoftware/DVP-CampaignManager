@@ -173,7 +173,7 @@ function GetConfigurationByCampaignId(campaignId, tenantId, companyId, callBack)
 }
 
 
-function CreateCallbackConfiguration(configureId,maxCallBackCount,reasonId, tenantId, companyId, callback) {
+function CreateCallbackConfiguration(configureId,maxCallBackCount,reasonId,callbackInterval, tenantId, companyId, callback) {
 
 
     DbConn.CampCallbackConfigurations
@@ -181,7 +181,8 @@ function CreateCallbackConfiguration(configureId,maxCallBackCount,reasonId, tena
         {
             ConfigureId:configureId,
             MaxCallBackCount:maxCallBackCount,
-            ReasonId:reasonId
+            ReasonId:reasonId,
+            CallbackInterval:callbackInterval
         }
     ).then(function (cmp) {
 

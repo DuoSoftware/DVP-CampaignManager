@@ -155,10 +155,34 @@ function GetCallbackInfosByCampaignId(campaignId, tenantId, companyId, callBack)
 
 }
 
+function GetCallbackInfosByClassTypeCategory(tenantId, companyId,callbackClass,callbackType,callbackCategory, callBack) {
+
+    DbConn.CampCallbackInfo.findAll({where: [{Class: callbackClass},{Type: callbackType},{Category: callbackCategory}]}).then(function (CamObject) {
+
+        if (CamObject) {
+            logger.info('[DVP-CampCallbackInfo.GetCallbackInfosByClassTypeCategory] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+            callBack.end(jsonString);
+        }
+        else {
+            logger.error('[DVP-CampCallbackInfo.GetCallbackInfosByClassTypeCategory] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+            var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+            callBack.end(jsonString);
+        }
+
+    }).error(function (err) {
+        logger.error('[DVP-CampCallbackInfo.GetCallbackInfosByClassTypeCategory] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callBack.end(jsonString);
+    });
+
+}
+
 module.exports.CreateCallbackInfo = CreateCallbackInfo;
 module.exports.EditCallbackInfo = EditCallbackInfo;
 module.exports.GetCallbackInfo = GetCallbackInfo;
 module.exports.GetAllCallbackInfos = GetAllCallbackInfos;
 module.exports.GetCallbackInfosByCampaignId = GetCallbackInfosByCampaignId;
+module.exports.GetCallbackInfosByClassTypeCategory = GetCallbackInfosByClassTypeCategory;
 
 

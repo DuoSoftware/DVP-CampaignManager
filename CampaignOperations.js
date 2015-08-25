@@ -324,7 +324,6 @@ function GetPendingCampaign(tenantId, companyId, callback) {
     }
 }
 
-
 function GetPendingCampaignByDialerId(tenantId, companyId, dialerId, callback) {
     try {
 
@@ -371,6 +370,39 @@ function GetPendingCampaignByDialerId(tenantId, companyId, dialerId, callback) {
     }
 }
 
+function GetOngoingCampaign(tenantId, companyId, callback) {
+    try {
+
+        DbConn.CampOngoingCampaign.findAll({where: [Sequelize.and({TenantId: tenantId}, {CompanyId: companyId},{CampaignState: 'ongoing'})]}).complete(function (err, CamObject) {
+
+            if (err) {
+                logger.error('[DVP-CampCampaignInfo.GetOngoingCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
+                var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                callback.end(jsonString);
+            }
+
+            else {
+
+                if (CamObject) {
+                    logger.info('[DVP-CampCampaignInfo.GetOngoingCampaign] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
+                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+                    callback.end(jsonString);
+                }
+                else {
+                    logger.error('[DVP-CampCampaignInfo.GetOngoingCampaign] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+                    var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+                    callback.end(jsonString);
+                }
+            }
+        });
+    }
+    catch (ex) {
+        logger.error('[DVP-CampCampaignInfo.GetOngoingCampaign] - [%s] - [PGSQL]  - Error %s - %s  ', tenantId, companyId, ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    }
+}
+
 module.exports.StartCampaign = StartCampaign;
 module.exports.StopCampaign = StopCampaign;
 module.exports.PauseCampaign = PauseCampaign;
@@ -379,3 +411,4 @@ module.exports.EndCampaign = EndCampaign;
 module.exports.UpdateOperationState = UpdateOperationState;
 module.exports.GetPendingCampaign = GetPendingCampaign;
 module.exports.GetPendingCampaignByDialerId = GetPendingCampaignByDialerId;
+module.exports.GetOngoingCampaign = GetOngoingCampaign;
