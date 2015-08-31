@@ -7,14 +7,14 @@ var logger = require('DVP-Common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('DVP-DBModels');
 
 
-function CreateCallbackInfo(campaignId,contactId,dialoutTime,callBackCount, tenantId, companyId, callback) {
+function CreateCallbackInfo(campaignId,contactId,dialoutTime,callBackCount, tenantId, companyId,callbackClass,callbackType,callbackCategory, callback) {
 
     DbConn.CampConfigurations.find({where: [{CompanyId: companyId}, {TenantId: tenantId}, {CampaignId: campaignId}]}).complete(function (err, CamObject) {
 
         if (err) {
             logger.error('[DVP-CampConfigurations.GetConfiguration] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callBack.end(jsonString);
+            callback.end(jsonString);
         }
 
         else {
@@ -30,7 +30,10 @@ function CreateCallbackInfo(campaignId,contactId,dialoutTime,callBackCount, tena
                             ContactId:contactId,
                             DialoutTime:dialoutTime,
                             CallBackCount:callBackCount,
-                            CallbackStatus :true
+                            CallbackStatus :true,
+                            Class: callbackClass,
+                            Type: callbackType,
+                            Category:callbackCategory
                         }
                     ).then(function (cmp) {
 
@@ -49,7 +52,7 @@ function CreateCallbackInfo(campaignId,contactId,dialoutTime,callBackCount, tena
             else {
                 logger.error('[DVP-CampCampaignInfo.GetConfiguration] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
                 var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
-                callBack.end(jsonString);
+                callback.end(jsonString);
             }
         }
     });

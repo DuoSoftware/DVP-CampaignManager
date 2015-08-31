@@ -689,7 +689,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Co
     return next();
 });
 
-RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configurations/:ConfigureId/Callback', function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/:ConfigureId/Callback', function (req, res, next) {
     try {
 
         logger.info('[DVP-CreateCallbackConfiguration] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body),JSON.stringify(req.params));
@@ -1735,7 +1735,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Callback', function (r
         catch (ex) {
             logger.error('[DVP-CreateCallbackInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
-        campaignCallBackHandler.CreateCallbackInfo(cmp.CampaignId,cmp.ContactId,cmp.DialoutTime,cmp.CallBackCount, tenantId, companyId, res);
+        campaignCallBackHandler.CreateCallbackInfo(cmp.CampaignId,cmp.ContactId,cmp.DialoutTime,cmp.CallBackCount, tenantId, companyId,cmp.CallbackClass,cmp.CallbackType,cmp.CallbackCategory, res);
 
     }
     catch (ex) {
