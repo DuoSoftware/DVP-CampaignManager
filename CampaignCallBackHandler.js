@@ -21,7 +21,11 @@ function CreateCallbackInfo(campaignId,contactId,dialoutTime,callBackCount, tena
 
             if (CamObject) {
                 var b = Date.parse(dialoutTime);
-                if(((b-CamObject.StartDate)>0)&&((CamObject.EndDate-b)>0)){
+                var startDate = Date.parse(CamObject.StartDate);
+                var endDate = Date.parse(CamObject.EndDate);
+                if(((b-startDate)>0)&&((endDate-b)>0)){
+
+
 
                     DbConn.CampCallbackInfo
                         .create(
@@ -46,6 +50,11 @@ function CreateCallbackInfo(campaignId,contactId,dialoutTime,callBackCount, tena
                             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
                             callback.end(jsonString);
                         });
+                }
+                else{
+                    logger.error('[DVP-CampCallbackInfo.CreateCallbackInfo-date validate] - [%s] - [PGSQL] - [%s]', contactId, err);
+                    var jsonString = messageFormatter.FormatMessage(new Error("invalid Date range."), "EXCEPTION", false, undefined);
+                    callback.end(jsonString);
                 }
 
             }

@@ -302,6 +302,164 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/State/:Comman
     return next();
 });
 
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditinalData', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-campaignmanager.AddAdditionalData] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body),JSON.stringify(req.params));
+
+        var cmp = req.body;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager.AddAdditionalData] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignHandler.AddAdditionalData(cmp.DataClass, cmp.DataType, cmp.DataCategory, tenantId, companyId, cmp.AdditionalData, req.params.CampaignId, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[DVP-campaignmanager.CreateCampaign] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[DVP-campaignmanager.CreateCampaign] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditinalData', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-campaignmanager.EditAdditionalData] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body),JSON.stringify(req.params));
+
+        var cmp = req.body;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager.EditAdditionalData] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignHandler.EditAdditionalData(cmp.AdditionalDataId, cmp.DataClass, cmp.DataType, cmp.DataCategory, tenantId, companyId, cmp.AdditionalData, req.params.CampaignId, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[DVP-campaignmanager.EditAdditionalData] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[DVP-campaignmanager.EditAdditionalData] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/AdditinalData/:AdditionalDataId', function (req, res, next) {
+    try {
+        logger.info('[DVP-campaignmanager.GetAdditionalData] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body),JSON.stringify(req.params));
+
+        var cmp = req.params;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager.GetAdditionalData] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignHandler.GetAdditionalData(cam.AdditionalDataId, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-campaignmanager.GetAdditionalData] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditinalData', function (req, res, next) {
+    try {
+        logger.info('[DVP-campaignmanager.GetAdditionalDataByCampaignId] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body),JSON.stringify(req.params));
+
+        var cmp = req.params;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager.GetAdditionalDataByCampaignId] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignHandler.GetAdditionalDataByCampaignId(cmp.CampaignId, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-campaignmanager.GetAdditionalDataByCampaignId] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditinalData/:DataClass/:DataType/:DataCategory', function (req, res, next) {
+    try {
+        logger.info('[DVP-campaignmanager.GetAdditionalDataByClassTypeCategory] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body),JSON.stringify(req.params));
+
+        var cmp = req.params;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager.GetAdditionalDataByClassTypeCategory] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignHandler.GetAdditionalDataByClassTypeCategory(cmp.CampaignId, tenantId, companyId, cmp.DataClass, cmp.DataType, cmp.DataCategory, res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-campaignmanager.GetAdditionalDataByClassTypeCategory] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
 
 //------------------------- End-CampaignHandler ------------------------- \\
 

@@ -190,7 +190,10 @@ function GetAllCampaign(tenantId, companyId, callback) {
 
         DbConn.CampCampaignInfo.findAll({
             where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}],
-            include: [{model: DbConn.CampContactSchedule, as: "CampContactSchedule"},{model: DbConn.CampConfigurations, as: "CampConfigurations"}]
+            include: [{model: DbConn.CampContactSchedule, as: "CampContactSchedule"}, {
+                model: DbConn.CampConfigurations,
+                as: "CampConfigurations"
+            }]
         }).complete(function (err, CamObject) {
 
             if (err) {
@@ -407,7 +410,10 @@ function GetPendingCampaign(tenantId, companyId, count, callback) {
 
         DbConn.CampCampaignInfo.findAll({
             where: [{Status: true}, {OperationalStatus: "start"}],
-            include: [{model: DbConn.CampScheduleInfo, as: "CampScheduleInfo"},{model: DbConn.CampConfigurations, as: "CampConfigurations"}],
+            include: [{model: DbConn.CampScheduleInfo, as: "CampScheduleInfo"}, {
+                model: DbConn.CampConfigurations,
+                as: "CampConfigurations"
+            }],
             limit: count
         }).complete(function (err, CamObject) {
 
@@ -440,6 +446,129 @@ function GetPendingCampaign(tenantId, companyId, count, callback) {
     }
 }
 
+function AddAdditionalData(dataClass, dataType, dataCategory, tenantId, companyId, additionalData, campaignId, callback) {
+    DbConn.CampAdditionalData
+        .create(
+        {
+            Class: dataClass,
+            Type: dataType,
+            Category: dataCategory,
+            TenantId: tenantId,
+            CompanyId: companyId,
+            AdditionalData: additionalData,
+            CampaignId: campaignId,
+        }
+    ).then(function (cmp) {
+
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+            logger.info('[DVP-CampAdditionalData.AddAdditionalData] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+            callback.end(jsonString);
+
+        }).error(function (err) {
+            logger.error('[DVP-CampAdditionalData.AddAdditionalData] - [%s] - [PGSQL] - insertion  failed-[%s]', campaignId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        });
+
+}
+
+function EditAdditionalData(additionalDataId, dataClass, dataType, dataCategory, tenantId, companyId, additionalData, campaignId, callback) {
+    DbConn.CampAdditionalData
+        .update(
+        {
+            Class: dataClass,
+            Type: dataType,
+            Category: dataCategory,
+            TenantId: tenantId,
+            CompanyId: companyId,
+            AdditionalData: additionalData,
+            CampaignId: campaignId,
+        },
+        {
+            where: [{AdditionalDataId: additionalDataId}]
+        }
+    ).then(function (cmp) {
+
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+            logger.info('[DVP-CampAdditionalData.EditAdditionalData] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+            callback.end(jsonString);
+
+        }).error(function (err) {
+            logger.error('[DVP-CampAdditionalData.EditAdditionalData] - [%s] - [PGSQL] - insertion  failed-[%s]', campaignId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        });
+
+}
+
+function GetAdditionalData(additionalDataId, tenantId, companyId, callBack) {
+
+    DbConn.CampAdditionalData.find({where: [{AdditionalDataId: additionalDataId}, {TenantId: tenantId}, {CompanyId: companyId}]})
+        .then(function (CamObject) {
+
+            if (CamObject) {
+                logger.info('[DVP-CampAdditionalData.GetAdditionalData] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
+                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+                callBack.end(jsonString);
+            }
+            else {
+                logger.error('[DVP-CampAdditionalData.GetAdditionalData] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+                var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+                callBack.end(jsonString);
+            }
+
+        }).error(function (err) {
+            logger.error('[DVP-CampAdditionalData.GetAdditionalData] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callBack.end(jsonString);
+        });
+}
+
+function GetAdditionalDataByCampaignId(campaignId, tenantId, companyId, callBack) {
+
+    DbConn.CampAdditionalData.findAll({where: [{CampaignId: campaignId}, {TenantId: tenantId}, {CompanyId: companyId}]})
+        .then(function (CamObject) {
+
+            if (CamObject) {
+                logger.info('[DVP-CampAdditionalData.GetAdditionalDataByCampaignId] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
+                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+                callBack.end(jsonString);
+            }
+            else {
+                logger.error('[DVP-CampAdditionalData.GetAdditionalDataByCampaignId] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+                var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+                callBack.end(jsonString);
+            }
+
+        }).error(function (err) {
+            logger.error('[DVP-CampAdditionalData.GetAdditionalDataByCampaignId] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callBack.end(jsonString);
+        });
+}
+
+function GetAdditionalDataByClassTypeCategory(campaignId, tenantId, companyId, dataClass, dataType, dataCategory, callBack) {
+
+    DbConn.CampAdditionalData.find({where: [{CampaignId: campaignId}, {TenantId: tenantId}, {CompanyId: companyId}, {Class: dataClass}, {Type: dataType}, {Category: dataCategory}]})
+        .then(function (CamObject) {
+
+            if (CamObject) {
+                logger.info('[DVP-CampAdditionalData.GetAdditionalDataByCampaignId] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
+                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+                callBack.end(jsonString);
+            }
+            else {
+                logger.error('[DVP-CampAdditionalData.GetAdditionalDataByCampaignId] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+                var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+                callBack.end(jsonString);
+            }
+
+        }).error(function (err) {
+            logger.error('[DVP-CampAdditionalData.GetAdditionalDataByCampaignId] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callBack.end(jsonString);
+        });
+}
 
 module.exports.CreateCampaign = CreateCampaign;
 module.exports.EditCampaign = EditCampaign;
@@ -452,3 +581,9 @@ module.exports.GetOngoingCampaign = GetOngoingCampaign;
 module.exports.GetAllCampaignByCampaignState = GetAllCampaignByCampaignState;
 module.exports.GetOfflineCampaign = GetOfflineCampaign;
 module.exports.GetPendingCampaign = GetPendingCampaign;
+module.exports.AddAdditionalData = AddAdditionalData;
+module.exports.EditAdditionalData = EditAdditionalData;
+module.exports.GetAdditionalData = GetAdditionalData;
+module.exports.GetAdditionalDataByCampaignId = GetAdditionalDataByCampaignId;
+module.exports.GetAdditionalDataByCampaignId = GetAdditionalDataByCampaignId;
+module.exports.GetAdditionalDataByClassTypeCategory = GetAdditionalDataByClassTypeCategory;
