@@ -372,7 +372,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/AdditinalData/
     try {
         logger.info('[DVP-campaignmanager.GetAdditionalData] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body),JSON.stringify(req.params));
 
-        var cmp = req.params;
+        var cam = req.params;
         var tenantId = 1;
         var companyId = 1;
         try {
