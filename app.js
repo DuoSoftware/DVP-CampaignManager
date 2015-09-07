@@ -1410,6 +1410,39 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/:CategoryId', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-CampaignNumberUpload.GetAllContactByCategoryID] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+
+        var categoryId = req.params.CategoryId;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
+        campaignNumberUpload.GetAllContactByCategoryID(categoryId, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CampaignNumberUpload.GetAllContactByCategoryID] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers/:ScheduleId/:RowCount/:PageNo', function (req, res, next) {
     try {
 
@@ -1473,6 +1506,43 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/Catego
 
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
         logger.error('[DVP-CampaignNumberUpload.GetContactCategory] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Number/:contactId/:PageNo/:RowCount', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-CampaignNumberUpload.GetExtraDataByContactId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+
+        var campaignId = req.params.CampaignId;
+        var contactId = req.params.ScheduleId;
+        var rowCount = req.params.RowCount;
+        var pageNo = req.params.PageNo;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-CampaignNumberUpload-GetExtraDataByContactId] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
+        campaignNumberUpload.GetExtraDataByContactId(campaignId, contactId, rowCount, pageNo, tenantId, companyId, res) ;
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CampaignNumberUpload.GetExtraDataByContactId] - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();
