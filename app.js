@@ -1142,6 +1142,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers', fun
         var cmp = req.body;
         var tenantId = 1;
         var companyId = 1;
+        var extraData="";
         try {
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
@@ -1154,13 +1155,16 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers', fun
         catch (ex) {
             logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
+        if (cmp.ExtraData){
+            extraData=cmp.ExtraData;
+        }
 
         if (cmp.CampaignId) {
             if (cmp.CamScheduleId) {
-                campaignNumberUpload.UploadContactsToCampaignWithSchedule(cmp.Contacts, cmp.CampaignId, cmp.CamScheduleId, tenantId, companyId, cmp.CategoryID, res);
+                campaignNumberUpload.UploadContactsToCampaignWithSchedule(cmp.Contacts, cmp.CampaignId, cmp.CamScheduleId, tenantId, companyId, cmp.CategoryID,extraData, res);
             }
             else {
-                campaignNumberUpload.UploadContactsToCampaign(cmp.Contacts, cmp.CampaignId, tenantId, companyId, cmp.CategoryID, res);
+                campaignNumberUpload.UploadContactsToCampaign(cmp.Contacts, cmp.CampaignId, tenantId, companyId, cmp.CategoryID,extraData, res);
             }
         }
         else {

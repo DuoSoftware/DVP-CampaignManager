@@ -77,6 +77,8 @@ function GetDialoutInfoByDialoutId(dialoutId,tenantId, companyId, callBack){
         });
 }
 
+
+
 function GetDialoutInfo(tenantId, companyId, callBack){
     DbConn.CampDialoutInfo
         .findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}]}
