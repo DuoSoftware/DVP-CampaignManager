@@ -272,14 +272,15 @@ function GetOngoingCampaign(tenantId, companyId, callback) {
 
     try {
         DbConn.CampOngoingCampaign.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}]}).then(function (CamObject) {
+            var jsonString;
             if (CamObject) {
                 logger.info('[DVP-CampCampaignInfo.GetOngoingCampaign] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
-                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+                jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
                 callback.end(jsonString);
             }
             else {
                 logger.error('[DVP-CampCampaignInfo.GetOngoingCampaign] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
-                var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+                jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
                 callback.end(jsonString);
             }
         }).error(function (err) {
