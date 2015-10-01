@@ -2,9 +2,9 @@
  * Created by Rajinda on 8/10/2015.
  */
 
-var messageFormatter = require('DVP-Common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
-var logger = require('DVP-Common/LogHandler/CommonLogHandler.js').logger;
-var DbConn = require('DVP-DBModels');
+var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
+var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
+var DbConn = require('dvp-dbmodels');
 
 
 function CreateCallbackInfo(campaignId,contactId,dialoutTime,callBackCount, tenantId, companyId,callbackClass,callbackType,callbackCategory, callback) {

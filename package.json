@@ -1,18 +1,18 @@
 {
   "name": "DVP-CampaignManager",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "app.js",
   "dependencies": {
-    "DVP-DBModels": "DuoSoftware/DVP-DBModels",
-    "restify": "^3.0.3",
-    "sequelize": "^3.3.2",
-    "config": "^1.14.0",
-    "stringify": "^3.1.0",
-    "moment": "^2.10.3",
-    "DVP-Common": "DuoSoftware/DVP-Common",
+    "collections": "^1.2.4",
+    "config": "^1.16.0",
+    "dvp-common": "^0.0.2",
+    "dvp-dbmodels": "^0.0.12",
+    "moment": "^2.10.6",
     "redis": "^0.12.1",
-    "collections": "^1.2.3"
+    "restify": "^3.0.3",
+    "sequelize": "^3.9.0",
+    "stringify": "^3.1.0"
   },
   "devDependencies": {},
   "scripts": {
