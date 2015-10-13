@@ -3,13 +3,13 @@
  */
 
 var restify = require('restify');
-var messageFormatter = require('DVP-Common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
+var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
 
 var config = require('config');
 
 var port = config.Host.port || 3000;
 var version = config.Host.version;
-var logger = require('DVP-Common/LogHandler/CommonLogHandler.js').logger;
+var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var campaignHandler = require('./CampaignHandler');
 var campaignOperations = require('./CampaignOperations');
 var campaignConfigurations = require('./CampaignConfigurations');
