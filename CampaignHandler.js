@@ -4,7 +4,7 @@
 
 var messageFormatter = require('DVP-Common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
 var logger = require('DVP-Common/LogHandler/CommonLogHandler.js').logger;
-var DbConn = require('DVP-DBModels');
+var DbConn = require('dvp-dbmodels');
 var moment = require('moment')
 var Sequelize = require('sequelize');
 
