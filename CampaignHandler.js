@@ -2,8 +2,8 @@
  * Created by Rajinda on 6/26/2015.
  */
 
-var messageFormatter = require('DVP-Common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
-var logger = require('DVP-Common/LogHandler/CommonLogHandler.js').logger;
+var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
+var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('dvp-dbmodels');
 var moment = require('moment')
 var Sequelize = require('sequelize');
