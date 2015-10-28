@@ -14,6 +14,7 @@ function CreateDialoutInfo(campaignId,dialerId,dialerStatus,dialtime,reason,sess
             CompanyId: companyId,
             TenantId: tenantId,
             DialerId: dialerId,
+            DialerId: dialerId,
             DialerStatus: dialerStatus,
             Dialtime: dialtime,
             Reason: reason,

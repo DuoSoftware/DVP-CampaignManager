@@ -5,7 +5,7 @@ var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJ
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('dvp-dbmodels');
 
-function StartCampaign(campaignId, dialerId, callback) {
+function StartCampaign(campaignId, dialerId,tenantId,companyId, callback) {
 
     DbConn.CampOngoingCampaign.find({where: [{CampaignId: campaignId}, {DialerId: dialerId}]}).then(function ( cmp) {
         if (cmp) {

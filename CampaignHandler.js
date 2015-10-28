@@ -77,7 +77,7 @@ function EditCampaign(campaignId, campaignName, campaignMode, campaignChannel, d
             where: [{CampaignId: campaignId},{CampaignState: 'ongoing'}]
         }
     ).then(function ( cmp) {
-            if(!cmp){
+            if(cmp){
                 var err = new Error("Try to modify ongoing Campaign");
                 logger.error('[DVP-CampCampaignInfo.EditCampaign] - [%s] - [PGSQL] - EditCampaign  failed', campaignId,err );
                 var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
@@ -85,44 +85,45 @@ function EditCampaign(campaignId, campaignName, campaignMode, campaignChannel, d
                 return;
             }
 
+            DbConn.CampCampaignInfo
+                .update(
+                {
+                    CampaignName: campaignName,
+                    CampaignMode: campaignMode,
+                    CampaignChannel: campaignChannel,
+                    DialoutMechanism: dialoutMechanism,
+                    TenantId: tenantId,
+                    CompanyId: companyId,
+                    Class: campaignClass,
+                    Type: campaignType,
+                    Category: campaignCategory,
+                    Extensions: extension,
+                    OperationalStatus: "create",
+                    Status: true
+                },
+                {
+                    where: {
+                        CampaignId: campaignId
+                    }
+                }
+            ).then(function (results) {
+
+                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+                    logger.info('[DVP-CampCampaignInfo.EditCampaign] - [PGSQL] - Updated successfully.[%s] ', jsonString);
+                    callback.end(jsonString);
+
+                }).error(function (err) {
+                    var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                    logger.error('[DVP-CampCampaignInfo.EditCampaign] - [%s] - [PGSQL] - Updation failed-[%s]', campaignId, err);
+                    callback.end(jsonString);
+                });
+
+
         }).error(function (err) {
             logger.error('[DVP-CampCampaignInfo.EditCampaign] - [%s] - [PGSQL] - EditCampaign  failed', campaignId, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
             return;
-        });
-
-    DbConn.CampCampaignInfo
-        .update(
-        {
-            CampaignName: campaignName,
-            CampaignMode: campaignMode,
-            CampaignChannel: campaignChannel,
-            DialoutMechanism: dialoutMechanism,
-            TenantId: tenantId,
-            CompanyId: companyId,
-            Class: campaignClass,
-            Type: campaignType,
-            Category: campaignCategory,
-            Extensions: extension,
-            OperationalStatus: "create",
-            Status: true
-        },
-        {
-            where: {
-                CampaignId: campaignId
-            }
-        }
-    ).then(function (results) {
-
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
-            logger.info('[DVP-CampCampaignInfo.EditCampaign] - [PGSQL] - Updated successfully.[%s] ', jsonString);
-            callback.end(jsonString);
-
-        }).error(function (err) {
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            logger.error('[DVP-CampCampaignInfo.EditCampaign] - [%s] - [PGSQL] - Updation failed-[%s]', campaignId, err);
-            callback.end(jsonString);
         });
 
 

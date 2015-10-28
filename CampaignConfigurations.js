@@ -175,7 +175,7 @@ function CreateCallbackConfiguration(configureId, maxCallBackCount, reasonId, ca
         });
 }
 
-function EditCallbackConfiguration(callBackConfId, configureId, maxCallBackCount, reasonId, tenantId, companyId, callback) {
+function EditCallbackConfiguration(callBackConfId, configureId, maxCallBackCount, reasonId,callbackInterval, tenantId, companyId, callback) {
 
 
     DbConn.CampCallbackConfigurations
@@ -183,6 +183,7 @@ function EditCallbackConfiguration(callBackConfId, configureId, maxCallBackCount
         {
             ConfigureId: configureId,
             MaxCallBackCount: maxCallBackCount,
+            CallbackInterval:callbackInterval,
             ReasonId: reasonId
         },
         {
