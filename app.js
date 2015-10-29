@@ -1048,7 +1048,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 
         logger.info('[DVP-EditCallBackReason] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
-        var cmp = req.params;
+        var cmp = req.body;
         var tenantId = 1;
         var companyId = 1;
         try {
@@ -1064,7 +1064,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
             logger.error('[DVP-EditCallBackReason] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
 
-        campaignConfigurations.EditCallBackReason(cmp.ReasonId,cmp.Reason, tenantId, companyId, res);
+        campaignConfigurations.EditCallBackReason(req.params.ReasonId,cmp.Reason, tenantId, companyId, res);
 
     }
     catch (ex) {
