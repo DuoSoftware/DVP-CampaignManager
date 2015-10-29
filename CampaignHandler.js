@@ -272,7 +272,10 @@ function GetAllCampaignByCampaignId(tenantId, companyId, campaignId, callback) {
 function GetOngoingCampaign(tenantId, companyId, callback) {
 
     try {
-        DbConn.CampOngoingCampaign.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}]}).then(function (CamObject) {
+
+        DbConn.CampCampaignInfo.findAll({
+            where:[{CompanyId: companyId}, {TenantId: tenantId},{OperationalStatus:"ongoing"}]
+        }).then(function (CamObject) {
             var jsonString;
             if (CamObject) {
                 logger.info('[DVP-CampCampaignInfo.GetOngoingCampaign] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
@@ -300,7 +303,9 @@ function GetOngoingCampaign(tenantId, companyId, callback) {
 function GetAllCampaignByCampaignState(tenantId, companyId, campaignState, callback) {
 
     try {
-        DbConn.CampOngoingCampaign.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {CampaignState: campaignState}, {Status: true}]}).then(function (CamObject) {
+        DbConn.CampOngoingCampaign.findAll({
+            where: [{CampaignState:campaignState}],
+            include: [{model: DbConn.CampCampaignInfo , as: "CampCampaignInfo" ,where:[{CompanyId: companyId}, {TenantId: tenantId}]}]}).then(function (CamObject) {
 
             if (CamObject) {
                 logger.info('[DVP-CampCampaignInfo.GetAllCampaignByCampaignState] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
@@ -327,7 +332,9 @@ function GetAllCampaignByCampaignState(tenantId, companyId, campaignState, callb
 
 function GetOfflineCampaign(tenantId, companyId, callback) {
 
-    DbConn.CampOngoingCampaign.findAll({where: [{TenantId: tenantId}, {CompanyId: companyId}]}).then(function ( CamObject) {
+    DbConn.CampCampaignInfo.findAll({
+        where:[{CompanyId: companyId}, {TenantId: tenantId},{OperationalStatus:"offline"}]
+        }).then(function ( CamObject) {
         if (CamObject) {
 
             var endDate = moment(new Date(), 'YYYY-M-DD HH:mm:ss');

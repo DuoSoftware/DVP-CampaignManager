@@ -152,6 +152,13 @@ function UploadContactsToCampaignWithSchedule(contacts, campaignId, camScheduleI
                 j++;
                 logger.error('[DVP-CampContactInfo.UploadContactsToCampaignWithSchedule] - [%s] - [PGSQL] - insertion[CampContactInfo]  failed- [%s]', contacts[j - 1], err);
                 ids.add(contacts[j - 1]);
+                if (j >= contacts.length) {
+                    var msg = undefined;
+                    if (ids.length > 0) {
+                        msg = new Error("Validation Error");
+                    }
+                    var jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length == 0, ids);
+                    callBack.end(jsonString);}
             });
 
     }

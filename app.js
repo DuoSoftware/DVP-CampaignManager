@@ -204,7 +204,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/:Count', func
             logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
 
-        if (req.params.Count) {
+        if (req.params.Count>0) {
             var count = req.params.Count;
             campaignHandler.GetAllCampaignPage(tenantId, companyId, count, res);
         }
@@ -606,6 +606,11 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/Operations/St
             case "Ongoing":
                 campaignOperations.GetOngoingCampaign(tenantId, companyId, res);
                 break;
+            default :
+            {
+                var jsonString = messageFormatter.FormatMessage(new Error("Invalid Command"), "EXCEPTION", false, undefined);
+                res.end(jsonString);
+            }
         }
 
 
@@ -677,6 +682,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Co
         catch (ex) {
             logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
+
         campaignConfigurations.EditConfiguration(req.params.ConfigureId,req.params.CampaignId, cmp.ChannelConcurrency, cmp.AllowCallBack, tenantId, companyId, true, cmp.Caller, cmp.StartDate, cmp.EndDate, res);
     }
     catch (ex) {
@@ -1686,7 +1692,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamS
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Schedules', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/Schedules/all', function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignSchedule.GetAllSchedule] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
@@ -1914,7 +1920,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Session/:Dialo
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Session', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Session/all', function (req, res, next) {
     try {
 
         logger.info('[DVP-DialoutInfo.GetDialoutInfo] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
@@ -2137,7 +2143,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback/Info', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callbacks/Info', function (req, res, next) {
     try {
 
         logger.info('[DVP-GetCallbackInfosByCampaignId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));

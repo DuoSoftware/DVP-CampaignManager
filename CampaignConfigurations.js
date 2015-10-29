@@ -33,15 +33,14 @@ function CreateConfiguration(campaignId, channelConcurrent, allowCallBack, tenan
 
 }
 
-function EditConfiguration(configureId, campaignId, channelConcurrency, allowCallBack, status, concurrent, caller, startDate, endDate, callBack) {
+function EditConfiguration(configureId, campaignId, channelConcurrency, allowCallBack, tenantId, companyId, status,  caller, startDate, endDate, callBack) {
 
     DbConn.CampConfigurations
         .update(
-        {
+        {CompanyId: companyId,TenantId: tenantId,
             CampaignId: campaignId,
             ChannelConcurrency: channelConcurrency,
             AllowCallBack: allowCallBack,
-            Concurrent: concurrent,
             Caller: caller,
             StartDate: startDate,
             EndDate: endDate,
@@ -80,12 +79,12 @@ function DeleteConfiguration(configureId, callBack) {
     ).then(function (results) {
 
 
-            logger.info('[DVP-CampConfigurations.EditCampaign] - [%s] - [PGSQL] - Updated successfully', campaignId);
+            logger.info('[DVP-CampConfigurations.EditCampaign] - [%s] - [PGSQL] - Updated successfully', configureId);
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
             callBack.end(jsonString);
 
         }).error(function (err) {
-            logger.error('[DVP-CampConfigurations.EditCampaign] - [%s] - [PGSQL] - Updation failed-[%s]', campaignId, err);
+            logger.error('[DVP-CampConfigurations.EditCampaign] - [%s] - [PGSQL] - Updation failed-[%s]', configureId, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callBack.end(jsonString);
         });
