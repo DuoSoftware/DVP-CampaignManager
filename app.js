@@ -595,13 +595,14 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/Operations/St
 
         switch (req.params.Command) {
             case "Pending":
-                if (req.body.DialerId) {
+                campaignOperations.GetPendingCampaign(tenantId, companyId, res);
+               /* if (req.body.DialerId) {
                     var dialerId = req.body.DialerId;
                     campaignOperations.GetPendingCampaignByDialerId(tenantId, companyId, dialerId, res);
                 }
                 else {
                     campaignOperations.GetPendingCampaign(tenantId, companyId, res);
-                }
+                }*/
                 break;
             case "Ongoing":
                 campaignOperations.GetOngoingCampaign(tenantId, companyId, res);

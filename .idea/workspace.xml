@@ -24,73 +24,42 @@
       <file leaf-file-name="app.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6062603">
-              <caret line="1055" column="43" selection-start-line="1055" selection-start-column="43" selection-end-line="1055" selection-end-column="43" />
+            <state vertical-scroll-proportion="0.4433657">
+              <caret line="588" column="25" selection-start-line="587" selection-start-column="16" selection-end-line="588" selection-end-column="25" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CampaignOperations.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CampaignOperations.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-7.724138">
+              <caret line="323" column="47" selection-start-line="323" selection-start-column="47" selection-end-line="323" selection-end-column="47" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CampaignHandler.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CampaignHandler.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="248" column="19" selection-start-line="248" selection-start-column="19" selection-end-line="248" selection-end-column="19" />
               <folding>
-                <element signature="e#1641#2888#0" expanded="false" />
-                <element signature="e#2998#4209#0" expanded="false" />
-                <element signature="e#4334#5482#0" expanded="false" />
-                <element signature="e#5592#6583#0" expanded="false" />
-                <element signature="e#6689#7827#0" expanded="false" />
-                <element signature="e#7937#8964#0" expanded="false" />
-                <element signature="e#9085#10605#0" expanded="false" />
-                <element signature="e#10730#11977#0" expanded="false" />
-                <element signature="e#12119#13406#0" expanded="false" />
-                <element signature="e#13536#14582#0" expanded="false" />
-                <element signature="e#14706#15794#0" expanded="false" />
-                <element signature="e#15953#17116#0" expanded="false" />
-                <element signature="e#17403#18405#0" expanded="false" />
-                <element signature="e#18535#19950#0" expanded="false" />
-                <element signature="e#20141#21267#0" expanded="false" />
-                <element signature="e#21392#23064#0" expanded="false" />
-                <element signature="e#23352#24497#0" expanded="false" />
-                <element signature="e#24634#25795#0" expanded="false" />
-                <element signature="e#25920#26922#0" expanded="false" />
-                <element signature="e#27042#28017#0" expanded="false" />
-                <element signature="e#28149#29180#0" expanded="false" />
-                <element signature="e#29309#30368#0" expanded="false" />
-                <element signature="e#30493#31585#0" expanded="false" />
-                <element signature="e#31720#32812#0" expanded="false" />
-                <element signature="e#32962#34082#0" expanded="false" />
-                <element signature="e#34203#35155#0" expanded="false" />
-                <element signature="e#35292#36311#0" expanded="false" />
-                <element signature="e#36431#37407#0" expanded="false" />
-                <element signature="e#37536#38511#0" expanded="false" />
-                <element signature="e#39751#40682#0" expanded="false" />
-                <element signature="e#40811#41783#0" expanded="false" />
-                <element signature="e#42055#43699#0" expanded="false" />
-                <element signature="e#43827#45400#0" expanded="false" />
-                <element signature="e#45516#46527#0" expanded="false" />
-                <element signature="e#46644#47684#0" expanded="false" />
-                <element signature="e#47802#48846#0" expanded="false" />
-                <element signature="e#48973#50041#0" expanded="false" />
-                <element signature="e#50160#51226#0" expanded="false" />
-                <element signature="e#51336#52287#0" expanded="false" />
-                <element signature="e#52405#53452#0" expanded="false" />
-                <element signature="e#53579#54626#0" expanded="false" />
-                <element signature="e#54774#56012#0" expanded="false" />
-                <element signature="e#56128#57120#0" expanded="false" />
-                <element signature="e#57266#58500#0" expanded="false" />
-                <element signature="e#58766#59785#0" expanded="false" />
-                <element signature="e#59907#60976#0" expanded="false" />
-                <element signature="e#61098#62108#0" expanded="false" />
-                <element signature="e#62221#63163#0" expanded="false" />
-                <element signature="e#63285#64264#0" expanded="false" />
-                <element signature="e#64383#65413#0" expanded="false" />
-                <element signature="e#65538#66571#0" expanded="false" />
-                <element signature="e#66704#67836#0" expanded="false" />
-                <element signature="e#68096#69163#0" expanded="false" />
-                <element signature="e#69280#70397#0" expanded="false" />
-                <element signature="e#70507#71438#0" expanded="false" />
-                <element signature="e#71555#72560#0" expanded="false" />
-                <element signature="e#72821#73935#0" expanded="false" />
-                <element signature="e#74066#75126#0" expanded="false" />
-                <element signature="e#75257#76242#0" expanded="false" />
-                <element signature="e#76361#77287#0" expanded="false" />
-                <element signature="e#77418#78391#0" expanded="false" />
-                <element signature="e#78516#79528#0" expanded="false" />
-                <element signature="e#78526#79265#0" expanded="false" />
-                <element signature="e#79694#80753#0" expanded="false" />
+                <element signature="e#13485#14795#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CampaignConfigurations.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CampaignConfigurations.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="261" column="6" selection-start-line="254" selection-start-column="4" selection-end-line="261" selection-end-column="6" />
+              <folding>
+                <element signature="n#!!block;n#CreateConfiguration#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -107,7 +76,10 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="WARN_ABOUT_CRLF" value="false" />
+    <option name="WARN_ABOUT_DETACHED_HEAD" value="false" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -129,15 +101,15 @@
         <option value="$PROJECT_DIR$/node_modules/DVP-DBModels/CampContactSchedule.js" />
         <option value="$PROJECT_DIR$/config/default.js" />
         <option value="$PROJECT_DIR$/config/custom-environment-variables.js" />
-        <option value="$PROJECT_DIR$/CampaignCallBackHandler.js" />
-        <option value="$PROJECT_DIR$/CampaignSchedule.js" />
-        <option value="$PROJECT_DIR$/CampaignOperations.js" />
-        <option value="$PROJECT_DIR$/CampaignDialoutInfo.js" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="domain.js" />
-        <option value="$PROJECT_DIR$/CampaignHandler.js" />
+        <option value="$PROJECT_DIR$/CampaignCallBackHandler.js" />
         <option value="$PROJECT_DIR$/CampaignConfigurations.js" />
+        <option value="$PROJECT_DIR$/CampaignDialoutInfo.js" />
+        <option value="$PROJECT_DIR$/CampaignHandler.js" />
         <option value="$PROJECT_DIR$/CampaignNumberUpload.js" />
+        <option value="$PROJECT_DIR$/CampaignSchedule.js" />
+        <option value="$PROJECT_DIR$/CampaignOperations.js" />
         <option value="$PROJECT_DIR$/app.js" />
       </list>
     </option>
@@ -178,6 +150,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -196,10 +169,23 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DVP-CampaignManager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DVP-CampaignManager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="node_modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -225,7 +211,7 @@
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="828" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
   <component name="RecentsManager">
@@ -323,16 +309,16 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24158126" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24535316" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33006537" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3251634" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.43954247" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3529412" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2805873" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28431374" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37480316" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4493464" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29575163" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
     </layout>
@@ -371,62 +357,62 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/app.js</url>
-          <line>1210</line>
+          <line>1211</line>
           <option name="timeStamp" value="218" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/app.js</url>
-          <line>1214</line>
+          <line>1215</line>
           <option name="timeStamp" value="219" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/CampaignNumberUpload.js</url>
-          <line>318</line>
+          <line>320</line>
           <option name="timeStamp" value="220" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/CampaignNumberUpload.js</url>
-          <line>327</line>
+          <line>329</line>
           <option name="timeStamp" value="221" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/CampaignNumberUpload.js</url>
-          <line>332</line>
+          <line>334</line>
           <option name="timeStamp" value="222" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/app.js</url>
-          <line>1224</line>
+          <line>1225</line>
           <option name="timeStamp" value="223" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/app.js</url>
-          <line>1207</line>
+          <line>1208</line>
           <option name="timeStamp" value="225" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/app.js</url>
-          <line>1217</line>
+          <line>1218</line>
           <option name="timeStamp" value="226" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/app.js</url>
-          <line>1177</line>
+          <line>1178</line>
           <option name="timeStamp" value="235" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/app.js</url>
-          <line>1173</line>
+          <line>1174</line>
           <option name="timeStamp" value="236" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/app.js</url>
-          <line>1393</line>
+          <line>1394</line>
           <option name="timeStamp" value="257" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/app.js</url>
-          <line>1162</line>
+          <line>1163</line>
           <option name="timeStamp" value="277" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -486,12 +472,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/CampaignHandler.js</url>
-          <line>275</line>
+          <line>279</line>
           <option name="timeStamp" value="340" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/CampaignHandler.js</url>
-          <line>334</line>
+          <line>340</line>
           <option name="timeStamp" value="341" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -539,142 +525,36 @@
           <line>155</line>
           <option name="timeStamp" value="375" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/app.js</url>
+          <line>635</line>
+          <option name="timeStamp" value="403" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/CampaignOperations.js</url>
+          <line>293</line>
+          <option name="timeStamp" value="404" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/app.js</url>
+          <line>598</line>
+          <option name="timeStamp" value="405" />
+        </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="403" />
+      <option name="time" value="406" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/CampaignConfigurations.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="22" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
-          <folding>
-            <element signature="n#!!block;n#CreateConfiguration#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CampaignDialoutInfo.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="6" column="22" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CampaignHandler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="6" column="22" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CampaignNumberUpload.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="4" column="22" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
           <folding>
-            <element signature="e#0#43#0" expanded="false" />
-            <element signature="n#!!block;n#UploadContacts#0" expanded="false" />
-            <element signature="e#535#756#0" expanded="false" />
-            <element signature="e#554#728#0" expanded="false" />
-            <element signature="e#858#1458#0" expanded="false" />
-            <element signature="e#1582#1853#0" expanded="false" />
-            <element signature="e#1876#2146#0" expanded="false" />
-            <element signature="e#2168#2284#0" expanded="false" />
-            <element signature="n#!!block;n#UploadContactsToCampaign#0" expanded="false" />
-            <element signature="e#2482#4385#0" expanded="false" />
-            <element signature="e#2549#2731#0" expanded="false" />
-            <element signature="e#2762#4114#0" expanded="false" />
-            <element signature="e#3033#3206#0" expanded="false" />
-            <element signature="e#3245#3435#0" expanded="false" />
-            <element signature="e#3458#3703#0" expanded="false" />
-            <element signature="e#3749#4100#0" expanded="false" />
-            <element signature="e#3832#3916#0" expanded="false" />
-            <element signature="e#4137#4376#0" expanded="false" />
-            <element signature="e#4905#6352#0" expanded="false" />
-            <element signature="n#!!block;n#AddExistingContactsToCampaign#0" expanded="false" />
-            <element signature="e#7160#7260#0" expanded="false" />
-            <element signature="e#7347#7632#0" expanded="false" />
-            <element signature="e#7655#7945#0" expanded="false" />
-            <element signature="e#8091#8265#0" expanded="false" />
-            <element signature="e#8275#8356#0" expanded="false" />
-            <element signature="e#8296#8346#0" expanded="false" />
-            <element signature="e#8387#8654#0" expanded="false" />
-            <element signature="e#8677#8947#0" expanded="false" />
-            <element signature="e#9188#9386#0" expanded="false" />
-            <element signature="e#9400#9497#0" expanded="false" />
-            <element signature="e#9425#9483#0" expanded="false" />
-            <element signature="e#9532#10093#0" expanded="false" />
-            <element signature="e#9727#10078#0" expanded="false" />
-            <element signature="e#9810#9894#0" expanded="false" />
-            <element signature="e#10116#10725#0" expanded="false" />
-            <element signature="e#10360#10711#0" expanded="false" />
-            <element signature="e#10443#10527#0" expanded="false" />
-            <element signature="n#!!block;n#DeleteContacts#0" expanded="false" />
-            <element signature="e#11032#12507#0" expanded="false" />
-            <element signature="e#11098#11143#0" expanded="false" />
-            <element signature="e#11157#11294#0" expanded="false" />
-            <element signature="e#11329#11890#0" expanded="false" />
-            <element signature="e#11524#11875#0" expanded="false" />
-            <element signature="e#11607#11691#0" expanded="false" />
-            <element signature="e#11913#12499#0" expanded="false" />
-            <element signature="e#12134#12485#0" expanded="false" />
-            <element signature="e#12217#12301#0" expanded="false" />
-            <element signature="e#12512#12629#0" expanded="false" />
-            <element signature="n#!!block;n#AssigningScheduleToCampaign#0" expanded="false" />
-            <element signature="e#12787#12839#0" expanded="false" />
-            <element signature="e#12849#12952#0" expanded="false" />
-            <element signature="e#12983#13254#0" expanded="false" />
-            <element signature="e#13277#13528#0" expanded="false" />
-            <element signature="n#!!block;n#GetAllContact#0" expanded="false" />
-            <element signature="e#13708#14355#0" expanded="false" />
-            <element signature="e#13733#14036#0" expanded="false" />
-            <element signature="e#14050#14349#0" expanded="false" />
-            <element signature="e#14378#14651#0" expanded="false" />
-            <element signature="n#!!block;n#GetAllContactByCampaignId#0" expanded="false" />
-            <element signature="e#14778#14964#0" expanded="false" />
-            <element signature="e#14992#15670#0" expanded="false" />
-            <element signature="e#15017#15339#0" expanded="false" />
-            <element signature="e#15353#15664#0" expanded="false" />
-            <element signature="e#15693#15984#0" expanded="false" />
-            <element signature="n#!!block;n#GetAllContactByCategoryID#0" expanded="false" />
-            <element signature="e#16112#16393#0" expanded="false" />
-            <element signature="e#16209#16387#0" expanded="false" />
-            <element signature="e#16210#16386#0" expanded="false" />
-            <element signature="e#16421#17099#0" expanded="false" />
-            <element signature="e#16446#16768#0" expanded="false" />
-            <element signature="e#16782#17093#0" expanded="false" />
-            <element signature="e#17122#17413#0" expanded="false" />
-            <element signature="e#18069#18240#0" expanded="false" />
-            <element signature="e#18070#18239#0" expanded="false" />
-            <element signature="e#18274#18971#0" expanded="false" />
-            <element signature="e#18299#18630#0" expanded="false" />
-            <element signature="e#18644#18965#0" expanded="false" />
-            <element signature="e#18994#19295#0" expanded="false" />
-            <element signature="n#!!block;n#GetExtraDataByContactId#0" expanded="false" />
-            <element signature="e#19448#19825#0" expanded="false" />
-            <element signature="e#19613#19819#0" expanded="false" />
-            <element signature="e#19614#19818#0" expanded="false" />
-            <element signature="e#19853#20526#0" expanded="false" />
-            <element signature="e#19878#20197#0" expanded="false" />
-            <element signature="e#20211#20520#0" expanded="false" />
-            <element signature="e#20549#20838#0" expanded="false" />
-            <element signature="n#!!block;n#CreateContactCategory#0" expanded="false" />
-            <element signature="e#20978#21095#0" expanded="false" />
-            <element signature="e#21126#21416#0" expanded="false" />
-            <element signature="e#21439#21735#0" expanded="false" />
-            <element signature="n#!!block;n#EditContactCategory#0" expanded="false" />
-            <element signature="e#21885#21935#0" expanded="false" />
-            <element signature="e#22057#22347#0" expanded="false" />
-            <element signature="e#22370#22666#0" expanded="false" />
-            <element signature="e#23174#23461#0" expanded="false" />
-            <element signature="e#23467#24340#0" expanded="false" />
+            <element signature="e#877#1477#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -683,76 +563,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="5" column="22" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#43#0" expanded="false" />
-            <element signature="n#!!block;n#StartCampaign#0" expanded="false" />
-            <element signature="e#449#3703#0" expanded="false" />
-            <element signature="e#468#1614#0" expanded="false" />
-            <element signature="e#715#826#0" expanded="false" />
-            <element signature="e#844#939#0" expanded="false" />
-            <element signature="e#974#1275#0" expanded="false" />
-            <element signature="e#1298#1602#0" expanded="false" />
-            <element signature="e#1628#3697#0" expanded="false" />
-            <element signature="e#1858#2053#0" expanded="false" />
-            <element signature="e#2088#3351#0" expanded="false" />
-            <element signature="e#2333#2417#0" expanded="false" />
-            <element signature="e#2443#2532#0" expanded="false" />
-            <element signature="e#2575#2940#0" expanded="false" />
-            <element signature="e#2963#3331#0" expanded="false" />
-            <element signature="e#3374#3685#0" expanded="false" />
-            <element signature="e#3726#3989#0" expanded="false" />
-            <element signature="e#4099#4144#0" expanded="false" />
-            <element signature="e#4154#4211#0" expanded="false" />
-            <element signature="e#4239#4506#0" expanded="false" />
-            <element signature="e#4529#4799#0" expanded="false" />
-            <element signature="n#!!block;n#PauseCampaign#0" expanded="false" />
-            <element signature="e#4908#4954#0" expanded="false" />
-            <element signature="e#4964#5021#0" expanded="false" />
-            <element signature="e#5048#5317#0" expanded="false" />
-            <element signature="e#5340#5612#0" expanded="false" />
-            <element signature="n#!!block;n#ResumeCampaign#0" expanded="false" />
-            <element signature="e#5790#6918#0" expanded="false" />
-            <element signature="e#5812#6723#0" expanded="false" />
-            <element signature="e#5895#5957#0" expanded="false" />
-            <element signature="e#5975#6046#0" expanded="false" />
-            <element signature="e#6081#6383#0" expanded="false" />
-            <element signature="e#6406#6711#0" expanded="false" />
-            <element signature="e#6737#6912#0" expanded="false" />
-            <element signature="e#6941#7216#0" expanded="false" />
-            <element signature="n#!!block;n#EndCampaign#0" expanded="false" />
-            <element signature="e#7324#7369#0" expanded="false" />
-            <element signature="e#7379#7434#0" expanded="false" />
-            <element signature="e#7461#8549#0" expanded="false" />
-            <element signature="e#7662#7727#0" expanded="false" />
-            <element signature="e#7745#7818#0" expanded="false" />
-            <element signature="e#7853#8182#0" expanded="false" />
-            <element signature="e#8205#8537#0" expanded="false" />
-            <element signature="e#8572#8840#0" expanded="false" />
-            <element signature="e#8846#8896#0" expanded="false" />
-            <element signature="n#!!block;n#UpdateOperationState#0" expanded="false" />
-            <element signature="e#9033#9084#0" expanded="false" />
-            <element signature="e#9094#9204#0" expanded="false" />
-            <element signature="e#9231#10203#0" expanded="false" />
-            <element signature="e#9551#9858#0" expanded="false" />
-            <element signature="e#9881#10191#0" expanded="false" />
-            <element signature="e#10226#10512#0" expanded="false" />
-            <element signature="e#10598#10813#0" expanded="false" />
-            <element signature="e#11049#11742#0" expanded="false" />
-            <element signature="e#11078#11398#0" expanded="false" />
-            <element signature="e#11416#11732#0" expanded="false" />
-            <element signature="e#11765#12055#0" expanded="false" />
-            <element signature="e#12079#12351#0" expanded="false" />
-            <element signature="e#12455#12670#0" expanded="false" />
-            <element signature="e#13295#13611#0" expanded="false" />
-            <element signature="e#13644#13934#0" expanded="false" />
-            <element signature="n#!!block;n#GetOngoingCampaign#0" expanded="false" />
-            <element signature="e#14303#15488#0" expanded="false" />
-            <element signature="e#14474#15167#0" expanded="false" />
-            <element signature="e#14503#14823#0" expanded="false" />
-            <element signature="e#14841#15157#0" expanded="false" />
-            <element signature="e#15190#15480#0" expanded="false" />
-            <element signature="e#15504#15765#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -809,7 +620,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="74" column="0" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#13485#14795#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -818,102 +631,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#43#0" expanded="false" />
-            <element signature="n#!!block;n#UploadContacts#0" expanded="false" />
-            <element signature="e#535#756#0" expanded="false" />
-            <element signature="e#554#728#0" expanded="false" />
-            <element signature="e#858#1458#0" expanded="false" />
-            <element signature="e#1582#1853#0" expanded="false" />
-            <element signature="e#1876#2146#0" expanded="false" />
-            <element signature="e#2168#2284#0" expanded="false" />
-            <element signature="n#!!block;n#UploadContactsToCampaign#0" expanded="false" />
-            <element signature="e#2482#4385#0" expanded="false" />
-            <element signature="e#2549#2731#0" expanded="false" />
-            <element signature="e#2762#4114#0" expanded="false" />
-            <element signature="e#3033#3206#0" expanded="false" />
-            <element signature="e#3245#3435#0" expanded="false" />
-            <element signature="e#3458#3703#0" expanded="false" />
-            <element signature="e#3749#4100#0" expanded="false" />
-            <element signature="e#3832#3916#0" expanded="false" />
-            <element signature="e#4137#4376#0" expanded="false" />
-            <element signature="e#4905#6352#0" expanded="false" />
-            <element signature="n#!!block;n#AddExistingContactsToCampaign#0" expanded="false" />
-            <element signature="e#7160#7260#0" expanded="false" />
-            <element signature="e#7347#7632#0" expanded="false" />
-            <element signature="e#7655#7945#0" expanded="false" />
-            <element signature="e#8091#8265#0" expanded="false" />
-            <element signature="e#8275#8356#0" expanded="false" />
-            <element signature="e#8296#8346#0" expanded="false" />
-            <element signature="e#8387#8654#0" expanded="false" />
-            <element signature="e#8677#8947#0" expanded="false" />
-            <element signature="e#9188#9386#0" expanded="false" />
-            <element signature="e#9400#9497#0" expanded="false" />
-            <element signature="e#9425#9483#0" expanded="false" />
-            <element signature="e#9532#10093#0" expanded="false" />
-            <element signature="e#9727#10078#0" expanded="false" />
-            <element signature="e#9810#9894#0" expanded="false" />
-            <element signature="e#10116#10725#0" expanded="false" />
-            <element signature="e#10360#10711#0" expanded="false" />
-            <element signature="e#10443#10527#0" expanded="false" />
-            <element signature="n#!!block;n#DeleteContacts#0" expanded="false" />
-            <element signature="e#11032#12507#0" expanded="false" />
-            <element signature="e#11098#11143#0" expanded="false" />
-            <element signature="e#11157#11294#0" expanded="false" />
-            <element signature="e#11329#11890#0" expanded="false" />
-            <element signature="e#11524#11875#0" expanded="false" />
-            <element signature="e#11607#11691#0" expanded="false" />
-            <element signature="e#11913#12499#0" expanded="false" />
-            <element signature="e#12134#12485#0" expanded="false" />
-            <element signature="e#12217#12301#0" expanded="false" />
-            <element signature="e#12512#12629#0" expanded="false" />
-            <element signature="n#!!block;n#AssigningScheduleToCampaign#0" expanded="false" />
-            <element signature="e#12787#12839#0" expanded="false" />
-            <element signature="e#12849#12952#0" expanded="false" />
-            <element signature="e#12983#13254#0" expanded="false" />
-            <element signature="e#13277#13528#0" expanded="false" />
-            <element signature="n#!!block;n#GetAllContact#0" expanded="false" />
-            <element signature="e#13708#14355#0" expanded="false" />
-            <element signature="e#13733#14036#0" expanded="false" />
-            <element signature="e#14050#14349#0" expanded="false" />
-            <element signature="e#14378#14651#0" expanded="false" />
-            <element signature="n#!!block;n#GetAllContactByCampaignId#0" expanded="false" />
-            <element signature="e#14778#14964#0" expanded="false" />
-            <element signature="e#14992#15670#0" expanded="false" />
-            <element signature="e#15017#15339#0" expanded="false" />
-            <element signature="e#15353#15664#0" expanded="false" />
-            <element signature="e#15693#15984#0" expanded="false" />
-            <element signature="n#!!block;n#GetAllContactByCategoryID#0" expanded="false" />
-            <element signature="e#16112#16393#0" expanded="false" />
-            <element signature="e#16209#16387#0" expanded="false" />
-            <element signature="e#16210#16386#0" expanded="false" />
-            <element signature="e#16421#17099#0" expanded="false" />
-            <element signature="e#16446#16768#0" expanded="false" />
-            <element signature="e#16782#17093#0" expanded="false" />
-            <element signature="e#17122#17413#0" expanded="false" />
-            <element signature="e#18069#18240#0" expanded="false" />
-            <element signature="e#18070#18239#0" expanded="false" />
-            <element signature="e#18274#18971#0" expanded="false" />
-            <element signature="e#18299#18630#0" expanded="false" />
-            <element signature="e#18644#18965#0" expanded="false" />
-            <element signature="e#18994#19295#0" expanded="false" />
-            <element signature="n#!!block;n#GetExtraDataByContactId#0" expanded="false" />
-            <element signature="e#19448#19825#0" expanded="false" />
-            <element signature="e#19613#19819#0" expanded="false" />
-            <element signature="e#19614#19818#0" expanded="false" />
-            <element signature="e#19853#20526#0" expanded="false" />
-            <element signature="e#19878#20197#0" expanded="false" />
-            <element signature="e#20211#20520#0" expanded="false" />
-            <element signature="e#20549#20838#0" expanded="false" />
-            <element signature="n#!!block;n#CreateContactCategory#0" expanded="false" />
-            <element signature="e#20978#21095#0" expanded="false" />
-            <element signature="e#21126#21416#0" expanded="false" />
-            <element signature="e#21439#21735#0" expanded="false" />
-            <element signature="n#!!block;n#EditContactCategory#0" expanded="false" />
-            <element signature="e#21885#21935#0" expanded="false" />
-            <element signature="e#22057#22347#0" expanded="false" />
-            <element signature="e#22370#22666#0" expanded="false" />
-            <element signature="e#23174#23461#0" expanded="false" />
-            <element signature="e#23467#24340#0" expanded="false" />
+            <element signature="e#877#1477#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -929,7 +647,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="165" column="17" selection-start-line="165" selection-start-column="17" selection-end-line="165" selection-end-column="17" />
-          <folding />
+          <folding>
+            <element signature="e#13485#14795#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -944,7 +664,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="197" column="11" selection-start-line="178" selection-start-column="8" selection-end-line="197" selection-end-column="11" />
-          <folding />
+          <folding>
+            <element signature="e#13485#14795#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -959,7 +681,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#13485#14795#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -981,7 +705,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#13485#14795#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -996,72 +722,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="137" column="0" selection-start-line="137" selection-start-column="0" selection-end-line="137" selection-end-column="0" />
-          <folding>
-            <element signature="e#1641#2888#0" expanded="false" />
-            <element signature="e#2998#4209#0" expanded="false" />
-            <element signature="e#4334#5482#0" expanded="false" />
-            <element signature="e#5592#6583#0" expanded="false" />
-            <element signature="e#6689#7827#0" expanded="false" />
-            <element signature="e#7937#8964#0" expanded="false" />
-            <element signature="e#9085#10605#0" expanded="false" />
-            <element signature="e#10730#11977#0" expanded="false" />
-            <element signature="e#12119#13406#0" expanded="false" />
-            <element signature="e#13536#14582#0" expanded="false" />
-            <element signature="e#14706#15794#0" expanded="false" />
-            <element signature="e#15953#17116#0" expanded="false" />
-            <element signature="e#17403#18405#0" expanded="false" />
-            <element signature="e#18535#19950#0" expanded="false" />
-            <element signature="e#20141#21267#0" expanded="false" />
-            <element signature="e#21392#23064#0" expanded="false" />
-            <element signature="e#23352#24497#0" expanded="false" />
-            <element signature="e#24634#25795#0" expanded="false" />
-            <element signature="e#25920#26922#0" expanded="false" />
-            <element signature="e#27042#28017#0" expanded="false" />
-            <element signature="e#28149#29180#0" expanded="false" />
-            <element signature="e#29309#30368#0" expanded="false" />
-            <element signature="e#30493#31585#0" expanded="false" />
-            <element signature="e#31720#32812#0" expanded="false" />
-            <element signature="e#32962#34082#0" expanded="false" />
-            <element signature="e#34203#35155#0" expanded="false" />
-            <element signature="e#35292#36311#0" expanded="false" />
-            <element signature="e#36431#37407#0" expanded="false" />
-            <element signature="e#37536#38511#0" expanded="false" />
-            <element signature="e#39751#40682#0" expanded="false" />
-            <element signature="e#40811#41783#0" expanded="false" />
-            <element signature="e#42055#43699#0" expanded="false" />
-            <element signature="e#43827#45400#0" expanded="false" />
-            <element signature="e#45516#46527#0" expanded="false" />
-            <element signature="e#46644#47684#0" expanded="false" />
-            <element signature="e#47802#48846#0" expanded="false" />
-            <element signature="e#48973#50041#0" expanded="false" />
-            <element signature="e#50160#51226#0" expanded="false" />
-            <element signature="e#51336#52287#0" expanded="false" />
-            <element signature="e#52405#53452#0" expanded="false" />
-            <element signature="e#53579#54626#0" expanded="false" />
-            <element signature="e#54774#56012#0" expanded="false" />
-            <element signature="e#56128#57120#0" expanded="false" />
-            <element signature="e#57266#58500#0" expanded="false" />
-            <element signature="e#58766#59785#0" expanded="false" />
-            <element signature="e#59907#60976#0" expanded="false" />
-            <element signature="e#61098#62108#0" expanded="false" />
-            <element signature="e#62221#63163#0" expanded="false" />
-            <element signature="e#63285#64264#0" expanded="false" />
-            <element signature="e#64383#65413#0" expanded="false" />
-            <element signature="e#65538#66571#0" expanded="false" />
-            <element signature="e#66704#67836#0" expanded="false" />
-            <element signature="e#68096#69163#0" expanded="false" />
-            <element signature="e#69280#70397#0" expanded="false" />
-            <element signature="e#70507#71438#0" expanded="false" />
-            <element signature="e#71555#72560#0" expanded="false" />
-            <element signature="e#72821#73935#0" expanded="false" />
-            <element signature="e#74066#75126#0" expanded="false" />
-            <element signature="e#75257#76242#0" expanded="false" />
-            <element signature="e#76361#77287#0" expanded="false" />
-            <element signature="e#77418#78391#0" expanded="false" />
-            <element signature="e#78516#79528#0" expanded="false" />
-            <element signature="e#78526#79265#0" expanded="false" />
-            <element signature="e#79694#80753#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1128,13 +789,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CampaignSchedule.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33278418">
-          <caret line="138" column="9" selection-start-line="138" selection-start-column="9" selection-end-line="138" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/default.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.52698416">
@@ -1156,13 +810,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/dvp-dbmodels/CampOngoingCampaign.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33116883">
-          <caret line="9" column="25" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/dvp-dbmodels/CampCampaignInfo.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1170,97 +817,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CampaignOperations.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.37662336">
-          <caret line="297" column="33" selection-start-line="295" selection-start-column="7" selection-end-line="297" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#43#0" expanded="false" />
-            <element signature="n#!!block;n#StartCampaign#0" expanded="false" />
-            <element signature="e#449#3703#0" expanded="false" />
-            <element signature="e#468#1614#0" expanded="false" />
-            <element signature="e#715#826#0" expanded="false" />
-            <element signature="e#844#939#0" expanded="false" />
-            <element signature="e#974#1275#0" expanded="false" />
-            <element signature="e#1298#1602#0" expanded="false" />
-            <element signature="e#1628#3697#0" expanded="false" />
-            <element signature="e#1858#2053#0" expanded="false" />
-            <element signature="e#2088#3351#0" expanded="false" />
-            <element signature="e#2333#2417#0" expanded="false" />
-            <element signature="e#2443#2532#0" expanded="false" />
-            <element signature="e#2575#2940#0" expanded="false" />
-            <element signature="e#2963#3331#0" expanded="false" />
-            <element signature="e#3374#3685#0" expanded="false" />
-            <element signature="e#3726#3989#0" expanded="false" />
-            <element signature="e#4099#4144#0" expanded="false" />
-            <element signature="e#4154#4211#0" expanded="false" />
-            <element signature="e#4239#4506#0" expanded="false" />
-            <element signature="e#4529#4799#0" expanded="false" />
-            <element signature="n#!!block;n#PauseCampaign#0" expanded="false" />
-            <element signature="e#4908#4954#0" expanded="false" />
-            <element signature="e#4964#5021#0" expanded="false" />
-            <element signature="e#5048#5317#0" expanded="false" />
-            <element signature="e#5340#5612#0" expanded="false" />
-            <element signature="n#!!block;n#ResumeCampaign#0" expanded="false" />
-            <element signature="e#5790#6918#0" expanded="false" />
-            <element signature="e#5812#6723#0" expanded="false" />
-            <element signature="e#5895#5957#0" expanded="false" />
-            <element signature="e#5975#6046#0" expanded="false" />
-            <element signature="e#6081#6383#0" expanded="false" />
-            <element signature="e#6406#6711#0" expanded="false" />
-            <element signature="e#6737#6912#0" expanded="false" />
-            <element signature="e#6941#7216#0" expanded="false" />
-            <element signature="n#!!block;n#EndCampaign#0" expanded="false" />
-            <element signature="e#7324#7369#0" expanded="false" />
-            <element signature="e#7379#7434#0" expanded="false" />
-            <element signature="e#7461#8549#0" expanded="false" />
-            <element signature="e#7662#7727#0" expanded="false" />
-            <element signature="e#7745#7818#0" expanded="false" />
-            <element signature="e#7853#8182#0" expanded="false" />
-            <element signature="e#8205#8537#0" expanded="false" />
-            <element signature="e#8572#8840#0" expanded="false" />
-            <element signature="e#8846#8896#0" expanded="false" />
-            <element signature="n#!!block;n#UpdateOperationState#0" expanded="false" />
-            <element signature="e#9033#9084#0" expanded="false" />
-            <element signature="e#9094#9204#0" expanded="false" />
-            <element signature="e#9231#10203#0" expanded="false" />
-            <element signature="e#9551#9858#0" expanded="false" />
-            <element signature="e#9881#10191#0" expanded="false" />
-            <element signature="e#10226#10512#0" expanded="false" />
-            <element signature="e#10598#10813#0" expanded="false" />
-            <element signature="e#11049#11742#0" expanded="false" />
-            <element signature="e#11078#11398#0" expanded="false" />
-            <element signature="e#11416#11732#0" expanded="false" />
-            <element signature="e#11765#12055#0" expanded="false" />
-            <element signature="e#12079#12351#0" expanded="false" />
-            <element signature="e#12455#12670#0" expanded="false" />
-            <element signature="e#13295#13611#0" expanded="false" />
-            <element signature="e#13644#13934#0" expanded="false" />
-            <element signature="n#!!block;n#GetOngoingCampaign#0" expanded="false" />
-            <element signature="e#14303#15488#0" expanded="false" />
-            <element signature="e#14474#15167#0" expanded="false" />
-            <element signature="e#14503#14823#0" expanded="false" />
-            <element signature="e#14841#15157#0" expanded="false" />
-            <element signature="e#15190#15480#0" expanded="false" />
-            <element signature="e#15504#15765#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/dvp-dbmodels/CampConfigurations.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CampaignConfigurations.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33152175">
-          <caret line="93" column="10" selection-start-line="93" selection-start-column="10" selection-end-line="93" selection-end-column="10" />
-          <folding>
-            <element signature="n#!!block;n#CreateConfiguration#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1278,107 +838,84 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/dvp-dbmodels/CampContactSchedule.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/dvp-dbmodels/CampContactInfo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CampaignDialoutInfo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33171913">
+          <caret line="67" column="11" selection-start-line="67" selection-start-column="11" selection-end-line="67" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/CampaignNumberUpload.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33152175">
-          <caret line="416" column="10" selection-start-line="416" selection-start-column="10" selection-end-line="416" selection-end-column="10" />
+        <state vertical-scroll-proportion="-0.6150121">
+          <caret line="533" column="22" selection-start-line="533" selection-start-column="22" selection-end-line="533" selection-end-column="22" />
           <folding>
-            <element signature="e#0#43#0" expanded="false" />
-            <element signature="n#!!block;n#UploadContacts#0" expanded="false" />
-            <element signature="e#535#756#0" expanded="false" />
-            <element signature="e#554#728#0" expanded="false" />
-            <element signature="e#858#1458#0" expanded="false" />
-            <element signature="e#1582#1853#0" expanded="false" />
-            <element signature="e#1876#2146#0" expanded="false" />
-            <element signature="e#2168#2284#0" expanded="false" />
-            <element signature="n#!!block;n#UploadContactsToCampaign#0" expanded="false" />
-            <element signature="e#2482#4385#0" expanded="false" />
-            <element signature="e#2549#2731#0" expanded="false" />
-            <element signature="e#2762#4114#0" expanded="false" />
-            <element signature="e#3033#3206#0" expanded="false" />
-            <element signature="e#3245#3435#0" expanded="false" />
-            <element signature="e#3458#3703#0" expanded="false" />
-            <element signature="e#3749#4100#0" expanded="false" />
-            <element signature="e#3832#3916#0" expanded="false" />
-            <element signature="e#4137#4376#0" expanded="false" />
-            <element signature="e#4905#6352#0" expanded="false" />
-            <element signature="n#!!block;n#AddExistingContactsToCampaign#0" expanded="false" />
-            <element signature="e#7160#7260#0" expanded="false" />
-            <element signature="e#7347#7632#0" expanded="false" />
-            <element signature="e#7655#7945#0" expanded="false" />
-            <element signature="e#8091#8265#0" expanded="false" />
-            <element signature="e#8275#8356#0" expanded="false" />
-            <element signature="e#8296#8346#0" expanded="false" />
-            <element signature="e#8387#8654#0" expanded="false" />
-            <element signature="e#8677#8947#0" expanded="false" />
-            <element signature="e#9188#9386#0" expanded="false" />
-            <element signature="e#9400#9497#0" expanded="false" />
-            <element signature="e#9425#9483#0" expanded="false" />
-            <element signature="e#9532#10093#0" expanded="false" />
-            <element signature="e#9727#10078#0" expanded="false" />
-            <element signature="e#9810#9894#0" expanded="false" />
-            <element signature="e#10116#10725#0" expanded="false" />
-            <element signature="e#10360#10711#0" expanded="false" />
-            <element signature="e#10443#10527#0" expanded="false" />
-            <element signature="n#!!block;n#DeleteContacts#0" expanded="false" />
-            <element signature="e#11032#12507#0" expanded="false" />
-            <element signature="e#11098#11143#0" expanded="false" />
-            <element signature="e#11157#11294#0" expanded="false" />
-            <element signature="e#11329#11890#0" expanded="false" />
-            <element signature="e#11524#11875#0" expanded="false" />
-            <element signature="e#11607#11691#0" expanded="false" />
-            <element signature="e#11913#12499#0" expanded="false" />
-            <element signature="e#12134#12485#0" expanded="false" />
-            <element signature="e#12217#12301#0" expanded="false" />
-            <element signature="e#12512#12629#0" expanded="false" />
-            <element signature="n#!!block;n#AssigningScheduleToCampaign#0" expanded="false" />
-            <element signature="e#12787#12839#0" expanded="false" />
-            <element signature="e#12849#12952#0" expanded="false" />
-            <element signature="e#12983#13254#0" expanded="false" />
-            <element signature="e#13277#13528#0" expanded="false" />
-            <element signature="n#!!block;n#GetAllContact#0" expanded="false" />
-            <element signature="e#13708#14355#0" expanded="false" />
-            <element signature="e#13733#14036#0" expanded="false" />
-            <element signature="e#14050#14349#0" expanded="false" />
-            <element signature="e#14378#14651#0" expanded="false" />
-            <element signature="n#!!block;n#GetAllContactByCampaignId#0" expanded="false" />
-            <element signature="e#14778#14964#0" expanded="false" />
-            <element signature="e#14992#15670#0" expanded="false" />
-            <element signature="e#15017#15339#0" expanded="false" />
-            <element signature="e#15353#15664#0" expanded="false" />
-            <element signature="e#15693#15984#0" expanded="false" />
-            <element signature="n#!!block;n#GetAllContactByCategoryID#0" expanded="false" />
-            <element signature="e#16112#16393#0" expanded="false" />
-            <element signature="e#16209#16387#0" expanded="false" />
-            <element signature="e#16210#16386#0" expanded="false" />
-            <element signature="e#16421#17099#0" expanded="false" />
-            <element signature="e#16446#16768#0" expanded="false" />
-            <element signature="e#16782#17093#0" expanded="false" />
-            <element signature="e#17122#17413#0" expanded="false" />
-            <element signature="e#18069#18240#0" expanded="false" />
-            <element signature="e#18070#18239#0" expanded="false" />
-            <element signature="e#18274#18971#0" expanded="false" />
-            <element signature="e#18299#18630#0" expanded="false" />
-            <element signature="e#18644#18965#0" expanded="false" />
-            <element signature="e#18994#19295#0" expanded="false" />
-            <element signature="n#!!block;n#GetExtraDataByContactId#0" expanded="false" />
-            <element signature="e#19448#19825#0" expanded="false" />
-            <element signature="e#19613#19819#0" expanded="false" />
-            <element signature="e#19614#19818#0" expanded="false" />
-            <element signature="e#19853#20526#0" expanded="false" />
-            <element signature="e#19878#20197#0" expanded="false" />
-            <element signature="e#20211#20520#0" expanded="false" />
-            <element signature="e#20549#20838#0" expanded="false" />
-            <element signature="n#!!block;n#CreateContactCategory#0" expanded="false" />
-            <element signature="e#20978#21095#0" expanded="false" />
-            <element signature="e#21126#21416#0" expanded="false" />
-            <element signature="e#21439#21735#0" expanded="false" />
-            <element signature="n#!!block;n#EditContactCategory#0" expanded="false" />
-            <element signature="e#21885#21935#0" expanded="false" />
-            <element signature="e#22057#22347#0" expanded="false" />
-            <element signature="e#22370#22666#0" expanded="false" />
-            <element signature="e#23174#23461#0" expanded="false" />
-            <element signature="e#23467#24340#0" expanded="false" />
+            <element signature="e#877#1477#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="23" selection-start-line="11" selection-start-column="23" selection-end-line="11" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CampaignCallBackHandler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="4.263492">
+          <caret line="79" column="36" selection-start-line="79" selection-start-column="36" selection-end-line="90" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CampaignSchedule.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="9.552381">
+          <caret line="177" column="18" selection-start-line="177" selection-start-column="18" selection-end-line="177" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/dvp-dbmodels/CampOngoingCampaign.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.35238096">
+          <caret line="9" column="25" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/dvp-dbmodels/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="294" column="58" selection-start-line="294" selection-start-column="42" selection-end-line="294" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CampaignConfigurations.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="261" column="6" selection-start-line="254" selection-start-column="4" selection-end-line="261" selection-end-column="6" />
+          <folding>
+            <element signature="n#!!block;n#CreateConfiguration#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1386,105 +923,26 @@
     <entry file="file://$PROJECT_DIR$/CampaignHandler.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="175" column="14" selection-start-line="175" selection-start-column="14" selection-end-line="175" selection-end-column="14" />
-          <folding />
+          <caret line="248" column="19" selection-start-line="248" selection-start-column="19" selection-end-line="248" selection-end-column="19" />
+          <folding>
+            <element signature="e#13485#14795#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CampaignDialoutInfo.js">
+    <entry file="file://$PROJECT_DIR$/CampaignOperations.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.4402174">
-          <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CampaignCallBackHandler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5081522">
-          <caret line="11" column="10" selection-start-line="11" selection-start-column="10" selection-end-line="11" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.26333907">
-          <caret line="9" column="28" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="28" />
+        <state vertical-scroll-proportion="-7.724138">
+          <caret line="323" column="47" selection-start-line="323" selection-start-column="47" selection-end-line="323" selection-end-column="47" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6062603">
-          <caret line="1055" column="43" selection-start-line="1055" selection-start-column="43" selection-end-line="1055" selection-end-column="43" />
-          <folding>
-            <element signature="e#1641#2888#0" expanded="false" />
-            <element signature="e#2998#4209#0" expanded="false" />
-            <element signature="e#4334#5482#0" expanded="false" />
-            <element signature="e#5592#6583#0" expanded="false" />
-            <element signature="e#6689#7827#0" expanded="false" />
-            <element signature="e#7937#8964#0" expanded="false" />
-            <element signature="e#9085#10605#0" expanded="false" />
-            <element signature="e#10730#11977#0" expanded="false" />
-            <element signature="e#12119#13406#0" expanded="false" />
-            <element signature="e#13536#14582#0" expanded="false" />
-            <element signature="e#14706#15794#0" expanded="false" />
-            <element signature="e#15953#17116#0" expanded="false" />
-            <element signature="e#17403#18405#0" expanded="false" />
-            <element signature="e#18535#19950#0" expanded="false" />
-            <element signature="e#20141#21267#0" expanded="false" />
-            <element signature="e#21392#23064#0" expanded="false" />
-            <element signature="e#23352#24497#0" expanded="false" />
-            <element signature="e#24634#25795#0" expanded="false" />
-            <element signature="e#25920#26922#0" expanded="false" />
-            <element signature="e#27042#28017#0" expanded="false" />
-            <element signature="e#28149#29180#0" expanded="false" />
-            <element signature="e#29309#30368#0" expanded="false" />
-            <element signature="e#30493#31585#0" expanded="false" />
-            <element signature="e#31720#32812#0" expanded="false" />
-            <element signature="e#32962#34082#0" expanded="false" />
-            <element signature="e#34203#35155#0" expanded="false" />
-            <element signature="e#35292#36311#0" expanded="false" />
-            <element signature="e#36431#37407#0" expanded="false" />
-            <element signature="e#37536#38511#0" expanded="false" />
-            <element signature="e#39751#40682#0" expanded="false" />
-            <element signature="e#40811#41783#0" expanded="false" />
-            <element signature="e#42055#43699#0" expanded="false" />
-            <element signature="e#43827#45400#0" expanded="false" />
-            <element signature="e#45516#46527#0" expanded="false" />
-            <element signature="e#46644#47684#0" expanded="false" />
-            <element signature="e#47802#48846#0" expanded="false" />
-            <element signature="e#48973#50041#0" expanded="false" />
-            <element signature="e#50160#51226#0" expanded="false" />
-            <element signature="e#51336#52287#0" expanded="false" />
-            <element signature="e#52405#53452#0" expanded="false" />
-            <element signature="e#53579#54626#0" expanded="false" />
-            <element signature="e#54774#56012#0" expanded="false" />
-            <element signature="e#56128#57120#0" expanded="false" />
-            <element signature="e#57266#58500#0" expanded="false" />
-            <element signature="e#58766#59785#0" expanded="false" />
-            <element signature="e#59907#60976#0" expanded="false" />
-            <element signature="e#61098#62108#0" expanded="false" />
-            <element signature="e#62221#63163#0" expanded="false" />
-            <element signature="e#63285#64264#0" expanded="false" />
-            <element signature="e#64383#65413#0" expanded="false" />
-            <element signature="e#65538#66571#0" expanded="false" />
-            <element signature="e#66704#67836#0" expanded="false" />
-            <element signature="e#68096#69163#0" expanded="false" />
-            <element signature="e#69280#70397#0" expanded="false" />
-            <element signature="e#70507#71438#0" expanded="false" />
-            <element signature="e#71555#72560#0" expanded="false" />
-            <element signature="e#72821#73935#0" expanded="false" />
-            <element signature="e#74066#75126#0" expanded="false" />
-            <element signature="e#75257#76242#0" expanded="false" />
-            <element signature="e#76361#77287#0" expanded="false" />
-            <element signature="e#77418#78391#0" expanded="false" />
-            <element signature="e#78516#79528#0" expanded="false" />
-            <element signature="e#78526#79265#0" expanded="false" />
-            <element signature="e#79694#80753#0" expanded="false" />
-          </folding>
+        <state vertical-scroll-proportion="0.4433657">
+          <caret line="588" column="25" selection-start-line="587" selection-start-column="16" selection-end-line="588" selection-end-column="25" />
+          <folding />
         </state>
       </provider>
     </entry>
