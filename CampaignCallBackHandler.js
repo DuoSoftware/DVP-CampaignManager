@@ -7,8 +7,16 @@ var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('dvp-dbmodels');
 
 
-function CreateCallbackInfo(campaignId,contactId,dialoutTime,callBackCount, tenantId, companyId,callbackClass,callbackType,callbackCategory, callback) {
+function CreateCallbackInfo(req, cmp,tenantId,companyId, callback) {
     var jsonString;
+    var campaignId = req.params.CampaignId;
+    var contactId = cmp.ContactId;
+    var dialoutTime = cmp.DialoutTime;
+    var callBackCount = cmp.CallBackCount;
+    var callbackClass = cmp.CallbackClass;
+    var callbackType = cmp.CallbackType;
+    var callbackCategory = cmp.CallbackCategory;
+
     DbConn.CampConfigurations.find({where: [{CompanyId: companyId}, {TenantId: tenantId}, {CampaignId: campaignId}]}).complete(function (err, CamObject) {
 
         if (err) {
@@ -23,21 +31,20 @@ function CreateCallbackInfo(campaignId,contactId,dialoutTime,callBackCount, tena
                 var b = Date.parse(dialoutTime);
                 var startDate = Date.parse(CamObject.StartDate);
                 var endDate = Date.parse(CamObject.EndDate);
-                if(((b-startDate)>0)&&((endDate-b)>0)){
-
+                if (((b - startDate) > 0) && ((endDate - b) > 0)) {
 
 
                     DbConn.CampCallbackInfo
                         .create(
                         {
-                            CampaignId:campaignId,
-                            ContactId:contactId,
-                            DialoutTime:dialoutTime,
-                            CallBackCount:callBackCount,
-                            CallbackStatus :true,
+                            CampaignId: campaignId,
+                            ContactId: contactId,
+                            DialoutTime: dialoutTime,
+                            CallBackCount: callBackCount,
+                            CallbackStatus: true,
                             Class: callbackClass,
                             Type: callbackType,
-                            Category:callbackCategory
+                            Category: callbackCategory
                         }
                     ).then(function (cmp) {
 
@@ -51,7 +58,7 @@ function CreateCallbackInfo(campaignId,contactId,dialoutTime,callBackCount, tena
                             callback.end(jsonString);
                         });
                 }
-                else{
+                else {
                     logger.error('[DVP-CampCallbackInfo.CreateCallbackInfo-date validate] - [%s] - [PGSQL] - [%s]', contactId, err);
                     jsonString = messageFormatter.FormatMessage(new Error("invalid Date range."), "EXCEPTION", false, undefined);
                     callback.end(jsonString);
@@ -69,17 +76,17 @@ function CreateCallbackInfo(campaignId,contactId,dialoutTime,callBackCount, tena
 
 }
 
-function EditCallbackInfo(callBackId,campaignId,contactId,dialoutTime,callBackCount, tenantId, companyId, callback) {
+function EditCallbackInfo(callBackId, campaignId, contactId, dialoutTime, callBackCount, tenantId, companyId, callback) {
 
 
     DbConn.CampCallbackInfo
         .update(
         {
-            CampaignId:campaignId,
-            ContactId:contactId,
-            DialoutTime:dialoutTime,
-            CallBackCount:callBackCount,
-            CallbackStatus:true
+            CampaignId: campaignId,
+            ContactId: contactId,
+            DialoutTime: dialoutTime,
+            CallBackCount: callBackCount,
+            CallbackStatus: true
         },
         {
             where: [{CallBackId: callBackId}]
@@ -167,9 +174,9 @@ function GetCallbackInfosByCampaignId(campaignId, tenantId, companyId, callBack)
 
 }
 
-function GetCallbackInfosByClassTypeCategory(tenantId, companyId,callbackClass,callbackType,callbackCategory, callBack) {
+function GetCallbackInfosByClassTypeCategory(tenantId, companyId, callbackClass, callbackType, callbackCategory, callBack) {
     var jsonString;
-    DbConn.CampCallbackInfo.findAll({where: [{Class: callbackClass},{Type: callbackType},{Category: callbackCategory}]}).then(function (CamObject) {
+    DbConn.CampCallbackInfo.findAll({where: [{Class: callbackClass}, {Type: callbackType}, {Category: callbackCategory}]}).then(function (CamObject) {
 
         if (CamObject) {
             logger.info('[DVP-CampCallbackInfo.GetCallbackInfosByClassTypeCategory] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));

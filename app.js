@@ -1146,7 +1146,6 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers', fun
     try {
 
         logger.info('[DVP-CampaignNumberUpload.UploadContacts] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-        res.setHeader('Access-Control-Allow-Origin', '*');
         var cmp = req.body;
         var tenantId = 1;
         var companyId = 1;
@@ -2007,7 +2006,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/C
         catch (ex) {
             logger.error('[DVP-CreateCallbackInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
-        campaignCallBackHandler.CreateCallbackInfo(req.params.CampaignId,cmp.ContactId,cmp.DialoutTime,cmp.CallBackCount, tenantId, companyId,cmp.CallbackClass,cmp.CallbackType,cmp.CallbackCategory, res);
+        campaignCallBackHandler.CreateCallbackInfo(req, cmp,tenantId,companyId, res);
 
     }
     catch (ex) {
