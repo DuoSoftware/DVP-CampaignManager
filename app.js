@@ -23,26 +23,28 @@ var campaignCallBackHandler = require('./CampaignCallBackHandler');
 var RestServer = restify.createServer({
     name: "campaignmanager",
     version: '1.0.0'
-}, function (req, res) {
-
-
-
 });
-restify.CORS.ALLOW_HEADERS.push('api_key');
 
+restify.CORS.ALLOW_HEADERS.push('authorization');
 RestServer.use(restify.CORS());
 RestServer.use(restify.fullResponse());
-//Enable request body parsing(access)
-RestServer.use(restify.bodyParser());
-RestServer.use(restify.acceptParser(RestServer.acceptable));
-RestServer.use(restify.queryParser());
-RestServer.use(cors());
+
 //Server listen
 RestServer.listen(port, function () {
     console.log('%s listening at %s', RestServer.name, RestServer.url);
 
 
 });
+
+//Enable request body parsing(access)
+RestServer.use(restify.bodyParser());
+RestServer.use(restify.acceptParser(RestServer.acceptable));
+RestServer.use(restify.queryParser());
+RestServer.use(cors());
+
+
+
+
 
 
 //-------------------------  Restify Server ------------------------- \\
@@ -2208,31 +2210,3 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
 
 //------------------------- End-CallBack ------------------------- \\
 
-function Crossdomain(req, res, next) {
-
-
-    var xml = '<?xml version=""1.0""?><!DOCTYPE cross-domain-policy SYSTEM ""http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd""> <cross-domain-policy>    <allow-access-from domain=""*"" />        </cross-domain-policy>';
-
-    /*var xml='<?xml version="1.0"?>\n';
-
-     xml+= '<!DOCTYPE cross-domain-policy SYSTEM "/xml/dtds/cross-domain-policy.dtd">\n';
-     xml+='';
-     xml+=' \n';
-     xml+='\n';
-     xml+='';*/
-    req.setEncoding('utf8');
-    res.end(xml);
-
-}
-
-function Clientaccesspolicy(req, res, next) {
-
-
-    var xml = '<?xml version="1.0" encoding="utf-8" ?>       <access-policy>        <cross-domain-access>        <policy>        <allow-from http-request-headers="*" http-methods="*">        <domain uri="*"/>        </allow-from>        <grant-to>        <resource include-subpaths="true" path="/"/>        </grant-to>        </policy>        </cross-domain-access>        </access-policy>';
-    req.setEncoding('utf8');
-    res.end(xml);
-
-}
-
-RestServer.get("/crossdomain.xml", Crossdomain);
-RestServer.get("/clientaccesspolicy.xml", Clientaccesspolicy);
