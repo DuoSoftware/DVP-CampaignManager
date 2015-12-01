@@ -24,6 +24,8 @@ var RestServer = restify.createServer({
     version: '1.0.0'
 }, function (req, res) {
 
+
+
 });
 restify.CORS.ALLOW_HEADERS.push('api_key');
 
@@ -33,6 +35,13 @@ RestServer.use(restify.fullResponse());
 RestServer.use(restify.bodyParser());
 RestServer.use(restify.acceptParser(RestServer.acceptable));
 RestServer.use(restify.queryParser());
+RestServer.use(
+    function crossOrigin(req,res,next){
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "X-Requested-With");
+        return next();
+    }
+);
 
 //Server listen
 RestServer.listen(port, function () {
