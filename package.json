@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "dependencies": {
+    "cors": "^2.7.1",
     "collections": "^1.2.4",
     "config": "^1.16.0",
     "dvp-common": "^0.0.2",
