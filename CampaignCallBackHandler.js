@@ -17,15 +17,9 @@ function CreateCallbackInfo(req, cmp,tenantId,companyId, callback) {
     var callbackType = cmp.CallbackType;
     var callbackCategory = cmp.CallbackCategory;
 
-    DbConn.CampConfigurations.find({where: [{CompanyId: companyId}, {TenantId: tenantId}, {CampaignId: campaignId}]}).complete(function (err, CamObject) {
+    DbConn.CampConfigurations.find({where: [{CompanyId: companyId}, {TenantId: tenantId}, {CampaignId: campaignId}]}).then(function (CamObject) {
 
-        if (err) {
-            logger.error('[DVP-CampConfigurations.GetConfiguration] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        }
 
-        else {
 
             if (CamObject) {
                 var b = Date.parse(dialoutTime);
@@ -65,12 +59,12 @@ function CreateCallbackInfo(req, cmp,tenantId,companyId, callback) {
                 }
 
             }
-            else {
-                logger.error('[DVP-CampCampaignInfo.GetConfiguration] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
-                jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
-                callback.end(jsonString);
-            }
-        }
+    },function(err){
+
+
+        logger.error('[DVP-CampConfigurations.GetConfiguration] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
     });
 
 

@@ -9,18 +9,23 @@ var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJ
 function UploadContacts(contacts, tenantId, companyId, categoryID, callBack) {
     var jsonString;
     var startTime = new Date();
-    logger.info('UploadContacts - 1 - %s ', contacts.length);
+
     var nos = [];
 
-    for (var i = 0; i < contacts.length; i++) {
-        var no = {
-            ContactId: contacts[i],
-            Status: true,
-            TenantId: tenantId,
-            CompanyId: companyId,
-            CategoryID: categoryID
-        };
-        nos.add(no);
+    if(contacts) {
+
+        logger.info('UploadContacts - 1 - %s ', contacts.length);
+
+        for (var i = 0; i < contacts.length; i++) {
+            var no = {
+                ContactId: contacts[i],
+                Status: true,
+                TenantId: tenantId,
+                CompanyId: companyId,
+                CategoryID: categoryID
+            };
+            nos.add(no);
+        }
     }
 
     logger.info('UploadContacts - 2 - %s - %s ms', contacts.length, (new Date() - startTime));

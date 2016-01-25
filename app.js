@@ -71,7 +71,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign', function (r
         catch (ex) {
             logger.error('[DVP-campaignmanager.CreateCampaign] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
-        campaignHandler.CreateCampaign(cmp.CampaignName, cmp.CampaignMode, cmp.CampaignChannel, cmp.DialoutMechanism, tenantId, companyId, cmp.Class, cmp.Type, cmp.Category, cmp.Extension, res);
+        campaignHandler.CreateCampaign(cmp.CampaignName, cmp.CampaignMode, cmp.CampaignChannel, cmp.DialoutMechanism, tenantId, companyId, cmp.Class, cmp.Type, cmp.Category, cmp.Extensions, res);
 
     }
     catch (ex) {
@@ -106,7 +106,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId', 
             logger.error('[DVP-campaignmanager.EditCampaign] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
 
-        campaignHandler.EditCampaign(campaignId, cmp.CampaignName, cmp.CampaignMode, cmp.CampaignChannel, cmp.DialoutMechanism, tenantId, companyId, cmp.Class, cmp.Type, cmp.Category, cmp.Extension, res)
+        campaignHandler.EditCampaign(campaignId, cmp.CampaignName, cmp.CampaignMode, cmp.CampaignChannel, cmp.DialoutMechanism, tenantId, companyId, cmp.Class, cmp.Type, cmp.Category, cmp.Extensions, res)
 
     }
     catch (ex) {
@@ -881,7 +881,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration
         catch (ex) {
             logger.error('[DVP-CreateCallbackInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
-        campaignConfigurations.CreateCallbackConfiguration(req.params.ConfigureId,cmp.MaxCallBackCount,cmp.ReasonId,cmp.CallbackInterval, tenantId, companyId, res);
+        campaignConfigurations.CreateCallbackConfiguration(parseInt(req.params.ConfigureId),cmp.MaxCallBackCount,cmp.ReasonId,cmp.CallbackInterval, tenantId, companyId, res);
 
     }
     catch (ex) {
@@ -985,6 +985,71 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
     }
     return next();
 });
+
+
+RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Callback/:CallBackConfId', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-GetAllCallbackConfigurations] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+        var callBackConfId = parseInt(req.params.CallBackConfId);
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-DialoutInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignConfigurations.DeleteCallbackConfigurationByID(callBackConfId, tenantId, companyId, res);
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-GetAllCallbackConfigurations] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/:configID/Callbacks', function (req, res, next) {
+    try {
+
+        logger.info('[DVP-GetCallbackConfigurationByConfigID] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+        var configID = parseInt(req.params.configID);
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-DialoutInfo] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        campaignConfigurations.GetCallbackConfigurationByConfigID(configID, tenantId, companyId, res);
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-GetCallbackConfigurationByConfigID] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+
+//GetCallbackConfigurationByCampaignID
+
 
 RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Reason', function (req, res, next) {
     try {
@@ -1147,7 +1212,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 
 //------------------------- CampaignNumberUpload ------------------------- \\
 
-RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers', function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/CampaignManager/CampaignNumbers', function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.UploadContacts] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
@@ -1234,7 +1299,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/N
     return next();
 });
 
-RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/Category', function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/CampaignManager/CampaignCategory', function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.CreateContactCategory] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
@@ -1527,7 +1592,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/Categorys', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/CampaignCategorys', function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.GetContactCategory] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -1558,6 +1623,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/Catego
     }
     return next();
 });
+
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Number/:contactId/:PageNo/:RowCount', function (req, res, next) {
     try {
@@ -2077,7 +2143,9 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
             logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
 
-        campaignCallBackHandler.DeleteCallbackInfo(callBackId,tenantId, companyId, res);
+
+
+        campaignConfigurations.DeleteCallbackInfo(callBackId,tenantId, companyId, res);
     }
     catch (ex) {
 
