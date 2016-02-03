@@ -150,7 +150,6 @@ function GetConfigurationByCampaignId(campaignId, tenantId, companyId, callBack)
     });
 }
 
-
 function CreateCallbackConfiguration(configureId, maxCallBackCount, reasonId, callbackInterval, tenantId, companyId, callback) {
 
     var jsonString;
@@ -208,6 +207,50 @@ function EditCallbackConfiguration(callBackConfId, configureId, maxCallBackCount
 function GetCallbackConfiguration(callBackConfId, tenantId, companyId, callBack) {
     var jsonString;
     DbConn.CampCallbackConfigurations.find({where: [{CallBackConfId: callBackConfId}]}).then(function (CamObject) {
+
+        if (CamObject) {
+            logger.info('[DVP-CampCallbackConfigurations.GetCallbackConfiguration] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
+            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+            callBack.end(jsonString);
+        }
+        else {
+            logger.error('[DVP-CampCallbackConfigurations.GetCallbackConfiguration] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+            jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+            callBack.end(jsonString);
+        }
+
+    }).error(function (err) {
+        logger.error('[DVP-CampCallbackConfigurations.GetCallbackConfiguration] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callBack.end(jsonString);
+    });
+}
+
+function DeleteCallbackConfigurationByID(configureId, tenantId, companyId, callBack) {
+    var jsonString;
+    DbConn.CampCallbackConfigurations.destroy({where: [{CallBackConfId: configureId}]}).then(function (CamObject) {
+
+        if (CamObject) {
+            logger.info('[DVP-CampCallbackConfigurations.DeleteCallbackConfigurationByID] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
+            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+            callBack.end(jsonString);
+        }
+        else {
+            logger.error('[DVP-CampCallbackConfigurations.DeleteCallbackConfigurationByID] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+            jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+            callBack.end(jsonString);
+        }
+
+    }).error(function (err) {
+        logger.error('[DVP-CampCallbackConfigurations.DeleteCallbackConfigurationByID] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callBack.end(jsonString);
+    });
+}
+
+function GetCallbackConfigurationByConfigID(configureId, tenantId, companyId, callBack) {
+    var jsonString;
+    DbConn.CampCallbackConfigurations.findAll({where: [{ConfigureId: configureId}], include: [{model : DbConn.CampCallBackReasons, as: "CampCallBackReasons"}]}).then(function (CamObject) {
 
         if (CamObject) {
             logger.info('[DVP-CampCallbackConfigurations.GetCallbackConfiguration] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
@@ -443,3 +486,5 @@ module.exports.EditCallBackReason = EditCallBackReason;
 module.exports.DeleteCallbackInfo = DeleteCallbackInfo;
 module.exports.GetCallBackReason = GetCallBackReason;
 module.exports.GetAllCallBackReasons = GetAllCallBackReasons;
+module.exports.GetCallbackConfigurationByConfigID = GetCallbackConfigurationByConfigID;
+module.exports.DeleteCallbackConfigurationByID = DeleteCallbackConfigurationByID;

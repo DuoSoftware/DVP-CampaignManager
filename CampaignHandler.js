@@ -245,9 +245,9 @@ function GetAllCampaignPage(tenantId, companyId, count, callback) {
 function GetAllCampaignByCampaignId(tenantId, companyId, campaignId, callback) {
     var jsonString;
     try {
-        DbConn.CampCampaignInfo.findAll({
+        DbConn.CampCampaignInfo.find({
             where: [{CompanyId: companyId}, {TenantId: tenantId}, {CampaignId: campaignId}],
-            include: [{model: DbConn.CampContactSchedule, as: "CampContactSchedule"}]
+            include: [{model: DbConn.CampContactSchedule, as: "CampContactSchedule"}, {model: DbConn.CampConfigurations, as: "CampConfigurations"}]
         }).then(function (CamObject) {
 
             if (CamObject) {
