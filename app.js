@@ -285,9 +285,9 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/State/:Comman
             case "offline":
                 campaignHandler.GetOfflineCampaign(tenantId, companyId, res);
                 break;
-            case "ongoing":
+            /*case "ongoing":
                 campaignHandler.GetOngoingCampaign(tenantId, companyId, res);
-                break;
+                break;*/
             case "Pending":
                 var count = req.params.Count;
                 campaignHandler.GetPendingCampaign(tenantId, companyId, count, res);

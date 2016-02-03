@@ -291,7 +291,7 @@ function GetOngoingCampaign(tenantId, companyId, callback) {
     var jsonString;
     try {
 
-        DbConn.CampOngoingCampaign.findAll({where: [{CampaignState: 'ongoing'}],
+        DbConn.CampOngoingCampaign.findAll({where: [{CampaignState: 'start'}],
             include:[{model: DbConn.CampCampaignInfo,
                 as: "CampCampaignInfo", where:[{TenantId: tenantId}, {CompanyId: companyId}]}]
         }).then(function (CamObject) {
