@@ -7,6 +7,7 @@ var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('dvp-dbmodels');
 
 function CreateDialoutInfo(campaignId,dialerId,dialerStatus,dialtime,reason,sessionId,tryCount,tenantId, companyId, callBack){
+    var jsonString;
     DbConn.CampDialoutInfo
         .create(
         {
@@ -22,18 +23,19 @@ function CreateDialoutInfo(campaignId,dialerId,dialerStatus,dialtime,reason,sess
         }
     ).then(function (results) {
 
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
             logger.info('[DVP-CampDialoutInfo.CreateDialoutInfo] - [PGSQL] - CreateDialoutInfo successfully.[%s] ', jsonString);
             callBack.end(jsonString);
 
         }).error(function (err) {
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             logger.error('[DVP-CampDialoutInfo.CreateDialoutInfo] - [%s] - [PGSQL] - CreateDialoutInfo failed', campaignId, err);
             callBack.end(jsonString);
         });
 }
 
 function EditDialoutInfo(dialoutId,campaignId,dialerId,dialerStatus,dialtime,reason,sessionId,tryCount,tenantId, companyId, callBack){
+    var jsonString;
     DbConn.CampDialoutInfo
         .update(
         {
@@ -50,28 +52,29 @@ function EditDialoutInfo(dialoutId,campaignId,dialerId,dialerStatus,dialtime,rea
         {where:[{TenantId: tenantId}, { CompanyId:companyId},{CategoryID:categoryID},{DialoutId:dialoutId}]}
     ).then(function (results) {
 
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
             logger.info('[DVP-CampDialoutInfo.EditContactCategory] - [PGSQL] - EditContactCategory successfully.[%s] ', jsonString);
             callBack.end(jsonString);
 
         }).error(function (err) {
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             logger.error('[DVP-CampDialoutInfo.EditContactCategory] - [%s] - [PGSQL] - EditContactCategory failed', categoryName, err);
             callBack.end(jsonString);
         });
 }
 
 function GetDialoutInfoByDialoutId(dialoutId,tenantId, companyId, callBack){
+    var jsonString;
     DbConn.CampDialoutInfo
         .findAll({where: [{CompanyId: companyId}, {TenantId: tenantId},{DialoutId:dialoutId}]}
     ).then(function (results) {
 
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
             logger.info('[DVP-CampDialoutInfo.GetDialoutInfoByDialoutId] - [PGSQL] - GetDialoutInfoByDialoutId successfully.[%s] ', jsonString);
             callBack.end(jsonString);
 
         }).error(function (err) {
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             logger.error('[DVP-CampDialoutInfo.GetDialoutInfoByDialoutId] - [%s] - [PGSQL] - GetDialoutInfoByDialoutId failed', companyId, err);
             callBack.end(jsonString);
         });
@@ -80,16 +83,17 @@ function GetDialoutInfoByDialoutId(dialoutId,tenantId, companyId, callBack){
 
 
 function GetDialoutInfo(tenantId, companyId, callBack){
+    var jsonString;
     DbConn.CampDialoutInfo
         .findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}]}
     ).then(function (results) {
 
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
             logger.info('[DVP-CampDialoutInfo.GetDialoutInfo] - [PGSQL] - GetDialoutInfo successfully.[%s] ', jsonString);
             callBack.end(jsonString);
 
         }).error(function (err) {
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             logger.error('[DVP-CampDialoutInfo.GetDialoutInfo] - [%s] - [PGSQL] - GetDialoutInfo failed', companyId, err);
             callBack.end(jsonString);
         });
