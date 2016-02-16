@@ -64,7 +64,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign', authorizati
         logger.info('[DVP-campaignmanager.CreateCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
 
         var tenantId = req.user.tenant;
@@ -93,7 +93,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId', 
 
         var cmp = req.body;
         var campaignId = req.params.CampaignId;
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -118,7 +118,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/St
 
         logger.info('[DVP-campaignmanager] - [HTTP]  - Request received -  Data - [%s]- %s ', req.params.CampaignId, JSON.stringify(req.body));
 
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -149,7 +149,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId', 
     try {
 
         logger.info('[DVP-campaignmanager.DeleteCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var cmpId = req.params.CampaignId;
         var tenantId = req.user.tenant;
@@ -175,7 +175,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/:Count', auth
     try {
 
         logger.info('[DVP-campaignmanager.GetAllCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -207,7 +207,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId', 
     try {
 
         logger.info('[DVP-campaignmanager.GetAllCampaignByCampaignId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var cmpId = req.params.CampaignId;
         var tenantId = req.user.tenant;
@@ -233,7 +233,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/State/:Comman
     try {
 
         logger.info('[DVP-campaignmanager.Campaign/State] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -272,7 +272,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/A
     try {
 
         logger.info('[DVP-campaignmanager.AddAdditionalData] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var cmp = req.body;
         var tenantId = req.user.tenant;
@@ -298,7 +298,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ad
     try {
 
         logger.info('[DVP-campaignmanager.EditAdditionalData] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var cmp = req.body;
         var tenantId = req.user.tenant;
@@ -323,7 +323,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/AdditinalData/
 }), function (req, res, next) {
     try {
         logger.info('[DVP-campaignmanager.GetAdditionalData] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var cam = req.params;
         var tenantId = req.user.tenant;
@@ -347,7 +347,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ad
 }), function (req, res, next) {
     try {
         logger.info('[DVP-campaignmanager.GetAdditionalDataByCampaignId] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var cmp = req.params;
         var tenantId = req.user.tenant;
@@ -371,7 +371,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ad
 }), function (req, res, next) {
     try {
         logger.info('[DVP-campaignmanager.GetAdditionalDataByClassTypeCategory] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var cmp = req.params;
         var tenantId = req.user.tenant;
@@ -400,7 +400,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/O
     try {
 
         logger.info('[DVP-CampaignOperations.StartCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -425,7 +425,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Op
 
         logger.info('[DVP-CampaignOperations] - [HTTP]  - Request received -  Data - %s - %s', JSON.stringify(req.body), JSON.stringify(req.params));
         var camId = req.params.CampaignId;
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -467,7 +467,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Op
         var campaignId = req.params.CampaignId;
         var dialerId = req.params.DialerId;
         var campaignState = req.params.CampaignState;
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -490,7 +490,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/Operations/St
     try {
 
         logger.info('[DVP-campaignmanager.GetPendingCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -540,7 +540,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/C
     try {
 
         logger.info('[DVP-CampaignConfigurations.CreateConfiguration] - [HTTP]  - Request received -  Data - %s %s ', JSON.stringify(req.params), JSON.stringify(req.body));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var cmp = req.body;
         var tenantId = req.user.tenant;
@@ -566,7 +566,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Co
     try {
 
         logger.info('[DVP-CampaignConfigurations.EditConfiguration] - [HTTP]  - Request received -  Data - %s %s ', JSON.stringify(req.params), JSON.stringify(req.body));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var cmp = req.body;
         var tenantId = req.user.tenant;
@@ -591,7 +591,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
     try {
 
         logger.info('[DVP-CampaignConfigurations.DeleteConfiguration] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -616,7 +616,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 
         logger.info('[DVP-CampaignConfigurations.GetAllConfiguration] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -641,7 +641,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 
         logger.info('[DVP-CampaignConfigurations.GetConfiguration] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -667,7 +667,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 
         logger.info('[DVP-CampaignConfigurations.GetAllConfigurationSetting] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -693,7 +693,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Co
 
         logger.info('[DVP-CampaignConfigurations.GetAllConfigurationSettingByCampaignId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -720,7 +720,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration
         logger.info('[DVP-CreateCallbackConfiguration] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
 
         var cmp = req.body;
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -746,7 +746,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
         logger.info('[DVP-EditCallbackConfiguration] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
 
         var cmp = req.body;
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -772,7 +772,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 
         logger.info('[DVP-GetAllCallbackConfigurations] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -797,7 +797,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
         logger.info('[DVP-GetAllCallbackConfigurations] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
         var callBackConfId = req.params.CallBackConfId;
 
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -821,7 +821,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 
         logger.info('[DVP-GetAllCallbackConfigurations] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
         var callBackConfId = parseInt(req.params.CallBackConfId);
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -845,7 +845,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 
         logger.info('[DVP-GetCallbackConfigurationByConfigID] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
         var configID = parseInt(req.params.configID);
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -873,7 +873,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration
         logger.info('[DVP-CreateCallBackReason] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -899,7 +899,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
         logger.info('[DVP-DeleteCallbackInfo] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
         var cmp = req.params;
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -925,7 +925,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
         logger.info('[DVP-EditCallBackReason] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
         var cmp = req.body;
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -950,7 +950,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 
         logger.info('[DVP-GetAllCallBackReasons] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -974,7 +974,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 
         logger.info('[DVP-GetCallBackReason] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
         var reasonId = req.params.ReasonId;
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -1005,7 +1005,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/CampaignNumbers', auth
         var cmp = req.body;
 
         var extraData = "";
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -1042,7 +1042,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/N
     try {
 
         logger.info('[DVP-CampaignNumberUpload.AssigningScheduleToCampaign] - [HTTP]  - Request received -  Data - %s -%s ', JSON.stringify(req.body), JSON.stringify(req.params));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -1080,7 +1080,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/CampaignCategory', aut
         logger.info('[DVP-CampaignNumberUpload.CreateContactCategory] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -1105,7 +1105,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
         logger.info('[DVP-CampaignNumberUpload.EditContact] - [HTTP]  - Request received -  Data - %s -%s ', JSON.stringify(req.body), JSON.stringify(req.params));
 
         var cmp = req.body;
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -1131,7 +1131,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
         logger.info('[DVP-CampaignNumberUpload.EditContacts] - [HTTP]  - Request received -  Data - %s -%s ', JSON.stringify(req.body), JSON.stringify(req.params));
 
         var cmp = req.body;
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -1157,7 +1157,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/Catego
         logger.info('[DVP-CampaignNumberUpload.EditContactCategory] - [HTTP]  - Request received -  Data - %s - %s', JSON.stringify(req.body), JSON.stringify(req.params));
 
         var cmp = req.body;
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -1180,7 +1180,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
     try {
 
         logger.info('[DVP-CampaignNumberUpload.DeleteContacts] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var contacts = req.body.Contacts;
         var campaignId = req.params.CampaignId;
@@ -1206,7 +1206,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/all', 
     try {
 
         logger.info('[DVP-CampaignNumberUpload.GetAllContact] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -1230,7 +1230,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
     try {
 
         logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var campaignId = req.params.CampaignId;
         var tenantId = req.user.tenant;
@@ -1255,7 +1255,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/Catego
     try {
 
         logger.info('[DVP-CampaignNumberUpload.GetAllContactByCategoryID] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var categoryId = req.params.CategoryID;
         var tenantId = req.user.tenant;
@@ -1281,7 +1281,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
     try {
 
         logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var campaignId = req.params.CampaignId;
         var scheduleId = req.params.ScheduleId;
@@ -1310,7 +1310,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/CampaignCategorys', aut
     try {
 
         logger.info('[DVP-CampaignNumberUpload.GetContactCategory] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -1336,7 +1336,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
 
         logger.info('[DVP-CampaignNumberUpload.GetExtraDataByContactId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var campaignId = req.params.CampaignId;
         var contactId = req.params.ScheduleId;
@@ -1370,7 +1370,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule', au
 
         logger.info('[DVP-CampaignSchedule.CreateSchedule] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var cmp = req.body;
         var tenantId = req.user.tenant;
@@ -1396,7 +1396,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamS
 
         logger.info('[DVP-CampaignSchedule.EditSchedule] - [HTTP]  - Request received -  Data - %s %s', JSON.stringify(req.params), JSON.stringify(req.body));
 
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var cmp = req.body;
         var tenantId = req.user.tenant;
@@ -1423,7 +1423,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamS
 
         logger.info('[DVP-CampaignSchedule.DeleteSchedule] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var camScheduleId = req.params.CamScheduleId;
         var tenantId = req.user.tenant;
@@ -1448,7 +1448,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/Schedules/all
 
         logger.info('[DVP-CampaignSchedule.GetAllSchedule] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -1473,7 +1473,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamS
 
         logger.info('[DVP-CampaignSchedule.GetSchedule] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
         var camScheduleId = req.params.CamScheduleId;
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -1498,7 +1498,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Sc
 
         logger.info('[DVP-CampaignSchedule.GetScheduleByCampaignId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
         var campaignId = req.params.CampaignId;
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -1523,7 +1523,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/Sched
 
         logger.info('[DVP-CampaignSchedule.GetScheduleByScheduleType] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
         var scheduleType = req.params.Type;
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -1549,7 +1549,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Sc
         logger.info('[DVP-CampaignSchedule.GetScheduleByCampaignIdScheduleType] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
         var campaignId = req.params.CampaignId;
         var scheduleType = req.params.ScheduleType;
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -1578,7 +1578,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Session', aut
     try {
 
         logger.info('[DVP-DialoutInfo.CreateDialoutInfo] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var cmp = req.body;
         var tenantId = req.user.tenant;
@@ -1603,7 +1603,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Session/:Dialo
     try {
 
         logger.info('[DVP-DialoutInfo.EditDialoutInfo] - [HTTP]  - Request received -  Data - %s %s ', JSON.stringify(req.params), JSON.stringify(req.body));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var cmp = req.body;
         var tenantId = req.user.tenant;
@@ -1628,7 +1628,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Session/all', 
     try {
 
         logger.info('[DVP-DialoutInfo.GetDialoutInfo] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -1652,7 +1652,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Session/:Dialo
     try {
 
         logger.info('[DVP-DialoutInfo.GetSchedule] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var dialoutId = req.params.DialoutId;
         var tenantId = req.user.tenant;
@@ -1681,7 +1681,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/C
 
         logger.info('[DVP-CreateCallbackInfo] - [HTTP]  - Request received -  Data - %s %s ', JSON.stringify(req.params), JSON.stringify(req.body));
 
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var cmp = req.body;
         var tenantId = req.user.tenant;
@@ -1707,7 +1707,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
 
         logger.info('[DVP-EditCallbackInfo] - [HTTP]  - Request received -  Data - %s %s', JSON.stringify(req.params), JSON.stringify(req.body));
 
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var cmp = req.body;
         var tenantId = req.user.tenant;
@@ -1734,7 +1734,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
 
         logger.info('[DVP-DeleteCallbackInfo] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var callBackId = req.params.CallBackId;
         var tenantId = req.user.tenant;
@@ -1760,7 +1760,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
 
         logger.info('[DVP-GetAllCallbackInfos] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
@@ -1783,7 +1783,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
     try {
 
         logger.info('[DVP-GetCallbackInfo] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var callBackId = req.params.CallBackId;
         var tenantId = req.user.tenant;
@@ -1807,7 +1807,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
     try {
 
         logger.info('[DVP-GetCallbackInfosByCampaignId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var campaignId = req.params.CampaignId;
         var tenantId = req.user.tenant;
@@ -1831,7 +1831,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
     try {
 
         logger.info('[DVP-GetCallbackInfosByClassTypeCategory] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-        if (!req.user.tenant || !req.user.company)
+         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var cmp = req.params;
         var tenantId = req.user.tenant;
