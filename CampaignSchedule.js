@@ -180,6 +180,27 @@ function GetScheduleByCampaignIdScheduleType(campaignId, scheduleType, tenantId,
     });
 }
 
+function AssigningScheduleToCampaign(campaignId, CamScheduleId, tenantId, companyId, callBack) {
+    var jsonString;
+    DbConn.CampContactSchedule
+        .update(
+        {
+            CamScheduleId: CamScheduleId
+        },
+        {
+            where: [{CampaignId: campaignId}, {CompanyId: companyId}, {TenantId: tenantId}]
+        }
+    ).then(function (results) {
+            logger.info('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', CamScheduleId);
+            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+            callBack.end(jsonString);
+
+        }).error(function (err) {
+            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            logger.error('[DVP-CampaignNumberUpload.EditContacts] - Updation failed : %s ', jsonString);
+            callBack.end(jsonString);
+        });
+}
 
 module.exports.CreateSchedule = CreateSchedule;
 module.exports.EditSchedule = EditSchedule;
@@ -189,6 +210,7 @@ module.exports.GetSchedule = GetSchedule;
 module.exports.GetScheduleByCampaignId = GetScheduleByCampaignId;
 module.exports.GetScheduleByScheduleType = GetScheduleByScheduleType;
 module.exports.GetScheduleByCampaignIdScheduleType = GetScheduleByCampaignIdScheduleType;
+module.exports.AssigningScheduleToCampaign = AssigningScheduleToCampaign;
 
 
 

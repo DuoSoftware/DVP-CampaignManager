@@ -996,7 +996,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 //------------------------- CampaignNumberUpload ------------------------- \\
 
 RestServer.post('/DVP/API/' + version + '/CampaignManager/CampaignNumbers', authorization({
-    resource: "Numbers",
+    resource: "campaign",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -1054,7 +1054,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/N
             campaignNumberUpload.AddExistingContactsToCampaign(cmp.ContactIds, req.params.CampaignId, res);
         }
         else if (cmp.CamScheduleIds) {
-            campaignNumberUpload.AssigningScheduleToCampaign(req.params.CampaignId, cmp.CamScheduleIds, tenantId, companyId, res);
+            campaignSchedule.AssigningScheduleToCampaign(req.params.CampaignId, cmp.CamScheduleIds, tenantId, companyId, res);
         }
         else {
             var jsonString = messageFormatter.FormatMessage(new Error("Invalid Operation."), "EXCEPTION", false, undefined);
