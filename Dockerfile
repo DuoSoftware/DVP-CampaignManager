@@ -7,7 +7,7 @@
 
 #EXPOSE 8827
 
-FROM node:argon
+FROM node:5.10.0
 RUN git clone git://github.com/DuoSoftware/DVP-CampaignManager.git /usr/local/src/campaignmanager
 RUN cd /usr/local/src/campaignmanager;
 WORKDIR /usr/local/src/campaignmanager
