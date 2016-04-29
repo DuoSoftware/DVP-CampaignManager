@@ -168,10 +168,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId', 
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/:Count', authorization({
-    resource: "campaign",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/:Count', function (req, res, next) {
     try {
 
         logger.info('[DVP-campaignmanager.GetAllCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
