@@ -47,7 +47,7 @@ RestServer.use(cors());
 var jwt = require('restify-jwt');
 var secret = require('dvp-common/Authentication/Secret.js');
 var authorization = require('dvp-common/Authentication/Authorization.js');
-RestServer.use(jwt({secret: secret.Secret}));
+//RestServer.use(jwt({secret: secret.Secret}));
 // ---------------- Security -------------------------- \\
 
 
@@ -55,20 +55,28 @@ RestServer.use(jwt({secret: secret.Secret}));
 
 //-------------------------  CampaignHandler ------------------------- \\
 
-RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign', authorization({
-    resource: "campaign",
-    action: "write"
-}), function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign', function (req, res, next) {
     try {
 
         logger.info('[DVP-campaignmanager.CreateCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
 
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
+
 
         campaignHandler.CreateCampaign(cmp.CampaignName, cmp.CampaignMode, cmp.CampaignChannel, cmp.DialoutMechanism, tenantId, companyId, cmp.Class, cmp.Type, cmp.Category, cmp.Extensions, res);
 
@@ -83,20 +91,28 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign', authorizati
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId', authorization({
-    resource: "campaign",
-    action: "write"
-}), function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId',  function (req, res, next) {
     try {
 
         logger.info('[DVP-campaignmanager.EditCampaign] - [HTTP]  - Request received -  Data - %s %s', JSON.stringify(req.params), JSON.stringify(req.body));
 
         var cmp = req.body;
         var campaignId = req.params.CampaignId;
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
 
         campaignHandler.EditCampaign(campaignId, cmp.CampaignName, cmp.CampaignMode, cmp.CampaignChannel, cmp.DialoutMechanism, tenantId, companyId, cmp.Class, cmp.Type, cmp.Category, cmp.Extensions, res)
@@ -110,18 +126,26 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId', 
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/State/:Command', authorization({
-    resource: "campaign",
-    action: "write"
-}), function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/State/:Command', function (req, res, next) {
     try {
 
         logger.info('[DVP-campaignmanager] - [HTTP]  - Request received -  Data - [%s]- %s ', req.params.CampaignId, JSON.stringify(req.body));
 
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         switch (req.params.Command) {
             case "start":
@@ -142,18 +166,26 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/St
     return next();
 });
 
-RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId', authorization({
-    resource: "campaign",
-    action: "delete"
-}), function (req, res, next) {
+RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId',  function (req, res, next) {
     try {
 
         logger.info('[DVP-campaignmanager.DeleteCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var cmpId = req.params.CampaignId;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
 
         campaignHandler.DeleteCampaign(cmpId, tenantId, companyId, res);
@@ -171,11 +203,27 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId', 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/:Count', function (req, res, next) {
     try {
 
+    authorization({
+            resource: "campaign",
+            action: "delete"
+        });
+
         logger.info('[DVP-campaignmanager.GetAllCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
 
         if (req.params.Count > 0) {
@@ -197,18 +245,26 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/:Count', func
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId', authorization({
-    resource: "campaign",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId', function (req, res, next) {
     try {
 
         logger.info('[DVP-campaignmanager.GetAllCampaignByCampaignId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var cmpId = req.params.CampaignId;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         campaignHandler.GetAllCampaignByCampaignId(tenantId, companyId, cmpId, res);
 
@@ -223,17 +279,25 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId', 
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/State/:Command/:Count', authorization({
-    resource: "campaign",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/State/:Command/:Count',  function (req, res, next) {
     try {
 
         logger.info('[DVP-campaignmanager.Campaign/State] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         switch (req.params.Command) {
             case "offline":
@@ -262,18 +326,26 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/State/:Comman
     return next();
 });
 
-RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditinalData', authorization({
-    resource: "campaign",
-    action: "write"
-}), function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditinalData',function (req, res, next) {
     try {
 
         logger.info('[DVP-campaignmanager.AddAdditionalData] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var cmp = req.body;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         campaignHandler.AddAdditionalData(cmp.DataClass, cmp.DataType, cmp.DataCategory, tenantId, companyId, cmp.AdditionalData, req.params.CampaignId, res);
 
@@ -288,18 +360,26 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/A
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditinalData/:AdditionalDataId', authorization({
-    resource: "campaign",
-    action: "write"
-}), function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditinalData/:AdditionalDataId', function (req, res, next) {
     try {
 
         logger.info('[DVP-campaignmanager.EditAdditionalData] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var cmp = req.body;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         campaignHandler.EditAdditionalData(req.params.AdditionalDataId, cmp.DataClass, cmp.DataType, cmp.DataCategory, tenantId, companyId, cmp.AdditionalData, req.params.CampaignId, res);
 
@@ -314,17 +394,25 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ad
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/AdditinalData/:AdditionalDataId', authorization({
-    resource: "campaign",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/AdditinalData/:AdditionalDataId',  function (req, res, next) {
     try {
         logger.info('[DVP-campaignmanager.GetAdditionalData] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var cam = req.params;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         campaignHandler.GetAdditionalData(cam.AdditionalDataId, tenantId, companyId, res);
 
@@ -338,17 +426,25 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/AdditinalData/
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditinalData', authorization({
-    resource: "campaign",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditinalData', function (req, res, next) {
     try {
         logger.info('[DVP-campaignmanager.GetAdditionalDataByCampaignId] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var cmp = req.params;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         campaignHandler.GetAdditionalDataByCampaignId(cmp.CampaignId, tenantId, companyId, res);
 
@@ -362,17 +458,25 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ad
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditinalData/:DataClass/:DataType/:DataCategory', authorization({
-    resource: "campaign",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditinalData/:DataClass/:DataType/:DataCategory',function (req, res, next) {
     try {
         logger.info('[DVP-campaignmanager.GetAdditionalDataByClassTypeCategory] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var cmp = req.params;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         campaignHandler.GetAdditionalDataByClassTypeCategory(cmp.CampaignId, tenantId, companyId, cmp.DataClass, cmp.DataType, cmp.DataCategory, res);
 
@@ -390,17 +494,25 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ad
 
 //------------------------- CampaignOperations ------------------------- \\
 
-RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Operations/:DialerId', authorization({
-    resource: "Operations",
-    action: "write"
-}), function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Operations/:DialerId',  function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignOperations.StartCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         var cmp = req.params;
         campaignOperations.StartCampaign(cmp.CampaignId, cmp.DialerId, tenantId, companyId, res);
@@ -414,18 +526,26 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/O
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Operations/:Command', authorization({
-    resource: "Operations",
-    action: "write"
-}), function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Operations/:Command',  function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignOperations] - [HTTP]  - Request received -  Data - %s - %s', JSON.stringify(req.body), JSON.stringify(req.params));
         var camId = req.params.CampaignId;
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         switch (req.params.Command) {
             case "stop":
@@ -454,20 +574,28 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Op
 });
 
 //chagen put method to get. dialer req
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Operations/State/:DialerId/:CampaignState', authorization({
-    Operations: "campaign",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Operations/State/:DialerId/:CampaignState',  function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignOperations.UpdateOperationState] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.param));
         var campaignId = req.params.CampaignId;
         var dialerId = req.params.DialerId;
         var campaignState = req.params.CampaignState;
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignOperations.UpdateOperationState(campaignId, dialerId, campaignState, res);
     }
@@ -480,17 +608,25 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Op
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/Operations/State/:Command', authorization({
-    resource: "Operations",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/Operations/State/:Command', function (req, res, next) {
     try {
 
         logger.info('[DVP-campaignmanager.GetPendingCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
 
         switch (req.params.Command) {
@@ -530,18 +666,26 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/Operations/St
 
 //------------------------- CampaignConfigurations ------------------------- \\
 
-RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Configuration', authorization({
-    resource: "campaignconfiguration",
-    action: "write"
-}), function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Configuration',  function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignConfigurations.CreateConfiguration] - [HTTP]  - Request received -  Data - %s %s ', JSON.stringify(req.params), JSON.stringify(req.body));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var cmp = req.body;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
 
         campaignConfigurations.CreateConfiguration(req.params.CampaignId, cmp.ChannelConcurrency, cmp.AllowCallBack, tenantId, companyId, true, cmp.Caller, cmp.StartDate, cmp.EndDate, res);
@@ -556,18 +700,26 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/C
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Configuration/:ConfigureId', authorization({
-    resource: "campaignconfiguration",
-    action: "write"
-}), function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Configuration/:ConfigureId',  function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignConfigurations.EditConfiguration] - [HTTP]  - Request received -  Data - %s %s ', JSON.stringify(req.params), JSON.stringify(req.body));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var cmp = req.body;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
 
         campaignConfigurations.EditConfiguration(req.params.ConfigureId, req.params.CampaignId, cmp.ChannelConcurrency, cmp.AllowCallBack, tenantId, companyId, true, cmp.Caller, cmp.StartDate, cmp.EndDate, res);
@@ -581,17 +733,25 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Co
     return next();
 });
 
-RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/:ConfigureId', authorization({
-    resource: "campaignconfiguration",
-    action: "delete"
-}), function (req, res, next) {
+RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/:ConfigureId',  function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignConfigurations.DeleteConfiguration] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         var cmpId = req.params.ConfigureId;
         campaignConfigurations.DeleteConfiguration(cmpId, res);
@@ -605,18 +765,26 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Configs', authorization({
-    resource: "campaignconfiguration",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Configs', function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignConfigurations.GetAllConfiguration] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignConfigurations.GetAllConfiguration(tenantId, companyId, res);
 
@@ -630,18 +798,26 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Config/:ConfigureId', authorization({
-    resource: "campaignconfiguration",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Config/:ConfigureId',  function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignConfigurations.GetConfiguration] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         var configureId = req.params.ConfigureId;
         campaignConfigurations.GetConfiguration(configureId, tenantId, companyId, res);
@@ -656,18 +832,26 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/:ConfigureId/all', authorization({
-    resource: "campaignconfiguration",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/:ConfigureId/all', function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignConfigurations.GetAllConfigurationSetting] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         var configureId = req.params.ConfigureId;
         campaignConfigurations.GetAllConfigurationSetting(configureId, tenantId, companyId, res);
@@ -682,18 +866,26 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Configurations', authorization({
-    resource: "campaignconfiguration",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Configurations', function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignConfigurations.GetAllConfigurationSettingByCampaignId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         var campaignId = req.params.CampaignId;
         campaignConfigurations.GetAllConfigurationSettingByCampaignId(campaignId, tenantId, companyId, res);
@@ -708,19 +900,27 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Co
     return next();
 });
 
-RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/:ConfigureId/Callback', authorization({
-    resource: "campaignconfiguration",
-    action: "write"
-}), function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/:ConfigureId/Callback',  function (req, res, next) {
     try {
 
         logger.info('[DVP-CreateCallbackConfiguration] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
 
         var cmp = req.body;
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignConfigurations.CreateCallbackConfiguration(parseInt(req.params.ConfigureId), cmp.MaxCallBackCount, cmp.ReasonId, cmp.CallbackInterval, tenantId, companyId, res);
 
@@ -734,19 +934,27 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/:ConfigureId/Callback/:CallBackConfId', authorization({
-    resource: "campaignconfiguration",
-    action: "write"
-}), function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/:ConfigureId/Callback/:CallBackConfId',  function (req, res, next) {
     try {
 
         logger.info('[DVP-EditCallbackConfiguration] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
 
         var cmp = req.body;
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
 
         campaignConfigurations.EditCallbackConfiguration(req.params.CallBackConfId, req.params.ConfigureId, cmp.MaxCallBackCount, cmp.ReasonId, cmp.CallbackInterval, tenantId, companyId, res);
@@ -761,18 +969,26 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Callback', authorization({
-    resource: "campaignconfiguration",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Callback', function (req, res, next) {
     try {
 
         logger.info('[DVP-GetAllCallbackConfigurations] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignConfigurations.GetAllCallbackConfigurations(tenantId, companyId, res);
     }
@@ -785,19 +1001,27 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Callback/:CallBackConfId', authorization({
-    resource: "campaignconfiguration",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Callback/:CallBackConfId', function (req, res, next) {
     try {
 
         logger.info('[DVP-GetAllCallbackConfigurations] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
         var callBackConfId = req.params.CallBackConfId;
 
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignConfigurations.GetCallbackConfiguration(callBackConfId, tenantId, companyId, res);
     }
@@ -810,18 +1034,26 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
     return next();
 });
 
-RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Callback/:CallBackConfId', authorization({
-    resource: "campaignconfiguration",
-    action: "delete"
-}), function (req, res, next) {
+RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Callback/:CallBackConfId',  function (req, res, next) {
     try {
 
         logger.info('[DVP-GetAllCallbackConfigurations] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
         var callBackConfId = parseInt(req.params.CallBackConfId);
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignConfigurations.DeleteCallbackConfigurationByID(callBackConfId, tenantId, companyId, res);
     }
@@ -834,18 +1066,26 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/:configID/Callbacks', authorization({
-    resource: "campaignconfiguration",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/:configID/Callbacks',  function (req, res, next) {
     try {
 
         logger.info('[DVP-GetCallbackConfigurationByConfigID] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
         var configID = parseInt(req.params.configID);
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignConfigurations.GetCallbackConfigurationByConfigID(configID, tenantId, companyId, res);
     }
@@ -862,18 +1102,26 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 //GetCallbackConfigurationByCampaignID
 
 
-RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Reason', authorization({
-    resource: "campaigncallbackreason",
-    action: "write"
-}), function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Reason',  function (req, res, next) {
     try {
         logger.info('[DVP-CreateCallBackReason] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignConfigurations.CreateCallBackReason(cmp.Reason, tenantId, companyId, res);
 
@@ -887,19 +1135,27 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration
     return next();
 });
 
-RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Reason/:ReasonId', authorization({
-    resource: "campaigncallbackreason",
-    action: "delete"
-}), function (req, res, next) {
+RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Reason/:ReasonId',  function (req, res, next) {
     try {
 
         logger.info('[DVP-DeleteCallbackInfo] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
         var cmp = req.params;
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignConfigurations.DeleteCallbackInfo(cmp.ReasonId, tenantId, companyId, res);
 
@@ -913,19 +1169,27 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Reason/:ReasonId', authorization({
-    resource: "campaigncallbackreason",
-    action: "write"
-}), function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Reason/:ReasonId',  function (req, res, next) {
     try {
 
         logger.info('[DVP-EditCallBackReason] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
         var cmp = req.body;
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignConfigurations.EditCallBackReason(req.params.ReasonId, cmp.Reason, tenantId, companyId, res);
 
@@ -939,18 +1203,26 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Reasons', authorization({
-    resource: "campaigncallbackreason",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Reasons',  function (req, res, next) {
     try {
 
         logger.info('[DVP-GetAllCallBackReasons] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignConfigurations.GetAllCallBackReasons(tenantId, companyId, res);
     }
@@ -963,18 +1235,26 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Reason/:ReasonId', authorization({
-    resource: "campaigncallbackreason",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Reason/:ReasonId', function (req, res, next) {
     try {
 
         logger.info('[DVP-GetCallBackReason] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
         var reasonId = req.params.ReasonId;
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignConfigurations.GetCallBackReason(reasonId, tenantId, companyId, res);
     }
@@ -992,20 +1272,28 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 
 //------------------------- CampaignNumberUpload ------------------------- \\
 
-RestServer.post('/DVP/API/' + version + '/CampaignManager/CampaignNumbers', authorization({
-    resource: "campaign",
-    action: "write"
-}), function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/CampaignManager/CampaignNumbers', function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.UploadContacts] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
         var cmp = req.body;
 
         var extraData = "";
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         if (cmp.ExtraData) {
             extraData = cmp.ExtraData;
@@ -1032,17 +1320,25 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/CampaignNumbers', auth
     return next();
 });
 
-RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers/Existing', authorization({
-    resource: "campaignnumbers",
-    action: "write"
-}), function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers/Existing',  function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.AssigningScheduleToCampaign] - [HTTP]  - Request received -  Data - %s -%s ', JSON.stringify(req.body), JSON.stringify(req.params));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         var cmp = req.body;
 
@@ -1068,19 +1364,27 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/N
     return next();
 });
 
-RestServer.post('/DVP/API/' + version + '/CampaignManager/CampaignCategory', authorization({
-    resource: "campaignnumbers",
-    action: "write"
-}), function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/CampaignManager/CampaignCategory',  function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.CreateContactCategory] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
         var cmp = req.body;
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignNumberUpload.CreateContactCategory(cmp.CategoryName, tenantId, companyId, res);
 
@@ -1093,19 +1397,27 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/CampaignCategory', aut
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Number', authorization({
-    resource: "campaignnumbers",
-    action: "write"
-}), function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Number',  function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.EditContact] - [HTTP]  - Request received -  Data - %s -%s ', JSON.stringify(req.body), JSON.stringify(req.params));
 
         var cmp = req.body;
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignNumberUpload.EditContact(cmp.Contact, req.params.CampaignId, tenantId, companyId, res);
 
@@ -1119,19 +1431,27 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers', authorization({
-    resource: "campaignnumbers",
-    action: "write"
-}), function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers', function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.EditContacts] - [HTTP]  - Request received -  Data - %s -%s ', JSON.stringify(req.body), JSON.stringify(req.params));
 
         var cmp = req.body;
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignNumberUpload.EditContacts(cmp.Contacts, req.params.CampaignId, tenantId, companyId, res);
 
@@ -1145,19 +1465,27 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/Category/:CategoryID', authorization({
-    resource: "campaignnumbers",
-    action: "write"
-}), function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/Category/:CategoryID',  function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.EditContactCategory] - [HTTP]  - Request received -  Data - %s - %s', JSON.stringify(req.body), JSON.stringify(req.params));
 
         var cmp = req.body;
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignNumberUpload.EditContactCategory(req.params.CategoryID, cmp.CategoryName, tenantId, companyId, res);
     }
@@ -1170,19 +1498,27 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/Catego
     return next();
 });
 
-RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers/', authorization({
-    resource: "campaignnumbers",
-    action: "delete"
-}), function (req, res, next) {
+RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers/',function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.DeleteContacts] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var contacts = req.body.Contacts;
         var campaignId = req.params.CampaignId;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         campaignNumberUpload.DeleteContacts(contacts, campaignId, tenantId, companyId, res);
 
@@ -1196,17 +1532,25 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/all', authorization({
-    resource: "campaignnumbers",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/all',  function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.GetAllContact] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignNumberUpload.GetAllContact(tenantId, companyId, res);
 
@@ -1220,18 +1564,26 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/all', 
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers', authorization({
-    resource: "campaignnumbers",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers', function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var campaignId = req.params.CampaignId;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         campaignNumberUpload.GetAllContactByCampaignId(campaignId, tenantId, companyId, res);
 
@@ -1245,18 +1597,26 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/Category/:CategoryID', authorization({
-    resource: "campaignnumbers",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/Category/:CategoryID',  function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.GetAllContactByCategoryID] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var categoryId = req.params.CategoryID;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
 
         campaignNumberUpload.GetAllContactByCategoryID(categoryId, tenantId, companyId, res);
@@ -1271,21 +1631,29 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/Catego
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers/:ScheduleId/:RowCount/:PageNo', authorization({
-    resource: "campaignnumbers",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers/:ScheduleId/:RowCount/:PageNo',  function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var campaignId = req.params.CampaignId;
         var scheduleId = req.params.ScheduleId;
         var rowCount = req.params.RowCount;
         var pageNo = req.params.PageNo;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
 
         campaignNumberUpload.GetAllContactByCampaignIdScheduleId(campaignId, scheduleId, rowCount, pageNo, tenantId, companyId, res)
@@ -1300,17 +1668,25 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/CampaignCategorys', authorization({
-    resource: "campaignnumbers",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/CampaignCategorys', function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.GetContactCategory] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignNumberUpload.GetContactCategory(tenantId, companyId, res);
 
@@ -1325,22 +1701,30 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/CampaignCategorys', aut
 });
 
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Number/:contactId/:PageNo/:RowCount', authorization({
-    resource: "campaignnumbers",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Number/:contactId/:PageNo/:RowCount',function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignNumberUpload.GetExtraDataByContactId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var campaignId = req.params.CampaignId;
         var contactId = req.params.ScheduleId;
         var rowCount = req.params.RowCount;
         var pageNo = req.params.PageNo;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
 
         campaignNumberUpload.GetExtraDataByContactId(campaignId, contactId, rowCount, pageNo, tenantId, companyId, res);
@@ -1359,19 +1743,27 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
 
 //------------------------- CampaignSchedule ------------------------- \\
 
-RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule', authorization({
-    resource: "Schedule",
-    action: "write"
-}), function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule',  function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignSchedule.CreateSchedule] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var cmp = req.body;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         campaignSchedule.CreateSchedule(cmp.CampaignId, cmp.ScheduleId, cmp.ScheduleType, tenantId, companyId, res);
 
@@ -1385,19 +1777,27 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule', au
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamScheduleId', authorization({
-    resource: "Schedule",
-    action: "write"
-}), function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamScheduleId',  function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignSchedule.EditSchedule] - [HTTP]  - Request received -  Data - %s %s', JSON.stringify(req.params), JSON.stringify(req.body));
 
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var cmp = req.body;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
 
         campaignSchedule.EditSchedule(req.params.CamScheduleId, cmp.CampaignId, cmp.ScheduleId, cmp.ScheduleType, tenantId, companyId, res);
@@ -1412,19 +1812,27 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamS
     return next();
 });
 
-RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamScheduleId', authorization({
-    resource: "Schedule",
-    action: "delete"
-}), function (req, res, next) {
+RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamScheduleId', function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignSchedule.DeleteSchedule] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var camScheduleId = req.params.CamScheduleId;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         campaignSchedule.DeleteSchedule(camScheduleId, tenantId, companyId, res);
     }
@@ -1437,18 +1845,26 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamS
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/Schedules/all', authorization({
-    resource: "Schedule",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/Schedules/all',   function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignSchedule.GetAllSchedule] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignSchedule.GetAllSchedule(tenantId, companyId, res);
 
@@ -1462,18 +1878,26 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/Schedules/all
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamScheduleId', authorization({
-    resource: "Schedule",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamScheduleId',   function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignSchedule.GetSchedule] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
         var camScheduleId = req.params.CamScheduleId;
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignSchedule.GetSchedule(camScheduleId, res);
 
@@ -1487,18 +1911,26 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamS
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Schedule', authorization({
-    resource: "Schedule",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Schedule',  function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignSchedule.GetScheduleByCampaignId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
         var campaignId = req.params.CampaignId;
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignSchedule.GetScheduleByCampaignId(campaignId, tenantId, companyId, res);
 
@@ -1512,18 +1944,26 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Sc
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/ScheduleType/:Type', authorization({
-    resource: "Schedule",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/ScheduleType/:Type',   function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignSchedule.GetScheduleByScheduleType] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
         var scheduleType = req.params.Type;
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignSchedule.GetScheduleByScheduleType(scheduleType, tenantId, companyId, res);
 
@@ -1537,19 +1977,27 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/Sched
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Schedule/:ScheduleType', authorization({
-    resource: "Schedule",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Schedule/:ScheduleType',   function (req, res, next) {
     try {
 
         logger.info('[DVP-CampaignSchedule.GetScheduleByCampaignIdScheduleType] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
         var campaignId = req.params.CampaignId;
         var scheduleType = req.params.ScheduleType;
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
 
         campaignSchedule.GetScheduleByCampaignIdScheduleType(campaignId, scheduleType, tenantId, companyId, res);
@@ -1568,18 +2016,26 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Sc
 
 //------------------------- End-DialoutInfo ------------------------- \\
 
-RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Session', authorization({
-    resource: "Session",
-    action: "write"
-}), function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Session',   function (req, res, next) {
     try {
 
         logger.info('[DVP-DialoutInfo.CreateDialoutInfo] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var cmp = req.body;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         campaignDialoutInfo.CreateDialoutInfo(cmp.CampaignId, cmp.DialerId, cmp.DialerStatus, cmp.Dialtime, cmp.Reason, cmp.SessionId, cmp.TryCount, tenantId, companyId, res);
 
@@ -1593,18 +2049,26 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Session', aut
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Session/:DialoutId', authorization({
-    resource: "Session",
-    action: "write"
-}), function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Session/:DialoutId',   function (req, res, next) {
     try {
 
         logger.info('[DVP-DialoutInfo.EditDialoutInfo] - [HTTP]  - Request received -  Data - %s %s ', JSON.stringify(req.params), JSON.stringify(req.body));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var cmp = req.body;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         campaignDialoutInfo.EditDialoutInfo(req.params.DialoutId, cmp.CampaignId, cmp.DialerId, cmp.DialerStatus, cmp.Dialtime, cmp.Reason, cmp.SessionId, cmp.TryCount, tenantId, companyId, res);
 
@@ -1618,17 +2082,25 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Session/:Dialo
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Session/all', authorization({
-    resource: "Session",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Session/all',  function (req, res, next) {
     try {
 
         logger.info('[DVP-DialoutInfo.GetDialoutInfo] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignDialoutInfo.GetDialoutInfo(tenantId, companyId, res);
 
@@ -1642,18 +2114,26 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Session/all', 
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Session/:DialoutId', authorization({
-    resource: "Session",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Session/:DialoutId',   function (req, res, next) {
     try {
 
         logger.info('[DVP-DialoutInfo.GetSchedule] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var dialoutId = req.params.DialoutId;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         campaignDialoutInfo.GetDialoutInfoByDialoutId(dialoutId, tenantId, companyId, res)
     }
@@ -1670,19 +2150,27 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Session/:Dialo
 
 //------------------------- CallBack ------------------------- \\
 
-RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback', authorization({
-    resource: "Callback",
-    action: "write"
-}), function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback',   function (req, res, next) {
     try {
 
         logger.info('[DVP-CreateCallbackInfo] - [HTTP]  - Request received -  Data - %s %s ', JSON.stringify(req.params), JSON.stringify(req.body));
 
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var cmp = req.body;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         campaignCallBackHandler.CreateCallbackInfo(req, cmp, tenantId, companyId, res);
 
@@ -1696,19 +2184,27 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/C
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback/:CallBackId', authorization({
-    resource: "Callback",
-    action: "write"
-}), function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback/:CallBackId',  function (req, res, next) {
     try {
 
         logger.info('[DVP-EditCallbackInfo] - [HTTP]  - Request received -  Data - %s %s', JSON.stringify(req.params), JSON.stringify(req.body));
 
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var cmp = req.body;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
 
         campaignCallBackHandler.EditCallbackInfo(req.params.CallBackId, req.params.CampaignId, cmp.ContactId, cmp.DialoutTime, cmp.CallBackCount, tenantId, companyId, res);
@@ -1723,19 +2219,27 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
     return next();
 });
 
-RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback/:CallBackId', authorization({
-    resource: "Callback",
-    action: "delete"
-}), function (req, res, next) {
+RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback/:CallBackId', function (req, res, next) {
     try {
 
         logger.info('[DVP-DeleteCallbackInfo] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
 
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var callBackId = req.params.CallBackId;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
 
         campaignConfigurations.DeleteCallbackInfo(callBackId, tenantId, companyId, res);
@@ -1749,18 +2253,26 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback', authorization({
-    resource: "Callback",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback',  function (req, res, next) {
     try {
 
         logger.info('[DVP-GetAllCallbackInfos] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+
 
         campaignCallBackHandler.GetAllCallbackInfos(tenantId, companyId, res);
     }
@@ -1773,18 +2285,26 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback/:CallBackId', authorization({
-    resource: "Callback",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback/:CallBackId', function (req, res, next) {
     try {
 
         logger.info('[DVP-GetCallbackInfo] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var callBackId = req.params.CallBackId;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         campaignCallBackHandler.GetCallbackInfo(callBackId, tenantId, companyId, res);
     }
@@ -1797,18 +2317,27 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callbacks/Info', authorization({
-    resource: "Callback",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callbacks/Info',  function (req, res, next) {
     try {
 
         logger.info('[DVP-GetCallbackInfosByCampaignId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var campaignId = req.params.CampaignId;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         campaignCallBackHandler.GetCallbackInfosByCampaignId(campaignId, tenantId, companyId, res);
     }
@@ -1821,18 +2350,26 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback/:CallbackClass/:CallbackType/:CallbackCategory', authorization({
-    resource: "Callback",
-    action: "read"
-}), function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback/:CallbackClass/:CallbackType/:CallbackCategory', function (req, res, next) {
     try {
 
         logger.info('[DVP-GetCallbackInfosByClassTypeCategory] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DVP-campaignmanager] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
         var cmp = req.params;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         campaignCallBackHandler.GetCallbackInfosByClassTypeCategory(tenantId, companyId, cmp.CallbackClass, cmp.CallbackType, cmp.CallbackCategory, res);
     }
