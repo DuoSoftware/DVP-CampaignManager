@@ -534,7 +534,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/Operations/St
 //------------------------- CampaignConfigurations ------------------------- \\
 
 RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Configuration', authorization({
-    resource: "Configuration",
+    resource: "campaignconfiguration",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -560,7 +560,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/C
 });
 
 RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Configuration/:ConfigureId', authorization({
-    resource: "Configuration",
+    resource: "campaignconfiguration",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -585,7 +585,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Co
 });
 
 RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/:ConfigureId', authorization({
-    resource: "Configuration",
+    resource: "campaignconfiguration",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -609,7 +609,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Configs', authorization({
-    resource: "Configuration",
+    resource: "campaignconfiguration",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -634,7 +634,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Config/:ConfigureId', authorization({
-    resource: "Configuration",
+    resource: "campaignconfiguration",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -660,7 +660,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/:ConfigureId/all', authorization({
-    resource: "Configuration",
+    resource: "campaignconfiguration",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -686,7 +686,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Configurations', authorization({
-    resource: "Configuration",
+    resource: "campaignconfiguration",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -712,7 +712,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Co
 });
 
 RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/:ConfigureId/Callback', authorization({
-    resource: "Configuration",
+    resource: "campaignconfiguration",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -738,7 +738,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration
 });
 
 RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/:ConfigureId/Callback/:CallBackConfId', authorization({
-    resource: "Configuration",
+    resource: "campaignconfiguration",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -765,7 +765,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Callback', authorization({
-    resource: "Configuration",
+    resource: "campaignconfiguration",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -789,7 +789,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Callback/:CallBackConfId', authorization({
-    resource: "Configuration",
+    resource: "campaignconfiguration",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -814,7 +814,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 });
 
 RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Callback/:CallBackConfId', authorization({
-    resource: "Configuration",
+    resource: "campaignconfiguration",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -838,7 +838,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/:configID/Callbacks', authorization({
-    resource: "Configuration",
+    resource: "campaignconfiguration",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -866,7 +866,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 
 
 RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Reason', authorization({
-    resource: "Reason",
+    resource: "campaigncallbackreason",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -891,7 +891,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration
 });
 
 RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Reason/:ReasonId', authorization({
-    resource: "Reason",
+    resource: "campaigncallbackreason",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -917,7 +917,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 });
 
 RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Reason/:ReasonId', authorization({
-    resource: "Reason",
+    resource: "campaigncallbackreason",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -943,7 +943,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Reasons', authorization({
-    resource: "Reason",
+    resource: "campaigncallbackreason",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -967,7 +967,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/Reason/:ReasonId', authorization({
-    resource: "Reason",
+    resource: "campaigncallbackreason",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1036,7 +1036,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/CampaignNumbers', auth
 });
 
 RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers/Existing', authorization({
-    resource: "Numbers",
+    resource: "campaignnumbers",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -1072,7 +1072,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/N
 });
 
 RestServer.post('/DVP/API/' + version + '/CampaignManager/CampaignCategory', authorization({
-    resource: "Numbers",
+    resource: "campaignnumbers",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -1097,7 +1097,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/CampaignCategory', aut
 });
 
 RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Number', authorization({
-    resource: "Numbers",
+    resource: "campaignnumbers",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -1123,7 +1123,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
 });
 
 RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers', authorization({
-    resource: "Numbers",
+    resource: "campaignnumbers",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -1149,7 +1149,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
 });
 
 RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/Category/:CategoryID', authorization({
-    resource: "Numbers",
+    resource: "campaignnumbers",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -1174,7 +1174,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/Catego
 });
 
 RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers/', authorization({
-    resource: "Numbers",
+    resource: "campaignnumbers",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -1200,7 +1200,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/all', authorization({
-    resource: "Numbers",
+    resource: "campaignnumbers",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1224,7 +1224,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/all', 
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers', authorization({
-    resource: "Numbers",
+    resource: "campaignnumbers",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1249,7 +1249,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/Category/:CategoryID', authorization({
-    resource: "Numbers",
+    resource: "campaignnumbers",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1275,7 +1275,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Numbers/Catego
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers/:ScheduleId/:RowCount/:PageNo', authorization({
-    resource: "Numbers",
+    resource: "campaignnumbers",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1304,7 +1304,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/CampaignCategorys', authorization({
-    resource: "Numbers",
+    resource: "campaignnumbers",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1329,7 +1329,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/CampaignCategorys', aut
 
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Number/:contactId/:PageNo/:RowCount', authorization({
-    resource: "Numbers",
+    resource: "campaignnumbers",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1850,3 +1850,32 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
 
 //------------------------- End-CallBack ------------------------- \\
 
+//------------------------- Crossdomain ------------------------- \\
+
+function Crossdomain(req, res, next) {
+
+
+    var xml = '<?xml version=""1.0""?><!DOCTYPE cross-domain-policy SYSTEM ""http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd""> <cross-domain-policy>    <allow-access-from domain=""*"" />        </cross-domain-policy>';
+
+    /*var xml='<?xml version="1.0"?>\n';
+     xml+= '<!DOCTYPE cross-domain-policy SYSTEM "/xml/dtds/cross-domain-policy.dtd">\n';
+     xml+='';
+     xml+=' \n';
+     xml+='\n';
+     xml+='';*/
+    req.setEncoding('utf8');
+    res.end(xml);
+
+}
+
+function Clientaccesspolicy(req, res, next) {
+
+
+    var xml = '<?xml version="1.0" encoding="utf-8" ?>       <access-policy>        <cross-domain-access>        <policy>        <allow-from http-request-headers="*" http-methods="*">        <domain uri="*"/>        </allow-from>        <grant-to>        <resource include-subpaths="true" path="/"/>        </grant-to>        </policy>        </cross-domain-access>        </access-policy>';
+    req.setEncoding('utf8');
+    res.end(xml);
+
+}
+
+RestServer.get("/crossdomain.xml", Crossdomain);
+RestServer.get("/clientaccesspolicy.xml", Clientaccesspolicy);
