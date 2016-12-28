@@ -458,7 +458,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Op
 
 //chagen put method to get. dialer req
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Operations/State/:DialerId/:CampaignState', authorization({
-    Operations: "campaign",
+    resource: "Operations",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1363,7 +1363,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
 //------------------------- CampaignSchedule ------------------------- \\
 
 RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule', authorization({
-    resource: "Schedule",
+    resource: "CampaignSchedule",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -1389,7 +1389,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule', au
 });
 
 RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamScheduleId', authorization({
-    resource: "Schedule",
+    resource: "CampaignSchedule",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -1416,7 +1416,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamS
 });
 
 RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamScheduleId', authorization({
-    resource: "Schedule",
+    resource: "CampaignSchedule",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -1441,7 +1441,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamS
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/Schedules/all', authorization({
-    resource: "Schedule",
+    resource: "CampaignSchedule",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1466,7 +1466,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/Schedules/all
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamScheduleId', authorization({
-    resource: "Schedule",
+    resource: "CampaignSchedule",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1491,7 +1491,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamS
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Schedule', authorization({
-    resource: "Schedule",
+    resource: "CampaignSchedule",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1516,7 +1516,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Sc
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/ScheduleType/:Type', authorization({
-    resource: "Schedule",
+    resource: "CampaignSchedule",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1541,7 +1541,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/Sched
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Schedule/:ScheduleType', authorization({
-    resource: "Schedule",
+    resource: "CampaignSchedule",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1572,7 +1572,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Sc
 //------------------------- End-DialoutInfo ------------------------- \\
 
 RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Session', authorization({
-    resource: "Session",
+    resource: "CampaignSession",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -1597,7 +1597,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Session', aut
 });
 
 RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Session/:DialoutId', authorization({
-    resource: "Session",
+    resource: "CampaignSession",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -1622,7 +1622,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Session/:Dialo
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Session/all', authorization({
-    resource: "Session",
+    resource: "CampaignSession",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1646,7 +1646,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Session/all', 
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Session/:DialoutId', authorization({
-    resource: "Session",
+    resource: "CampaignSession",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1674,7 +1674,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Session/:Dialo
 //------------------------- CallBack ------------------------- \\
 
 RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback', authorization({
-    resource: "Callback",
+    resource: "CampaignCallback",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -1700,7 +1700,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/C
 });
 
 RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback/:CallBackId', authorization({
-    resource: "Callback",
+    resource: "CampaignCallback",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -1727,7 +1727,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
 });
 
 RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback/:CallBackId', authorization({
-    resource: "Callback",
+    resource: "CampaignCallback",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -1753,7 +1753,7 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback', authorization({
-    resource: "Callback",
+    resource: "CampaignCallback",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1777,7 +1777,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback/:CallBackId', authorization({
-    resource: "Callback",
+    resource: "CampaignCallback",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1801,7 +1801,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callbacks/Info', authorization({
-    resource: "Callback",
+    resource: "CampaignCallback",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1825,7 +1825,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
 });
 
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Callback/:CallbackClass/:CallbackType/:CallbackCategory', authorization({
-    resource: "Callback",
+    resource: "CampaignCallback",
     action: "read"
 }), function (req, res, next) {
     try {
