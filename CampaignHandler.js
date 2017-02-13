@@ -368,14 +368,14 @@ function GetOfflineCampaign(tenantId, companyId, callback) {
     });
 }
 
-function GetPendingCampaign(tenantId, companyId, count, callback) {
+function GetPendingCampaign(tenantId, companyId, operationalStatus, count, callback) {
     var jsonString;
     try {
 
 //DbConn.CampCampaignInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}], required: true,attributes: ['CampaignId'] , include :[{model:DbConn.CampOngoingCampaign, as :"CampOngoingCampaign", required: true,attributes: []}]}).complete(function (err, CamObject) {
 
         DbConn.CampCampaignInfo.findAll({
-            where: [{Status: true}, {OperationalStatus: "start"}],
+            where: [{Status: true}, {OperationalStatus: operationalStatus}],
             include: [{model: DbConn.CampScheduleInfo, as: "CampScheduleInfo"}, {
                 model: DbConn.CampConfigurations,
                 as: "CampConfigurations"

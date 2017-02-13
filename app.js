@@ -237,6 +237,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/State/:Comman
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
+        var count = req.params.Count;
 
         switch (req.params.Command) {
             case "offline":
@@ -246,8 +247,10 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/State/:Comman
              campaignHandler.GetOngoingCampaign(tenantId, companyId, res);
              break;*/
             case "Pending":
-                var count = req.params.Count;
-                campaignHandler.GetPendingCampaign(tenantId, companyId, count, res);
+                campaignHandler.GetPendingCampaign(tenantId, companyId, "start", count, res);
+                break;
+            case "create":
+                campaignHandler.GetPendingCampaign(tenantId, companyId, "create", count, res);
                 break;
             default :
                 campaignHandler.GetAllCampaignByCampaignState(tenantId, companyId, req.params.Command, res);
