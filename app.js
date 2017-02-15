@@ -18,6 +18,7 @@ var campaignNumberUpload = require('./CampaignNumberUpload');
 var campaignSchedule = require('./CampaignSchedule');
 var campaignDialoutInfo = require('./CampaignDialoutInfo');
 var campaignCallBackHandler = require('./CampaignCallBackHandler');
+var campaignDncInfo = require('./CampaignDncInfo');
 
 
 //-------------------------  Restify Server ------------------------- \\
@@ -237,6 +238,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/State/:Comman
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
+        var count = req.params.Count;
 
         switch (req.params.Command) {
             case "offline":
@@ -246,8 +248,10 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/State/:Comman
              campaignHandler.GetOngoingCampaign(tenantId, companyId, res);
              break;*/
             case "Pending":
-                var count = req.params.Count;
-                campaignHandler.GetPendingCampaign(tenantId, companyId, count, res);
+                campaignHandler.GetPendingCampaign(tenantId, companyId, "start", count, res);
+                break;
+            case "create":
+                campaignHandler.GetPendingCampaign(tenantId, companyId, "create", count, res);
                 break;
             default :
                 campaignHandler.GetAllCampaignByCampaignState(tenantId, companyId, req.params.Command, res);
@@ -1937,6 +1941,97 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ca
 });
 
 //------------------------- End-CallBack ------------------------- \\
+
+
+//------------------------- CampaignDncList ------------------------- \\
+
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Dnc', authorization({
+    resource: "campaigndnc",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[DVP-CampaignDncInfo.CreateDncRecord] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+        var dnc = req.body;
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = parseInt(req.user.tenant);
+        var companyId = parseInt(req.user.company);
+
+
+        campaignDncInfo.CreateDncRecord(dnc.ContactIds, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CampaignDncInfo.CreateDncRecord] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.del('/DVP/API/' + version + '/CampaignManager/Dnc', authorization({
+    resource: "campaigndnc",
+    action: "delete"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[DVP-CampaignDncInfo.DeleteDncRecord] - [HTTP]  - Request received -  Data - %s ', req.body);
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = parseInt(req.user.tenant);
+        var companyId = parseInt(req.user.company);
+
+        var dncList = [];
+        if(req.body && req.body.ContactIds){
+            dncList = req.body.ContactIds;
+        }
+
+
+        campaignDncInfo.DeleteDncRecord(dncList, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CampaignDncInfo.DeleteDncRecord] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Dnc', authorization({
+    resource: "campaigndnc",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[DVP-CampaignDncInfo.GetDncList] - [HTTP]  - Request received');
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = parseInt(req.user.tenant);
+        var companyId = parseInt(req.user.company);
+
+
+        campaignDncInfo.GetDncList(tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CampaignDncInfo.GetDncList] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+
+//------------------------- EndCampaignDncList ------------------------- \\
+
 
 //------------------------- Crossdomain ------------------------- \\
 
