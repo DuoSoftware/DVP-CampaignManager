@@ -4,8 +4,8 @@ module.exports = {
         "User": "duo",
         "Password": "DuoS123",
         "Port": 5432,
-        "Host": "localhost",
-        "Database": "dvpdb"
+        "Host": "104.236.231.11",
+        "Database": "duo"
     },
     "Redis":
     {
@@ -24,7 +24,7 @@ module.exports = {
     "Host": {
         "domain": "0.0.0.0",
         "port": 8827,
-        "version": "6.0",
+        "version": "1.0.0.0",
         "hostpath": "./config",
         "logfilepath": ""
     }

@@ -52,16 +52,16 @@ function UploadContacts(contacts, tenantId, companyId, categoryID, callBack) {
     DbConn.CampContactInfo.bulkCreate(
         nos, {validate: false, individualHooks: true}
     ).then(function (results) {
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
-            logger.info('[DVP-CampCampaignInfo.UploadContacts] - [PGSQL] - UploadContacts successfully.[%s] ', jsonString);
-            callBack.end(jsonString);
-        }).catch(function (err) {
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            logger.error('[DVP-CampCampaignInfo.UploadContacts] - [%s] - [PGSQL] - UploadContacts failed', companyId, err);
-            callBack.end(jsonString);
-        }).finally(function () {
-            logger.info('UploadContacts - %s - %s ms Done.', contacts.length, (new Date() - startTime));
-        });
+        jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+        logger.info('[DVP-CampCampaignInfo.UploadContacts] - [PGSQL] - UploadContacts successfully.[%s] ', jsonString);
+        callBack.end(jsonString);
+    }).catch(function (err) {
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CampCampaignInfo.UploadContacts] - [%s] - [PGSQL] - UploadContacts failed', companyId, err);
+        callBack.end(jsonString);
+    }).finally(function () {
+        logger.info('UploadContacts - %s - %s ms Done.', contacts.length, (new Date() - startTime));
+    });
 }
 
 function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, categoryID, extraData, callBack) {
@@ -72,43 +72,43 @@ function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, cat
 
         DbConn.CampContactInfo
             .create(
-            {
-                ContactId: contacts[i],
-                Status: true,
-                TenantId: tenantId,
-                CompanyId: companyId, CategoryID: categoryID
-            }
-        ).then(function (cmp) {
-                j++;
-                logger.info('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - inserted[CampContactInfo] successfully ', contacts[j - 1]);
+                {
+                    ContactId: contacts[i],
+                    Status: true,
+                    TenantId: tenantId,
+                    CompanyId: companyId, CategoryID: categoryID
+                }
+            ).then(function (cmp) {
+            j++;
+            logger.info('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - inserted[CampContactInfo] successfully ', contacts[j - 1]);
 
-                DbConn.CampContactSchedule
-                    .create(
+            DbConn.CampContactSchedule
+                .create(
                     {
                         CampaignId: campaignId,
                         CamScheduleId: cmp.CamContactId,
                         ExtraData: extraData
                     }
                 ).then(function (cmp) {
-                        logger.info('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - inserted[CampContactSchedule] successfully ', contacts[j - 1]);
-                    }).error(function (err) {
-                        logger.error('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - insertion[CampContactSchedule]  failed- [%s]', contacts[j - 1], err);
-                        ids.add(cmp.ContactId);
-                    });
-
-                if (j >= contacts.length) {
-                    var msg = undefined;
-                    if (ids.length > 0) {
-                        msg = new Error("Validation Error");
-                    }
-                    var jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length == 0, ids);
-                    callBack.end(jsonString);
-                }
+                logger.info('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - inserted[CampContactSchedule] successfully ', contacts[j - 1]);
             }).error(function (err) {
-                j++;
-                logger.error('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - insertion[CampContactInfo]  failed - [%s]', contacts[j - 1], err);
+                logger.error('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - insertion[CampContactSchedule]  failed- [%s]', contacts[j - 1], err);
                 ids.add(cmp.ContactId);
             });
+
+            if (j >= contacts.length) {
+                var msg = undefined;
+                if (ids.length > 0) {
+                    msg = new Error("Validation Error");
+                }
+                var jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length == 0, ids);
+                callBack.end(jsonString);
+            }
+        }).error(function (err) {
+            j++;
+            logger.error('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - insertion[CampContactInfo]  failed - [%s]', contacts[j - 1], err);
+            ids.add(cmp.ContactId);
+        });
 
     }
 
@@ -192,16 +192,16 @@ function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId, 
                     CampScheduleTask.push(function createContact(CampScheduleCallback) {
                         DbConn.CampContactSchedule
                             .create(
-                            {
-                                CampaignId: campaignId,
-                                CamContactId: item,
-                                CamScheduleId: camScheduleId,
-                                ExtraData: extraData
-                            }).then(function (cmp) {
-                                CampScheduleCallback(null, cmp.ContactScheduleId);
-                            }).error(function (err) {
-                                CampScheduleCallback(err, null);
-                            });
+                                {
+                                    CampaignId: campaignId,
+                                    CamContactId: item,
+                                    CamScheduleId: camScheduleId,
+                                    ExtraData: extraData
+                                }).then(function (cmp) {
+                            CampScheduleCallback(null, cmp.ContactScheduleId);
+                        }).error(function (err) {
+                            CampScheduleCallback(err, null);
+                        });
                     });
                 }
             });
@@ -217,19 +217,19 @@ function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId, 
         task.push(function createContact(callback) {
             DbConn.CampContactInfo
                 .create(
-                {
-                    ContactId: item,
-                    Status: true,
-                    TenantId: tenantId,
-                    CompanyId: companyId,
-                    CategoryID: categoryID
-                }).then(function (cmp) {
-                    camContactId.push(cmp.CamContactId);
-                    callback(null, cmp.CamContactId);
-                }).error(function (err) {
-                    errList.push(item);
-                    callback(null, null);
-                });
+                    {
+                        ContactId: item,
+                        Status: true,
+                        TenantId: tenantId,
+                        CompanyId: companyId,
+                        CategoryID: categoryID
+                    }).then(function (cmp) {
+                camContactId.push(cmp.CamContactId);
+                callback(null, cmp.CamContactId);
+            }).error(function (err) {
+                errList.push(item);
+                callback(null, null);
+            });
         });
     });
 
@@ -251,15 +251,15 @@ function AddExistingContactsToCampaign(contactIds, campaignId, callBack) {
         nos
     ).then(function (results) {
 
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
-            logger.info('[DVP-CampaignNumberUpload.AddExistingContactsToCampaign] - [PGSQL] - Updated successfully.[%s] ', jsonString);
-            callBack.end(jsonString);
+        jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+        logger.info('[DVP-CampaignNumberUpload.AddExistingContactsToCampaign] - [PGSQL] - Updated successfully.[%s] ', jsonString);
+        callBack.end(jsonString);
 
-        }).error(function (err) {
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            logger.error('[DVP-CampaignNumberUpload.AddExistingContactsToCampaign] - [%s] - [PGSQL] - Updation failed- [%s]', campaignId, err);
-            callBack.end(jsonString);
-        });
+    }).error(function (err) {
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CampaignNumberUpload.AddExistingContactsToCampaign] - [%s] - [PGSQL] - Updation failed- [%s]', campaignId, err);
+        callBack.end(jsonString);
+    });
 
 }
 
@@ -267,39 +267,6 @@ function EditContact(contact, campaignId, tenantId, companyId, categoryID, callB
     var jsonString;
     DbConn.CampContactInfo
         .update(
-        {
-            CampaignId: campaignId,
-            TenantId: tenantId,
-            CompanyId: companyId,
-            CategoryID: categoryID,
-            Status: true
-        },
-        {
-            where: {
-                ContactId: contact
-            }
-        }
-    ).then(function (results) {
-
-
-            logger.info('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', contact);
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
-            callBack.end(jsonString);
-
-        }).error(function (err) {
-            logger.error('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updation failed- [%s]', contact, err);
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callBack.end(jsonString);
-        });
-}
-
-function EditContacts(contacts, campaignId, tenantId, companyId, categoryID, callBack) {
-    var jsonString;
-    var ids = [];
-    var j = 0;
-    for (var i = 0; i < contacts.length; i++) {
-        DbConn.CampContactInfo
-            .update(
             {
                 CampaignId: campaignId,
                 TenantId: tenantId,
@@ -309,23 +276,56 @@ function EditContacts(contacts, campaignId, tenantId, companyId, categoryID, cal
             },
             {
                 where: {
-                    ContactId: contacts[i]
+                    ContactId: contact
                 }
             }
         ).then(function (results) {
 
-                j++;
-                logger.info('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', contacts[j - 1]);
-                if (j >= contacts.length) {
-                    var msg = undefined;
-                    if (ids.length > 0) {
-                        msg = new Error("Validation Error");
-                    }
-                    jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length == 0, ids);
-                    callBack.end(jsonString);
-                }
 
-            }).error(function (err) {
+        logger.info('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', contact);
+        jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+        callBack.end(jsonString);
+
+    }).error(function (err) {
+        logger.error('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updation failed- [%s]', contact, err);
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callBack.end(jsonString);
+    });
+}
+
+function EditContacts(contacts, campaignId, tenantId, companyId, categoryID, callBack) {
+    var jsonString;
+    var ids = [];
+    var j = 0;
+    for (var i = 0; i < contacts.length; i++) {
+        DbConn.CampContactInfo
+            .update(
+                {
+                    CampaignId: campaignId,
+                    TenantId: tenantId,
+                    CompanyId: companyId,
+                    CategoryID: categoryID,
+                    Status: true
+                },
+                {
+                    where: {
+                        ContactId: contacts[i]
+                    }
+                }
+            ).then(function (results) {
+
+            j++;
+            logger.info('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', contacts[j - 1]);
+            if (j >= contacts.length) {
+                var msg = undefined;
+                if (ids.length > 0) {
+                    msg = new Error("Validation Error");
+                }
+                jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length == 0, ids);
+                callBack.end(jsonString);
+            }
+
+        }).error(function (err) {
                 j++;
                 logger.error('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updation failed- [%s]', contacts[j - 1], err);
 
@@ -354,42 +354,41 @@ function DeleteContacts(contacts, campaignId, tenantId, companyId, callBack) {
     for (var i = 0; i < contacts.length; i++) {
         DbConn.CampContactInfo
             .update(
-            {
-                Status: false
-            },
-            {
-                where: [{ContactId: contacts[i]}, {CompanyId: companyId}, {TenantId: tenantId}, {CampaignId: campaignId}]
+                {
+                    Status: false
+                },
+                {
+                    where: [{ContactId: contacts[i]}, {CompanyId: companyId}, {TenantId: tenantId}, {CampaignId: campaignId}]
+                }
+            ).then(function (results) {
+
+            j++;
+            logger.info('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', contacts[j - 1]);
+            if (j >= contacts.length) {
+                var msg = undefined;
+                if (ids.length > 0) {
+                    msg = new Error("Validation Error");
+                }
+                jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length == 0, ids);
+                callBack.end(jsonString);
             }
-        ).then(function (results) {
 
-                j++;
-                logger.info('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', contacts[j - 1]);
-                if (j >= contacts.length) {
-                    var msg = undefined;
-                    if (ids.length > 0) {
-                        msg = new Error("Validation Error");
-                    }
-                    jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length == 0, ids);
-                    callBack.end(jsonString);
+        }).error(function (err) {
+            logger.error('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updation failed- [%s]', contacts[j - 1], err);
+            ids.add(contacts[j - 1])
+            if (j >= contacts.length) {
+                var msg = undefined;
+                if (ids.length > 0) {
+                    msg = new Error("Validation Error");
                 }
-
-            }).error(function (err) {
-                logger.error('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updation failed- [%s]', contacts[j - 1], err);
-                ids.add(contacts[j - 1])
-                if (j >= contacts.length) {
-                    var msg = undefined;
-                    if (ids.length > 0) {
-                        msg = new Error("Validation Error");
-                    }
-                    jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length == 0, ids);
-                    callBack.end(jsonString);
-                }
-            });
+                jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length == 0, ids);
+                callBack.end(jsonString);
+            }
+        });
     }
     /* var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, ids);
      callBack.end(jsonString);*/
 }
-
 
 function GetAllContact(tenantId, companyId, callBack) {
     var jsonString;
@@ -435,7 +434,6 @@ function GetAllContactByCampaignId(campaignId, tenantId, companyId, callBack) {
         callBack.end(jsonString);
     });
 }
-
 
 function GetAllContactByCategoryID(categoryId, tenantId, companyId, callBack) {
 
@@ -534,60 +532,202 @@ function CreateContactCategory(categoryName, tenantId, companyId, callBack) {
     var jsonString;
     DbConn.CampContactCategory
         .create(
-        {
-            CategoryName: categoryName,
-            TenantId: tenantId,
-            CompanyId: companyId,
-        }
-    ).then(function (results) {
+            {
+                CategoryName: categoryName,
+                TenantId: tenantId,
+                CompanyId: companyId,
+            }
+        ).then(function (results) {
 
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
-            logger.info('[DVP-CampContactCategory.CreateContactCategory] - [PGSQL] - CreateContactCategory successfully.[%s] ', jsonString);
-            callBack.end(jsonString);
+        jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+        logger.info('[DVP-CampContactCategory.CreateContactCategory] - [PGSQL] - CreateContactCategory successfully.[%s] ', jsonString);
+        callBack.end(jsonString);
 
-        }).error(function (err) {
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            logger.error('[DVP-CampContactCategory.CreateContactCategory] - [%s] - [PGSQL] - CreateContactCategory failed- [%s]', categoryName, err);
-            callBack.end(jsonString);
-        });
+    }).error(function (err) {
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CampContactCategory.CreateContactCategory] - [%s] - [PGSQL] - CreateContactCategory failed- [%s]', categoryName, err);
+        callBack.end(jsonString);
+    });
 }
 
 function EditContactCategory(categoryID, categoryName, tenantId, companyId, callBack) {
     var jsonString;
     DbConn.CampContactCategory
         .update(
-        {
-            CategoryName: categoryName
-        },
-        {where: [{TenantId: tenantId}, {CompanyId: companyId}, {CategoryID: categoryID}]}
-    ).then(function (results) {
+            {
+                CategoryName: categoryName
+            },
+            {where: [{TenantId: tenantId}, {CompanyId: companyId}, {CategoryID: categoryID}]}
+        ).then(function (results) {
 
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
-            logger.info('[DVP-CampContactCategory.CreateContactCategory] - [PGSQL] - CreateContactCategory successfully.[%s] ', jsonString);
-            callBack.end(jsonString);
+        jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+        logger.info('[DVP-CampContactCategory.CreateContactCategory] - [PGSQL] - CreateContactCategory successfully.[%s] ', jsonString);
+        callBack.end(jsonString);
 
-        }).error(function (err) {
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            logger.error('[DVP-CampContactCategory.CreateContactCategory] - [%s] - [PGSQL] - CreateContactCategory failed- [%s]', categoryName, err);
-            callBack.end(jsonString);
-        });
+    }).error(function (err) {
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CampContactCategory.CreateContactCategory] - [%s] - [PGSQL] - CreateContactCategory failed- [%s]', categoryName, err);
+        callBack.end(jsonString);
+    });
 }
+
 
 function GetContactCategory(tenantId, companyId, callBack) {
     var jsonString;
     DbConn.CampContactCategory
         .findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}]}
-    ).then(function (results) {
+        ).then(function (results) {
 
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
-            logger.info('[DVP-CampContactCategory.GetContactCategory] - [PGSQL] - GetContactCategory successfully.[%s] ', jsonString);
-            callBack.end(jsonString);
+        jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+        logger.info('[DVP-CampContactCategory.GetContactCategory] - [PGSQL] - GetContactCategory successfully.[%s] ', jsonString);
+        callBack.end(jsonString);
 
-        }).error(function (err) {
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            logger.error('[DVP-CampContactCategory.GetContactCategory] - [%s] - [PGSQL] - GetContactCategory failed- [%s]', companyId, err);
-            callBack.end(jsonString);
-        });
+    }).error(function (err) {
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CampContactCategory.GetContactCategory] - [%s] - [PGSQL] - GetContactCategory failed- [%s]', companyId, err);
+        callBack.end(jsonString);
+    });
+}
+
+function mapNumberToCampaign(req, res) {
+    var jsonString;
+
+    var tenantId = req.user.tenant;
+    var companyId = req.user.company;
+
+    DbConn.CampContactInfo
+        .findAll(
+            {where: [{CompanyId: companyId}, {TenantId: tenantId}, {CategoryID: req.params.CategoryID}]}).then(function (cmp) {
+        if (cmp && Array.isArray(cmp) && cmp.length > 0) {
+
+            DbConn.CampContactSchedule
+                .find({where: [{CampaignId: req.params.CampaignId}, {BatchNo: cmp[0].BatchNo}]}
+                ).then(function (results) {
+
+                if (results) {
+                    jsonString = messageFormatter.FormatMessage(new Error("Invalid Batch No"), "EXCEPTION", false, undefined);
+                    logger.error('CampContactInfo - bulkCreate failed- [%s]', new Error("Invalid Batch No"));
+                    res.end(jsonString);
+                }
+                else {
+                    var nos = cmp.map(function (item) {
+                        return {CampaignId: req.params.CampaignId, CamContactId: item.CamContactId,BatchNo: cmp[0].BatchNo};
+                    });
+
+                    DbConn.CampContactSchedule.bulkCreate(
+                        nos
+                    ).then(function (results) {
+
+                        jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+                        logger.info('CampContactInfo - bulkCreate successfully.[%s] ', jsonString);
+                        res.end(jsonString);
+
+                    }).error(function (err) {
+                        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                        logger.error('CampContactInfo - bulkCreate failed- [%s]', err);
+                        res.end(jsonString);
+                    });
+                }
+            }).error(function (err) {
+                jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                logger.error('CampContactInfo ---', err);
+                res.end(jsonString);
+            });
+        }
+        else {
+            jsonString = messageFormatter.FormatMessage(new Error("Invalid Category or No Number found."), "EXCEPTION", false, undefined);
+            logger.error('[mapNumberToCompaign] - mapNumberToCompaign failed- [%s]', new Error("Invalid Category"));
+            res.end(jsonString);
+        }
+    }).error(function (err) {
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        logger.error('[mapNumberToCompaign] - mapNumberToCompaign failed- [%s]', err);
+        res.end(jsonString);
+    });
+
+}
+
+function mapScheduleToCampaign(req, res) {
+    var jsonString;
+
+
+    DbConn.CampContactSchedule
+        .findAll(
+            {where: [{CampaignId: req.params.CampaignId}, {CamScheduleId: req.params.CamScheduleId}]}).then(function (cmp) {
+        if (cmp && Array.isArray(cmp) && cmp.length > 0) {
+            jsonString = messageFormatter.FormatMessage(new Error("Invalid Schedule ID OR Already Map To Campaign."), "EXCEPTION", false, undefined);
+            logger.error('mapScheduleToCampaign failed- [%s]', new Error("Invalid Schedule ID"));
+            res.end(jsonString);
+        }
+        else {
+            DbConn.CampContactSchedule
+                .create(
+                    {
+                        CampaignId: req.params.CampaignId,
+                        CamScheduleId:  req.params.CamScheduleId
+                    }
+                ).then(function (result) {
+                if(result){
+                    jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, result);
+                    logger.info('CampContactSchedule successfully.[%s] ', jsonString);
+                    res.end(jsonString);
+                }else {
+                    jsonString = messageFormatter.FormatMessage(undefined, "FAIL", false, result);
+                    logger.info('CampContactSchedule Fail.[%s] ', jsonString);
+                    res.end(jsonString);
+                }
+            }).error(function (err) {
+                jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                logger.error('CampContactSchedule failed- [%s]', err);
+                res.end(jsonString);
+            });
+
+        }
+    }).error(function (err) {
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        logger.error('mapScheduleToCampaign failed- [%s]', err);
+        res.end(jsonString);
+    });
+
+}
+
+function mapNumberAndScheduleToCampaign(req, res) {
+    var jsonString;
+
+
+    DbConn.CampContactSchedule
+        .findAll(
+            {where: [{CampaignId: req.params.CampaignId}, {CamScheduleId: req.params.CamScheduleId}]}).then(function (cmp) {
+        if (cmp && Array.isArray(cmp) && cmp.length > 0) {
+            mapNumberToCampaign(req, res);
+        }
+        else {
+            DbConn.CampContactSchedule
+                .create(
+                    {
+                        CampaignId: req.params.CampaignId,
+                        CamScheduleId:  req.params.CamScheduleId
+                    }
+                ).then(function (result) {
+                if(result){
+                    mapNumberToCampaign(req, res);
+                }else {
+                    jsonString = messageFormatter.FormatMessage(undefined, "FAIL", false, result);
+                    logger.info('mapNumberAndScheduleToCampaign Fail.[%s] ', jsonString);
+                    res.end(jsonString);
+                }
+            }).error(function (err) {
+                jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                logger.error('mapNumberAndScheduleToCampaign failed- [%s]', err);
+                res.end(jsonString);
+            });
+        }
+    }).error(function (err) {
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        logger.error('mapNumberAndScheduleToCampaign failed- [%s]', err);
+        res.end(jsonString);
+    });
+
 }
 
 /*
@@ -633,3 +773,7 @@ module.exports.GetExtraDataByContactId = GetExtraDataByContactId;
 module.exports.CreateContactCategory = CreateContactCategory;
 module.exports.GetContactCategory = GetContactCategory;
 module.exports.EditContactCategory = EditContactCategory;
+module.exports.MapNumberToCampaign = mapNumberToCampaign;
+module.exports.MapScheduleToCampaign = mapScheduleToCampaign;
+module.exports.MapNumberAndScheduleToCampaign = mapNumberAndScheduleToCampaign;
+
