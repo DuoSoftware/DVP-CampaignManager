@@ -56,7 +56,7 @@ function DeleteDncRecord(contactIds, tenantId, companyId, res) {
             ]
         }
     ).then(function (dnc) {
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", dnc>0, dnc);
+            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", dnc>0, undefined);
             logger.info('[DVP-CampDncInfo.DeleteDncRecord] - [PGSQL] - delete successfully. [%s] ', jsonString);
             res.end(jsonString);
         }).error(function (err) {
