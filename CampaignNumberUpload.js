@@ -440,7 +440,7 @@ function GetAllContactByCampaignId(campaignId, tenantId, companyId, callBack) {
 function GetAllContactByCategoryID(categoryId, tenantId, companyId, callBack) {
 
     var jsonString;
-    DbConn.CampContactCategory.find({
+    var query = {
         where: [{CategoryID: categoryId, TenantId: tenantId, CompanyId: companyId}],
         include: [{
             model: DbConn.CampContactInfo,
@@ -448,7 +448,20 @@ function GetAllContactByCategoryID(categoryId, tenantId, companyId, callBack) {
             attributes: ['ContactId'],
             where: [{'CategoryID': categoryId}]
         }]
-    }).then(function (CamObject) {
+    };
+
+    if(!categoryId){
+        query = {
+            where: [{TenantId: tenantId, CompanyId: companyId}],
+            include: [{
+                model: DbConn.CampContactInfo,
+                as: "CampContactInfo",
+                attributes: ['ContactId'],
+                where: [{'CategoryID': categoryId}]
+            }]
+        };
+    }
+    DbConn.CampContactCategory.find(query).then(function (CamObject) {
         if (CamObject) {
             logger.info('[DVP-CampaignNumberUpload.GetAllContactByCategoryID] - [%s] - [PGSQL]  - Data found  - %s - [%s]', tenantId, companyId, JSON.stringify(CamObject));
             jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
