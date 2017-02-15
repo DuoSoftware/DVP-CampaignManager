@@ -440,9 +440,8 @@ function GetAllContactByCampaignId(campaignId, tenantId, companyId, callBack) {
 function GetAllContactByCategoryID(categoryId, tenantId, companyId, callBack) {
 
     var jsonString;
-    DbConn.CampContactSchedule.findAll({
-        where: [{CampaignId: campaignId}],
-        attributes: ['ExtraData'],
+    DbConn.CampContactCategory.findAll({
+        where: [{CategoryID: categoryId, TenantId: tenantId, CompanyId: companyId}],
         include: [{
             model: DbConn.CampContactInfo,
             as: "CampContactInfo",
