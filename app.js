@@ -1911,7 +1911,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Dnc', authorization({
     return next();
 });
 
-RestServer.del('/DVP/API/' + version + '/CampaignManager/Dnc/Numbers', authorization({
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Dnc/Delete', authorization({
     resource: "campaigndnc",
     action: "delete"
 }), function (req, res, next) {
@@ -1925,8 +1925,8 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Dnc/Numbers', authoriza
         var companyId = parseInt(req.user.company);
 
         var dncList = [];
-        if(req.query.ContactIds){
-            dncList = req.query.ContactIds;
+        if(req.body && req.body.ContactIds){
+            dncList = req.body.ContactIds;
         }
 
 
