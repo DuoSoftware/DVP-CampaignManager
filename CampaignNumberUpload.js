@@ -675,3 +675,4 @@ module.exports.GetExtraDataByContactId = GetExtraDataByContactId;
 module.exports.CreateContactCategory = CreateContactCategory;
 module.exports.GetContactCategory = GetContactCategory;
 module.exports.EditContactCategory = EditContactCategory;
+module.exports.GetAllContactByCampaignIdScheduleIdWithoutPaging = GetAllContactByCampaignIdScheduleIdWithoutPaging;
