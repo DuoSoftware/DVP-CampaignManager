@@ -1925,8 +1925,8 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Dnc/Numbers', authoriza
         var companyId = parseInt(req.user.company);
 
         var dncList = [];
-        if(req.body && req.body.ContactIds){
-            dncList = req.body.ContactIds;
+        if(req.query.ContactIds){
+            dncList = req.query.ContactIds;
         }
 
 
