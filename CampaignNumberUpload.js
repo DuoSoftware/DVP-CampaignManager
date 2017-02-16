@@ -52,7 +52,7 @@ function UploadContacts(contacts, tenantId, companyId, categoryID, callBack) {
     DbConn.CampContactInfo.bulkCreate(
         nos, {validate: false, individualHooks: true}
     ).then(function (results) {
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, "done");
             logger.info('[DVP-CampCampaignInfo.UploadContacts] - [PGSQL] - UploadContacts successfully.[%s] ', jsonString);
             callBack.end(jsonString);
         }).catch(function (err) {
