@@ -1911,7 +1911,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Dnc', authorization({
     return next();
 });
 
-RestServer.del('/DVP/API/' + version + '/CampaignManager/Dnc', authorization({
+RestServer.del('/DVP/API/' + version + '/CampaignManager/Dnc/Numbers', authorization({
     resource: "campaigndnc",
     action: "delete"
 }), function (req, res, next) {
