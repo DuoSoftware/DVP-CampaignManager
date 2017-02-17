@@ -611,7 +611,11 @@ function mapNumberToCampaign(req, res) {
                 }
                 else {
                     var nos = cmp.map(function (item) {
-                        return {CampaignId: req.params.CampaignId, CamContactId: item.CamContactId,BatchNo: cmp[0].BatchNo};
+                        return {
+                            CampaignId: req.params.CampaignId,
+                            CamContactId: item.CamContactId,
+                            BatchNo: cmp[0].BatchNo
+                        };
                     });
 
                     DbConn.CampContactSchedule.bulkCreate(
@@ -650,38 +654,54 @@ function mapNumberToCampaign(req, res) {
 function mapScheduleToCampaign(req, res) {
     var jsonString;
 
-
-    DbConn.CampContactSchedule
-        .findAll(
-            {where: [{CampaignId: req.params.CampaignId}, {CamScheduleId: req.params.CamScheduleId}]}).then(function (cmp) {
-        if (cmp && Array.isArray(cmp) && cmp.length > 0) {
-            jsonString = messageFormatter.FormatMessage(new Error("Invalid Schedule ID OR Already Map To Campaign."), "EXCEPTION", false, undefined);
-            logger.error('mapScheduleToCampaign failed- [%s]', new Error("Invalid Schedule ID"));
+    var tenantId = req.user.tenant;
+    var companyId = req.user.company;
+    DbConn.CampScheduleInfo
+        .find(
+            {where: [{CampaignId: req.params.CampaignId}, {CamScheduleId: req.params.CamScheduleId},{CompanyId: companyId}, {TenantId: tenantId}]}).then(function (cmp) {
+        if(cmp){
+            jsonString = messageFormatter.FormatMessage(new Error("You need to Add Schedule To Campaign Before You Map Them to Campaign."), "EXCEPTION", false, undefined);
+            logger.error('mapScheduleToCampaign failed- [%s]', new Error("You need to Add Schedule To Campaign Before You Map Them to Campaign."));
             res.end(jsonString);
         }
-        else {
+        else{
             DbConn.CampContactSchedule
-                .create(
-                    {
-                        CampaignId: req.params.CampaignId,
-                        CamScheduleId:  req.params.CamScheduleId
-                    }
-                ).then(function (result) {
-                if(result){
-                    jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, result);
-                    logger.info('CampContactSchedule successfully.[%s] ', jsonString);
+                .findAll(
+                    {where: [{CampaignId: req.params.CampaignId}, {CamScheduleId: req.params.CamScheduleId}]}).then(function (cmp) {
+                if (cmp && Array.isArray(cmp) && cmp.length > 0) {
+                    jsonString = messageFormatter.FormatMessage(new Error("Invalid Schedule ID OR Already Map To Campaign."), "EXCEPTION", false, undefined);
+                    logger.error('mapScheduleToCampaign failed- [%s]', new Error("Invalid Schedule ID"));
                     res.end(jsonString);
-                }else {
-                    jsonString = messageFormatter.FormatMessage(undefined, "FAIL", false, result);
-                    logger.info('CampContactSchedule Fail.[%s] ', jsonString);
-                    res.end(jsonString);
+                }
+                else {
+                    DbConn.CampContactSchedule
+                        .create(
+                            {
+                                CampaignId: req.params.CampaignId,
+                                CamScheduleId: cmp.CamScheduleId
+                            }
+                        ).then(function (result) {
+                        if (result) {
+                            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, result);
+                            logger.info('CampContactSchedule successfully.[%s] ', jsonString);
+                            res.end(jsonString);
+                        } else {
+                            jsonString = messageFormatter.FormatMessage(undefined, "FAIL", false, result);
+                            logger.info('CampContactSchedule Fail.[%s] ', jsonString);
+                            res.end(jsonString);
+                        }
+                    }).error(function (err) {
+                        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                        logger.error('CampContactSchedule failed- [%s]', err);
+                        res.end(jsonString);
+                    });
+
                 }
             }).error(function (err) {
                 jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-                logger.error('CampContactSchedule failed- [%s]', err);
+                logger.error('mapScheduleToCampaign failed- [%s]', err);
                 res.end(jsonString);
             });
-
         }
     }).error(function (err) {
         jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
@@ -689,44 +709,67 @@ function mapScheduleToCampaign(req, res) {
         res.end(jsonString);
     });
 
+
+
+
+
 }
 
 function mapNumberAndScheduleToCampaign(req, res) {
     var jsonString;
+    var tenantId = req.user.tenant;
+    var companyId = req.user.company;
 
+    DbConn.CampScheduleInfo.find({where: [{CompanyId: companyId}, {TenantId: tenantId}, {CampaignId: req.params.CampaignId}]}).then(function (CamObject) {
+        if (CamObject) {
 
-    DbConn.CampContactSchedule
-        .findAll(
-            {where: [{CampaignId: req.params.CampaignId}, {CamScheduleId: req.params.CamScheduleId}]}).then(function (cmp) {
-        if (cmp && Array.isArray(cmp) && cmp.length > 0) {
-            mapNumberToCampaign(req, res);
-        }
-        else {
             DbConn.CampContactSchedule
-                .create(
-                    {
-                        CampaignId: req.params.CampaignId,
-                        CamScheduleId:  req.params.CamScheduleId
-                    }
-                ).then(function (result) {
-                if(result){
+                .findAll(
+                    {where: [{CampaignId: req.params.CampaignId}, {CamScheduleId: CamObject.CamScheduleId}]}).then(function (cmp) {
+                if (cmp && Array.isArray(cmp) && cmp.length > 0) {
                     mapNumberToCampaign(req, res);
-                }else {
-                    jsonString = messageFormatter.FormatMessage(undefined, "FAIL", false, result);
-                    logger.info('mapNumberAndScheduleToCampaign Fail.[%s] ', jsonString);
-                    res.end(jsonString);
+                }
+                else {
+                    DbConn.CampContactSchedule
+                        .create(
+                            {
+                                CampaignId: req.params.CampaignId,
+                                CamScheduleId: CamObject.CamScheduleId
+                            }
+                        ).then(function (result) {
+                        if (result) {
+                            mapNumberToCampaign(req, res);
+                        } else {
+                            jsonString = messageFormatter.FormatMessage(undefined, "FAIL", false, result);
+                            logger.info('mapNumberAndScheduleToCampaign Fail.[%s] ', jsonString);
+                            res.end(jsonString);
+                        }
+                    }).error(function (err) {
+                        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                        logger.error('mapNumberAndScheduleToCampaign failed- [%s]', err);
+                        res.end(jsonString);
+                    });
                 }
             }).error(function (err) {
                 jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
                 logger.error('mapNumberAndScheduleToCampaign failed- [%s]', err);
                 res.end(jsonString);
             });
+
+        }
+        else {
+            logger.error('Fail To Find CampScheduleInfo', new Error('No record'));
+            jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+            res.end(jsonString);
         }
     }).error(function (err) {
+        logger.error('Fail To Find CampScheduleInfo',err);
         jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-        logger.error('mapNumberAndScheduleToCampaign failed- [%s]', err);
         res.end(jsonString);
     });
+
+
+
 
 }
 

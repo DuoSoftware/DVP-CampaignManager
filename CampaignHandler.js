@@ -70,6 +70,27 @@ function StartCampaign(campaignId, tenantId, companyId, callback) {
 
 }
 
+function SetOperationalStatus(campaignId, tenantId, companyId,operationalStatus, callback) {
+    DbConn.CampCampaignInfo
+        .update(
+            {
+                OperationalStatus: operationalStatus
+            },
+            {
+                where: [{CompanyId: companyId}, {TenantId: tenantId}, {
+                    CampaignId: campaignId
+                }]
+            }
+        ).then(function (results) {
+        callback(undefined,results);
+
+    }).error(function (err) {
+        callback(err,undefined);
+    });
+
+
+}
+
 function EditCampaign(campaignId, campaignName, campaignMode, campaignChannel, dialoutMechanism, tenantId, companyId, campaignClass, campaignType, campaignCategory, extension, callback) {
     var jsonString;
     DbConn.CampOngoingCampaign
@@ -549,3 +570,4 @@ module.exports.GetAdditionalData = GetAdditionalData;
 module.exports.GetAdditionalDataByCampaignId = GetAdditionalDataByCampaignId;
 module.exports.GetAdditionalDataByCampaignId = GetAdditionalDataByCampaignId;
 module.exports.GetAdditionalDataByClassTypeCategory = GetAdditionalDataByClassTypeCategory;
+module.exports.SetOperationalStatus = SetOperationalStatus;
