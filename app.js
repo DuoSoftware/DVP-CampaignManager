@@ -1307,6 +1307,33 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers/:ScheduleId', authorization({
+    resource: "campaignnumbers",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleIdWithoutPaging] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var campaignId = req.params.CampaignId;
+        var scheduleId = req.params.ScheduleId;
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+
+
+        campaignNumberUpload.GetAllContactByCampaignIdScheduleIdWithoutPaging(campaignId, scheduleId, tenantId, companyId, res)
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.get('/DVP/API/' + version + '/CampaignManager/CampaignCategorys', authorization({
     resource: "campaignnumbers",
     action: "read"
@@ -1972,7 +1999,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Dnc', authorization({
     return next();
 });
 
-RestServer.del('/DVP/API/' + version + '/CampaignManager/Dnc', authorization({
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Dnc/Delete', authorization({
     resource: "campaigndnc",
     action: "delete"
 }), function (req, res, next) {

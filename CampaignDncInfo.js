@@ -27,7 +27,7 @@ function CreateDncRecord(contactIds, tenantId, companyId, res) {
     DbConn.CampDncInfo.bulkCreate(
         contactDetails, {validate: false, individualHooks: false}
     ).then(function ( dnc) {
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, dnc);
+            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, "done");
             logger.info('[DVP-CampDncInfo.CreateDncRecord] - [PGSQL] - inserted successfully. [%s] ', jsonString);
             res.end(jsonString);
         }).error(function (err) {
