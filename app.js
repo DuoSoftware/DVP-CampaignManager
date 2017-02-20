@@ -882,7 +882,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
 
-        campaignConfigurations.CreateCallBackReason(cmp.Reason, tenantId, companyId, res);
+        campaignConfigurations.CreateCallBackReason(cmp.Reason, cmp.HangupCause, res);
 
     }
     catch (ex) {
@@ -934,7 +934,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
 
-        campaignConfigurations.EditCallBackReason(req.params.ReasonId, cmp.Reason, tenantId, companyId, res);
+        campaignConfigurations.EditCallBackReason(req.params.ReasonId, cmp.Reason, cmp.HangupCause, res);
 
     }
     catch (ex) {
@@ -959,7 +959,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
 
-        campaignConfigurations.GetAllCallBackReasons(tenantId, companyId, res);
+        campaignConfigurations.GetAllCallBackReasons(res);
     }
     catch (ex) {
 
@@ -983,7 +983,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
 
-        campaignConfigurations.GetCallBackReason(reasonId, tenantId, companyId, res);
+        campaignConfigurations.GetCallBackReason(reasonId, res);
     }
     catch (ex) {
 
