@@ -959,7 +959,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
 
-        campaignConfigurations.GetAllCallBackReasons(res);
+        campaignConfigurations.GetAllCallBackReasons(tenantId, companyId, res);
     }
     catch (ex) {
 
@@ -983,7 +983,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
 
-        campaignConfigurations.GetCallBackReason(reasonId, res);
+        campaignConfigurations.GetCallBackReason(tenantId, companyId, reasonId, res);
     }
     catch (ex) {
 

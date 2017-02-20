@@ -425,7 +425,7 @@ function DeleteCallbackInfo(callBackId, tenantId, companyId, callback) {
 
 }
 
-function GetCallBackReason(reasonId, callBack) {
+function GetCallBackReason(tenantId, companyId, reasonId, callBack) {
     var jsonString;
     DbConn.CampCallBackReasons.find({where: [{ReasonId: reasonId}]}).then(function (CamObject) {
 
@@ -447,7 +447,7 @@ function GetCallBackReason(reasonId, callBack) {
     });
 }
 
-function GetAllCallBackReasons(callBack) {
+function GetAllCallBackReasons(tenantId, companyId, callBack) {
     var jsonString;
     DbConn.CampCallBackReasons.findAll().then(function (CamObject) {
 
