@@ -460,7 +460,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Op
     return next();
 });
 
-//chagen put method to get. dialer req
+//change put method to get. dialer req
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Operations/State/:DialerId/:CampaignState', authorization({
     resource: "Operations",
     action: "read"

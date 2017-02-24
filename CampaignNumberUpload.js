@@ -68,6 +68,41 @@ function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, cat
 
     var ids = [];
     var j = 0;
+
+    function UploadContactsToCampaignThen (cmp) {
+        j++;
+        logger.info('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - inserted[CampContactInfo] successfully ', contacts[j - 1]);
+
+        DbConn.CampContactSchedule
+            .create(
+                {
+                    CampaignId: campaignId,
+                    CamScheduleId: cmp.CamContactId,
+                    ExtraData: extraData
+                }
+            ).then(function (cmp) {
+            logger.info('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - inserted[CampContactSchedule] successfully ', contacts[j - 1]);
+        }).error(function (err) {
+            logger.error('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - insertion[CampContactSchedule]  failed- [%s]', contacts[j - 1], err);
+            ids.add(cmp.ContactId);
+        });
+
+        if (j >= contacts.length) {
+            var msg = undefined;
+            if (ids.length > 0) {
+                msg = new Error("Validation Error");
+            }
+            var jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length == 0, ids);
+            callBack.end(jsonString);
+        }
+    }
+
+    function UploadContactsToCampaignError(err) {
+        j++;
+        logger.error('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - insertion[CampContactInfo]  failed - [%s]', contacts[j - 1], err);
+        ids.add(cmp.ContactId);
+    }
+
     for (var i = 0; i < contacts.length; i++) {
 
         DbConn.CampContactInfo
@@ -78,37 +113,7 @@ function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, cat
                     TenantId: tenantId,
                     CompanyId: companyId, CategoryID: categoryID
                 }
-            ).then(function (cmp) {
-            j++;
-            logger.info('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - inserted[CampContactInfo] successfully ', contacts[j - 1]);
-
-            DbConn.CampContactSchedule
-                .create(
-                    {
-                        CampaignId: campaignId,
-                        CamScheduleId: cmp.CamContactId,
-                        ExtraData: extraData
-                    }
-                ).then(function (cmp) {
-                logger.info('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - inserted[CampContactSchedule] successfully ', contacts[j - 1]);
-            }).error(function (err) {
-                logger.error('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - insertion[CampContactSchedule]  failed- [%s]', contacts[j - 1], err);
-                ids.add(cmp.ContactId);
-            });
-
-            if (j >= contacts.length) {
-                var msg = undefined;
-                if (ids.length > 0) {
-                    msg = new Error("Validation Error");
-                }
-                var jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length == 0, ids);
-                callBack.end(jsonString);
-            }
-        }).error(function (err) {
-            j++;
-            logger.error('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - insertion[CampContactInfo]  failed - [%s]', contacts[j - 1], err);
-            ids.add(cmp.ContactId);
-        });
+            ).then(UploadContactsToCampaignThen ).error(UploadContactsToCampaignError);
 
     }
 
