@@ -302,6 +302,36 @@ function EditContacts(contacts, campaignId, tenantId, companyId, categoryID, cal
     var jsonString;
     var ids = [];
     var j = 0;
+    function EditContactsThen(results) {
+
+        j++;
+        logger.info('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', contacts[j - 1]);
+        if (j >= contacts.length) {
+            var msg = undefined;
+            if (ids.length > 0) {
+                msg = new Error("Validation Error");
+            }
+            jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length  === 0, ids);
+            callBack.end(jsonString);
+        }
+
+    }
+
+    function EditContactsError(err) {
+        j++;
+        logger.error('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updation failed- [%s]', contacts[j - 1], err);
+
+        ids.add(contacts[j - 1]);
+        if (j >= contacts.length) {
+            var msg = undefined;
+            if (ids.length > 0) {
+                msg = new Error("Validation Error");
+            }
+            jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length  === 0, ids);
+            callBack.end(jsonString);
+        }
+    }
+
     for (var i = 0; i < contacts.length; i++) {
         DbConn.CampContactInfo
             .update(
@@ -317,33 +347,7 @@ function EditContacts(contacts, campaignId, tenantId, companyId, categoryID, cal
                         ContactId: contacts[i]
                     }
                 }
-            ).then(function (results) {
-
-            j++;
-            logger.info('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', contacts[j - 1]);
-            if (j >= contacts.length) {
-                var msg = undefined;
-                if (ids.length > 0) {
-                    msg = new Error("Validation Error");
-                }
-                jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length  === 0, ids);
-                callBack.end(jsonString);
-            }
-
-        }).error(function (err) {
-                j++;
-                logger.error('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updation failed- [%s]', contacts[j - 1], err);
-
-                ids.add(contacts[j - 1]);
-                if (j >= contacts.length) {
-                    var msg = undefined;
-                    if (ids.length > 0) {
-                        msg = new Error("Validation Error");
-                    }
-                    jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length  === 0, ids);
-                    callBack.end(jsonString);
-                }
-            }
+            ).then(EditContactsThen).error(EditContactsError
         );
 
 
@@ -356,6 +360,35 @@ function DeleteContacts(contacts, campaignId, tenantId, companyId, callBack) {
     var jsonString;
     var ids = [];
     var j = 0;
+
+    function DeleteContactsThen(results) {
+
+        j++;
+        logger.info('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', contacts[j - 1]);
+        if (j >= contacts.length) {
+            var msg = undefined;
+            if (ids.length > 0) {
+                msg = new Error("Validation Error");
+            }
+            jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length  === 0, ids);
+            callBack.end(jsonString);
+        }
+
+    }
+
+    function DeleteContactsError(err) {
+        logger.error('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updation failed- [%s]', contacts[j - 1], err);
+        ids.add(contacts[j - 1])
+        if (j >= contacts.length) {
+            var msg = undefined;
+            if (ids.length > 0) {
+                msg = new Error("Validation Error");
+            }
+            jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length  === 0, ids);
+            callBack.end(jsonString);
+        }
+    }
+
     for (var i = 0; i < contacts.length; i++) {
         DbConn.CampContactInfo
             .update(
@@ -365,31 +398,7 @@ function DeleteContacts(contacts, campaignId, tenantId, companyId, callBack) {
                 {
                     where: [{ContactId: contacts[i]}, {CompanyId: companyId}, {TenantId: tenantId}, {CampaignId: campaignId}]
                 }
-            ).then(function (results) {
-
-            j++;
-            logger.info('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', contacts[j - 1]);
-            if (j >= contacts.length) {
-                var msg = undefined;
-                if (ids.length > 0) {
-                    msg = new Error("Validation Error");
-                }
-                jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length  === 0, ids);
-                callBack.end(jsonString);
-            }
-
-        }).error(function (err) {
-            logger.error('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updation failed- [%s]', contacts[j - 1], err);
-            ids.add(contacts[j - 1])
-            if (j >= contacts.length) {
-                var msg = undefined;
-                if (ids.length > 0) {
-                    msg = new Error("Validation Error");
-                }
-                jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length  === 0, ids);
-                callBack.end(jsonString);
-            }
-        });
+            ).then(DeleteContactsThen).error(DeleteContactsError);
     }
     /* var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, ids);
      callBack.end(jsonString);*/
