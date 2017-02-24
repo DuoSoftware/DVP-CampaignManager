@@ -1,0 +1,2 @@
+# DVP-CampaignManager
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/613ba046ea1d47b6969307fd58630ac8)](https://www.codacy.com/app/veery/DVP-CampaignManager?utm_source=github.com&utm_medium=referral&utm_content=DuoSoftware/DVP-CampaignManager&utm_campaign=badger)
