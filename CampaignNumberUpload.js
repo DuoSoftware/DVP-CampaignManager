@@ -92,7 +92,7 @@ function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, cat
             if (ids.length > 0) {
                 msg = new Error("Validation Error");
             }
-            var jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length == 0, ids);
+            var jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length  === 0, ids);
             callBack.end(jsonString);
         }
     }
@@ -100,7 +100,7 @@ function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, cat
     function UploadContactsToCampaignError(err) {
         j++;
         logger.error('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - insertion[CampContactInfo]  failed - [%s]', contacts[j - 1], err);
-        ids.add(cmp.ContactId);
+        //ids.add(cmp.ContactId);
     }
 
     for (var i = 0; i < contacts.length; i++) {
@@ -157,7 +157,7 @@ function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, cat
  if (ids.length > 0) {
  msg = new Error("Validation Error");
  }
- jsonString= messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length == 0, ids);
+ jsonString= messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length  === 0, ids);
  callBack.end(jsonString);
  }
  }).error(function (err) {
@@ -169,7 +169,7 @@ function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, cat
  if (ids.length > 0) {
  msg = new Error("Validation Error");
  }
- jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length == 0, ids);
+ jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length  === 0, ids);
  callBack.end(jsonString);}
  });
 
@@ -185,7 +185,7 @@ function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId, 
     var errList = [];
 
     function CampScheduleCallback(err, result) {
-        var jsonString = messageFormatter.FormatMessage(err, "OPERATIONS COMPLETED", errList.length == 0, errList);
+        var jsonString = messageFormatter.FormatMessage(err, "OPERATIONS COMPLETED", errList.length === 0, errList);
         callBackm.end(jsonString);
     }
 
@@ -326,7 +326,7 @@ function EditContacts(contacts, campaignId, tenantId, companyId, categoryID, cal
                 if (ids.length > 0) {
                     msg = new Error("Validation Error");
                 }
-                jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length == 0, ids);
+                jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length  === 0, ids);
                 callBack.end(jsonString);
             }
 
@@ -340,7 +340,7 @@ function EditContacts(contacts, campaignId, tenantId, companyId, categoryID, cal
                     if (ids.length > 0) {
                         msg = new Error("Validation Error");
                     }
-                    jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length == 0, ids);
+                    jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length  === 0, ids);
                     callBack.end(jsonString);
                 }
             }
@@ -374,7 +374,7 @@ function DeleteContacts(contacts, campaignId, tenantId, companyId, callBack) {
                 if (ids.length > 0) {
                     msg = new Error("Validation Error");
                 }
-                jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length == 0, ids);
+                jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length  === 0, ids);
                 callBack.end(jsonString);
             }
 
@@ -386,7 +386,7 @@ function DeleteContacts(contacts, campaignId, tenantId, companyId, callBack) {
                 if (ids.length > 0) {
                     msg = new Error("Validation Error");
                 }
-                jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length == 0, ids);
+                jsonString = messageFormatter.FormatMessage(msg, "OPERATIONS COMPLETED", ids.length  === 0, ids);
                 callBack.end(jsonString);
             }
         });
