@@ -100,7 +100,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId', 
         var companyId = req.user.company;
 
 
-        campaignHandler.EditCampaign(campaignId, cmp.CampaignName, cmp.CampaignMode, cmp.CampaignChannel, cmp.DialoutMechanism, tenantId, companyId, cmp.Class, cmp.Type, cmp.Category, cmp.Extensions.Extension, res)
+        campaignHandler.EditCampaign(campaignId, cmp.CampaignName, cmp.CampaignMode, cmp.CampaignChannel, cmp.DialoutMechanism, tenantId, companyId, cmp.Class, cmp.Type, cmp.Category, cmp.Extensions, res)
 
     }
     catch (ex) {
