@@ -197,10 +197,10 @@ function GetAllCampaign(tenantId, companyId, callback) {
 
         DbConn.CampCampaignInfo.findAll({
             where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}],
-            include: [{model: DbConn.CampContactSchedule, as: "CampContactSchedule"}, {
+            /*include: [{model: DbConn.CampContactSchedule, as: "CampContactSchedule"}, {
                 model: DbConn.CampConfigurations,
                 as: "CampConfigurations"
-            }]
+            }]*/
         }).then(function (CamObject) {
 
             if (CamObject) {

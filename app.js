@@ -1421,7 +1421,6 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/C
     return next();
 });
 
-
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Number/:contactId/:PageNo/:RowCount', authorization({
     resource: "campaignnumbers",
     action: "read"
@@ -1447,6 +1446,31 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
 
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
         logger.error('[DVP-CampaignNumberUpload.GetExtraDataByContactId] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/NumberCategory', authorization({
+    resource: "campaignnumbers",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('GetAssignedCategory');
+        var campaignId = req.params.CampaignId;
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+
+        campaignNumberUpload.GetAssignedCategory(campaignId, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[GetAssignedCategory] - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();
