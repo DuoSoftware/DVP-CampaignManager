@@ -649,7 +649,7 @@ function GetContactCategory(tenantId, companyId, callBack) {
     });
 }
 
-function mapNumberToCampaign(req, res) {
+/*function mapNumberToCampaign(req, res) {
     var jsonString;
 
     var tenantId = req.user.tenant;
@@ -682,6 +682,68 @@ function mapNumberToCampaign(req, res) {
                         nos
                     ).then(function (results) {
 
+                        jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+                        logger.info('CampContactInfo - bulkCreate successfully.[%s] ', jsonString);
+                        res.end(jsonString);
+
+                    }).error(function (err) {
+                        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                        logger.error('CampContactInfo - bulkCreate failed- [%s]', err);
+                        res.end(jsonString);
+                    });
+                }
+            }).error(function (err) {
+                jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                logger.error('CampContactInfo ---', err);
+                res.end(jsonString);
+            });
+        }
+        else {
+            jsonString = messageFormatter.FormatMessage(new Error("Invalid Category or No Number found."), "EXCEPTION", false, undefined);
+            logger.error('[mapNumberToCompaign] - mapNumberToCompaign failed- [%s]', new Error("Invalid Category"));
+            res.end(jsonString);
+        }
+    }).error(function (err) {
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        logger.error('[mapNumberToCompaign] - mapNumberToCompaign failed- [%s]', err);
+        res.end(jsonString);
+    });
+
+}*/
+
+function mapNumberToCampaign(req, res) {
+    var jsonString;
+
+    var tenantId = req.user.tenant;
+    var companyId = req.user.company;
+
+    DbConn.CampContactInfo
+        .findAll(
+            {where: [{CompanyId: companyId}, {TenantId: tenantId}, {CategoryID: req.params.CategoryID}]}).then(function (cmp) {
+        if (cmp && Array.isArray(cmp) && cmp.length > 0) {
+
+            DbConn.CampContactSchedule
+                .find({where: [{CampaignId: req.params.CampaignId}, {BatchNo: cmp[0].BatchNo}]}
+                ).then(function (results) {
+
+                if (results) {
+                    jsonString = messageFormatter.FormatMessage(new Error("Invalid Batch No"), "EXCEPTION", false, undefined);
+                    logger.error('CampContactInfo - bulkCreate failed- [%s]', new Error("Invalid Batch No"));
+                    res.end(jsonString);
+                }
+                else {
+                    var nos = cmp.map(function (item) {
+                        return {
+                            CampaignId: req.params.CampaignId,
+                            CamContactId: item.CamContactId,
+                            BatchNo: cmp[0].BatchNo
+                        };
+                    });
+
+                    DbConn.CampContactSchedule.bulkCreate(
+                        nos
+                    ).then(function (results) {
+                        AddMapData(req.params.CampaignId,req.body.camScheduleId,req.params.CategoryID,req.body.schedule,tenantId,companyId);
                         jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
                         logger.info('CampContactInfo - bulkCreate successfully.[%s] ', jsonString);
                         res.end(jsonString);
@@ -779,7 +841,7 @@ function mapNumberAndScheduleToCampaign(req, res) {
 
     DbConn.CampScheduleInfo.find({where: [{CompanyId: companyId}, {TenantId: tenantId}, {CampaignId: req.params.CampaignId}]}).then(function (CamObject) {
         if (CamObject) {
-
+            req.body.camScheduleId = CamObject.CamScheduleId;
             DbConn.CampContactSchedule
                 .findAll(
                     {where: [{CampaignId: req.params.CampaignId}, {CamScheduleId: CamObject.CamScheduleId}]}).then(function (cmp) {
@@ -795,7 +857,9 @@ function mapNumberAndScheduleToCampaign(req, res) {
                             }
                         ).then(function (result) {
                         if (result) {
+
                             mapNumberToCampaign(req, res);
+
                         } else {
                             jsonString = messageFormatter.FormatMessage(undefined, "FAIL", false, result);
                             logger.info('mapNumberAndScheduleToCampaign Fail.[%s] ', jsonString);
