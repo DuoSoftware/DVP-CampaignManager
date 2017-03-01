@@ -82,7 +82,7 @@ function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, cat
                 }
             ).then(function (j) {
             logger.info('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - inserted[CampContactSchedule] successfully ', contacts[j - 1]);
-            AddMapData(campaignId,-1,categoryID,tenantId,companyId);
+
         }).error(function (err) {
             logger.error('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - insertion[CampContactSchedule]  failed- [%s]', contacts[j - 1], err);
             ids.add(cmp.ContactId);
@@ -178,15 +178,16 @@ function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, cat
 
  }*/
 
-function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId, tenantId, companyId, categoryID, extraData, callBackm) {
+function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId,schedule, tenantId, companyId, categoryID, extraData, callBackm) {
 
     var task = [];
     var CampScheduleTask = [];
     var camContactId = [];
     var errList = [];
 
+
     function CampScheduleCallback(err, result) {
-        AddMapData(campaignId,camScheduleId,categoryID,tenantId,companyId);
+        AddMapData(campaignId,camScheduleId,categoryID,schedule,tenantId,companyId);
         var jsonString = messageFormatter.FormatMessage(err, "OPERATIONS COMPLETED", errList.length === 0, errList);
         callBackm.end(jsonString);
     }
@@ -680,7 +681,7 @@ function mapNumberToCampaign(req, res) {
                     DbConn.CampContactSchedule.bulkCreate(
                         nos
                     ).then(function (results) {
-                        AddMapData(req.params.CampaignId,-1,req.params.CategoryID,tenantId,companyId);
+
                         jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
                         logger.info('CampContactInfo - bulkCreate successfully.[%s] ', jsonString);
                         res.end(jsonString);
@@ -879,13 +880,14 @@ function getAssignedCategory(campaignId, tenantId, companyId,callBack) {
     });
 }
 
-function AddMapData(campaignId, camScheduleId, categoryID, tenantId, companyId) {
+function AddMapData(campaignId, camScheduleId, categoryID,schedule, tenantId, companyId) {
 
     try{
         DbConn.CampMapContactSchedule.create(
                 {
                     CampaignId: campaignId,
                     CamScheduleId: camScheduleId,
+                    CamSchedule: schedule,
                     CategoryID: categoryID,
                     TenantId: tenantId,
                     CompanyId: companyId

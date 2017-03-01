@@ -10,74 +10,93 @@ function CreateSchedule(campaignId, scheduleId, scheduleType, tenantId, companyI
     var jsonString;
     DbConn.CampScheduleInfo
         .create(
-        {
-            CampaignId: campaignId,
-            ScheduleId: scheduleId,
-            ScheduleType: scheduleType,
-            TenantId: tenantId,
-            CompanyId: companyId,
-            Status: true
-        }
-    ).then(function (cmp) {
+            {
+                CampaignId: campaignId,
+                ScheduleId: scheduleId,
+                ScheduleType: scheduleType,
+                TenantId: tenantId,
+                CompanyId: companyId,
+                Status: true
+            }
+        ).then(function (cmp) {
 
-            logger.info('[DVP-CampScheduleInfo.CreateSchedule] - [%s] - [PGSQL] - inserted successfully ', campaignId);
-            jsonString= messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            callBack.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-CampScheduleInfo.CreateSchedule] - [%s] - [PGSQL] - insertion  failed-[%s]', campaignId, err);
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callBack.end(jsonString);
-        });
+        logger.info('[DVP-CampScheduleInfo.CreateSchedule] - [%s] - [PGSQL] - inserted successfully ', campaignId);
+        jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+        callBack.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-CampScheduleInfo.CreateSchedule] - [%s] - [PGSQL] - insertion  failed-[%s]', campaignId, err);
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callBack.end(jsonString);
+    });
 }
 
 function EditSchedule(camscheduleId, campaignId, scheduleId, scheduleType, tenantId, companyId, callBack) {
     var jsonString;
     DbConn.CampScheduleInfo
         .update(
-        {
-            CampaignId: campaignId,
-            ScheduleId: scheduleId,
-            ScheduleType: scheduleType
-        },
-        {
-            where: [{CamScheduleId: camscheduleId}, {TenantId: tenantId}, {CompanyId: companyId}]
-        }
-    ).then(function (cmp) {
+            {
+                CampaignId: campaignId,
+                ScheduleId: scheduleId,
+                ScheduleType: scheduleType
+            },
+            {
+                where: [{CamScheduleId: camscheduleId}, {TenantId: tenantId}, {CompanyId: companyId}]
+            }
+        ).then(function (cmp) {
 
 
-            logger.info('[DVP-CampScheduleInfo.EditSchedule] - [%s] - [PGSQL] - Updated successfully', camscheduleId);
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            callBack.end(jsonString);
+        logger.info('[DVP-CampScheduleInfo.EditSchedule] - [%s] - [PGSQL] - Updated successfully', camscheduleId);
+        jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+        callBack.end(jsonString);
 
-        }).error(function (err) {
-            logger.error('[DVP-CampScheduleInfo.EditSchedule] - [%s] - [PGSQL] - Updation failed-[%s]', camscheduleId, err);
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callBack.end(jsonString);
-        });
+    }).error(function (err) {
+        logger.error('[DVP-CampScheduleInfo.EditSchedule] - [%s] - [PGSQL] - Updation failed-[%s]', camscheduleId, err);
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callBack.end(jsonString);
+    });
 }
 
-function DeleteSchedule(camScheduleId, tenantId, companyId, callBack) {
+function DeleteSchedule(camScheduleId,campaignId, tenantId, companyId, callBack) {
     var jsonString;
-    DbConn.CampScheduleInfo
-        .update(
-        {
-            Status: false
-        },
-        {
-            where: [{CamScheduleId: camScheduleId}, {TenantId: tenantId}, {CompanyId: companyId}]
-        }
-    ).then(function (cmp) {
 
-
-            logger.info('[DVP-CampScheduleInfo.DeleteSchedule] - [%s] - [PGSQL] - Updated successfully', camscheduleId);
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            callBack.end(jsonString);
-
-        }).error(function (err) {
-            logger.error('[DVP-CampScheduleInfo.DeleteSchedule] - [%s] - [PGSQL] - Updation failed-[%s]', camscheduleId, err);
+    DbConn.CampContactSchedule
+        .find(
+            {
+                where: [{CamScheduleId: camScheduleId},{CampaignId:campaignId}]
+            }
+        ).then(function (cmp) {
+        if (cmp) {
+            logger.error('[DVP-CampScheduleInfo.DeleteSchedule] - [%s] - [PGSQL] - Updation failed-[%s]', camScheduleId, undefined);
             jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callBack.end(jsonString);
-        });
+        }
+        else {
+            DbConn.CampScheduleInfo
+                .destroy(
+                    {
+                        where: [{CamScheduleId: camScheduleId},{CampaignId:campaignId}, {TenantId: tenantId}, {CompanyId: companyId}]
+                    }
+                ).then(function (cmp) {
+                logger.info('[DVP-CampScheduleInfo.DeleteSchedule] - [%s] - [PGSQL] - Updated successfully', camScheduleId);
+                jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", cmp==1, cmp);
+                callBack.end(jsonString);
+
+            }).error(function (err) {
+                logger.error('[DVP-CampScheduleInfo.DeleteSchedule] - [%s] - [PGSQL] - Updation failed-[%s]', camScheduleId, err);
+                jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                callBack.end(jsonString);
+            });
+
+        }
+
+    }).error(function (err) {
+        logger.error('[DVP-CampScheduleInfo.DeleteSchedule] - [%s] - [PGSQL] - Updation failed-[%s]', camScheduleId, err);
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callBack.end(jsonString);
+    });
+
+
+
 }
 
 function GetAllSchedule(tenantId, companyId, callBack) {
@@ -143,13 +162,19 @@ function GetScheduleByCampaignId(campaignId, tenantId, companyId, callBack) {
 function GetAssignableScheduleByCampaignId(campaignId, tenantId, companyId, callBack) {
     var jsonString;
 
-    DbConn.CampContactSchedule.findAll({where: [{CampaignId: campaignId}],attributes: ['ContactScheduleId']}).then(function (CamObject) {
+    DbConn.CampContactSchedule.findAll({
+        where: [{CampaignId: campaignId}],
+        attributes: ['ContactScheduleId']
+    }).then(function (CamObject) {
         if (CamObject) {
             DbConn.CampScheduleInfo.findAll(
-                {where: [{CompanyId: companyId}, {TenantId: tenantId},{
-                    CamContactId: {
-                        $in: CamObject           // ANY ARRAY[2, 3]::INTEGER (PG only)
-                    } } ]}).then(function (CamObject) {
+                {
+                    where: [{CompanyId: companyId}, {TenantId: tenantId}, {
+                        CamContactId: {
+                            $in: CamObject           // ANY ARRAY[2, 3]::INTEGER (PG only)
+                        }
+                    }]
+                }).then(function (CamObject) {
                 if (CamObject) {
                     logger.info('[DVP-CampScheduleInfo.GetScheduleByCampaignId] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
                     jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
@@ -224,22 +249,22 @@ function AssigningScheduleToCampaign(campaignId, CamScheduleId, tenantId, compan
     var jsonString;
     DbConn.CampContactSchedule
         .update(
-        {
-            CamScheduleId: CamScheduleId
-        },
-        {
-            where: [{CampaignId: campaignId}, {CompanyId: companyId}, {TenantId: tenantId}]
-        }
-    ).then(function (results) {
-            logger.info('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', CamScheduleId);
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
-            callBack.end(jsonString);
+            {
+                CamScheduleId: CamScheduleId
+            },
+            {
+                where: [{CampaignId: campaignId}, {CompanyId: companyId}, {TenantId: tenantId}]
+            }
+        ).then(function (results) {
+        logger.info('[DVP-CampaignNumberUpload.EditContacts] - [%s] - [PGSQL] - Updated successfully', CamScheduleId);
+        jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+        callBack.end(jsonString);
 
-        }).error(function (err) {
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            logger.error('[DVP-CampaignNumberUpload.EditContacts] - Updation failed : %s ', jsonString);
-            callBack.end(jsonString);
-        });
+    }).error(function (err) {
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CampaignNumberUpload.EditContacts] - Updation failed : %s ', jsonString);
+        callBack.end(jsonString);
+    });
 }
 
 module.exports.CreateSchedule = CreateSchedule;

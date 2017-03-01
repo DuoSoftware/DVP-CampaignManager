@@ -1020,7 +1020,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/CampaignNumbers', auth
 
         if (cmp.CampaignId) {
             if (cmp.CamScheduleId) {
-                campaignNumberUpload.UploadContactsToCampaignWithSchedule(cmp.Contacts, cmp.CampaignId, cmp.CamScheduleId, tenantId, companyId, cmp.CategoryID, extraData, res);
+                campaignNumberUpload.UploadContactsToCampaignWithSchedule(cmp.Contacts, cmp.CampaignId, cmp.CamScheduleId,cmp.ScheduleName, tenantId, companyId, cmp.CategoryID, extraData, res);
             }
             else {
                 campaignNumberUpload.UploadContactsToCampaign(cmp.Contacts, cmp.CampaignId, tenantId, companyId, cmp.CategoryID, extraData, res);
@@ -1533,8 +1533,8 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamS
     return next();
 });
 
-RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamScheduleId', authorization({
-    resource: "CampaignSchedule",
+RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Schedule/:CamScheduleId', authorization({
+    resource: "campaign",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -1544,10 +1544,11 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Schedule/:CamS
          if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
         var camScheduleId = req.params.CamScheduleId;
+        var campaignId = req.params.CampaignId;
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
 
-        campaignSchedule.DeleteSchedule(camScheduleId, tenantId, companyId, res);
+        campaignSchedule.DeleteSchedule(camScheduleId,campaignId, tenantId, companyId, res);
     }
     catch (ex) {
 
