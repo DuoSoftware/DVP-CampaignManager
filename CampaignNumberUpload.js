@@ -187,6 +187,7 @@ function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId,s
 
 
     function CampScheduleCallback(err, result) {
+
         AddMapData(campaignId,camScheduleId,categoryID,schedule,tenantId,companyId);
         var jsonString = messageFormatter.FormatMessage(err, "OPERATIONS COMPLETED", errList.length === 0, errList);
         callBackm.end(jsonString);
@@ -721,9 +722,12 @@ function mapNumberToCampaign(req, res) {
         .findAll(
             {where: [{CompanyId: companyId}, {TenantId: tenantId}, {CategoryID: req.params.CategoryID}]}).then(function (cmp) {
         if (cmp && Array.isArray(cmp) && cmp.length > 0) {
-
+            var condition = [{CampaignId: req.params.CampaignId}, {BatchNo: cmp[0].BatchNo}];
+            if(req.body.camScheduleId){
+                condition.push({CamScheduleId: req.body.camScheduleId})
+            }
             DbConn.CampContactSchedule
-                .find({where: [{CampaignId: req.params.CampaignId}, {BatchNo: cmp[0].BatchNo}]}
+                .find({where: condition}
                 ).then(function (results) {
 
                 if (results) {
@@ -743,7 +747,7 @@ function mapNumberToCampaign(req, res) {
                     DbConn.CampContactSchedule.bulkCreate(
                         nos
                     ).then(function (results) {
-                        AddMapData(req.params.CampaignId,req.body.camScheduleId,req.params.CategoryID,req.body.schedule,tenantId,companyId);
+                        AddMapData(req.params.CampaignId,req.body.camScheduleId,req.params.CategoryID,req.body.ScheduleName,tenantId,companyId);
                         jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
                         logger.info('CampContactInfo - bulkCreate successfully.[%s] ', jsonString);
                         res.end(jsonString);
