@@ -70,6 +70,27 @@ function StartCampaign(campaignId, tenantId, companyId, callback) {
 
 }
 
+function SetOperationalStatus(campaignId, tenantId, companyId,operationalStatus, callback) {
+    DbConn.CampCampaignInfo
+        .update(
+            {
+                OperationalStatus: operationalStatus
+            },
+            {
+                where: [{CompanyId: companyId}, {TenantId: tenantId}, {
+                    CampaignId: campaignId
+                }]
+            }
+        ).then(function (results) {
+        callback(undefined,results);
+
+    }).error(function (err) {
+        callback(err,undefined);
+    });
+
+
+}
+
 function EditCampaign(campaignId, campaignName, campaignMode, campaignChannel, dialoutMechanism, tenantId, companyId, campaignClass, campaignType, campaignCategory, extension, callback) {
     var jsonString;
     DbConn.CampOngoingCampaign
@@ -176,10 +197,10 @@ function GetAllCampaign(tenantId, companyId, callback) {
 
         DbConn.CampCampaignInfo.findAll({
             where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}],
-            include: [{model: DbConn.CampContactSchedule, as: "CampContactSchedule"}, {
+            /*include: [{model: DbConn.CampContactSchedule, as: "CampContactSchedule"}, {
                 model: DbConn.CampConfigurations,
                 as: "CampConfigurations"
-            }]
+            }]*/
         }).then(function (CamObject) {
 
             if (CamObject) {
@@ -368,14 +389,14 @@ function GetOfflineCampaign(tenantId, companyId, callback) {
     });
 }
 
-function GetPendingCampaign(tenantId, companyId, count, callback) {
+function GetPendingCampaign(tenantId, companyId, operationalStatus, count, callback) {
     var jsonString;
     try {
 
 //DbConn.CampCampaignInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}], required: true,attributes: ['CampaignId'] , include :[{model:DbConn.CampOngoingCampaign, as :"CampOngoingCampaign", required: true,attributes: []}]}).complete(function (err, CamObject) {
 
         DbConn.CampCampaignInfo.findAll({
-            where: [{Status: true}, {OperationalStatus: "start"}],
+            where: [{Status: true}, {OperationalStatus: operationalStatus}],
             include: [{model: DbConn.CampScheduleInfo, as: "CampScheduleInfo"}, {
                 model: DbConn.CampConfigurations,
                 as: "CampConfigurations"
@@ -549,3 +570,4 @@ module.exports.GetAdditionalData = GetAdditionalData;
 module.exports.GetAdditionalDataByCampaignId = GetAdditionalDataByCampaignId;
 module.exports.GetAdditionalDataByCampaignId = GetAdditionalDataByCampaignId;
 module.exports.GetAdditionalDataByClassTypeCategory = GetAdditionalDataByClassTypeCategory;
+module.exports.SetOperationalStatus = SetOperationalStatus;
