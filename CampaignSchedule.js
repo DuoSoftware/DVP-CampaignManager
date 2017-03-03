@@ -62,9 +62,37 @@ function DeleteSchedule(camScheduleId,campaignId, tenantId, companyId, callBack)
     DbConn.CampContactSchedule
         .find(
             {
-                where: [{CamScheduleId: camScheduleId},{CampaignId:campaignId}]
+                where: [{CamScheduleId: camScheduleId}]
             }
-        ).then(function (cmp) {
+        ).then(function (camSch) {
+
+        if (camSch) {
+            logger.error('[DVP-CampScheduleInfo.DeleteSchedule] - [%s] - [PGSQL] - Updation failed-[%s]', camScheduleId, undefined);
+            jsonString = messageFormatter.FormatMessage(new Error("Not Allow To Delete.May Be Assign To Another Campaign."), "EXCEPTION", false, undefined);
+            callBack.end(jsonString);
+        }else{
+            DbConn.CampScheduleInfo
+                .destroy(
+                    {
+                        where: [{CamScheduleId: camScheduleId},{CampaignId:campaignId}, {TenantId: tenantId}, {CompanyId: companyId}]
+                    }
+                ).then(function (cmp) {
+                logger.info('[DVP-CampScheduleInfo.DeleteSchedule] - [%s] - [PGSQL] - Updated successfully', camScheduleId);
+                jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", cmp==1, cmp);
+                callBack.end(jsonString);
+
+            }).error(function (err) {
+                logger.error('[DVP-CampScheduleInfo.DeleteSchedule] - [%s] - [PGSQL] - Updation failed-[%s]', camScheduleId, err);
+                jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                callBack.end(jsonString);
+            });
+        }
+
+/*
+
+
+
+
         if (cmp) {
             logger.error('[DVP-CampScheduleInfo.DeleteSchedule] - [%s] - [PGSQL] - Updation failed-[%s]', camScheduleId, undefined);
             jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
@@ -87,7 +115,7 @@ function DeleteSchedule(camScheduleId,campaignId, tenantId, companyId, callBack)
                 callBack.end(jsonString);
             });
 
-        }
+        }*/
 
     }).error(function (err) {
         logger.error('[DVP-CampScheduleInfo.DeleteSchedule] - [%s] - [PGSQL] - Updation failed-[%s]', camScheduleId, err);
