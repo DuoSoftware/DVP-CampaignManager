@@ -351,15 +351,15 @@ function GetAllConfigurationSettingByCampaignId(campaignId, tenantId, companyId,
 
 }
 
-function CreateCallBackReason(reason, tenantId, companyId, callback) {
+function CreateCallBackReason(reason, hangupCause, callback) {
 
     var jsonString;
     DbConn.CampCallBackReasons
         .create(
         {
             Reason: reason,
-            TenantId: tenantId,
-            CompanyId: companyId
+            HangupCause: hangupCause,
+            Status: true
         }
     ).then(function ( cmp) {
             jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
@@ -373,16 +373,17 @@ function CreateCallBackReason(reason, tenantId, companyId, callback) {
 
 }
 
-function EditCallBackReason(reasonId, reason, tenantId, companyId, callback) {
+function EditCallBackReason(reasonId, reason, hangupCause, callback) {
 
     var jsonString;
     DbConn.CampCallBackReasons
         .update(
         {
-            Reason: reason
+            Reason: reason,
+            HangupCause: hangupCause
         },
         {
-            where: [{ReasonId: reasonId}, {TenantId: tenantId}, {CompanyId: companyId}]
+            where: [{ReasonId: reasonId}]
         }
     ).then(function (results) {
 
@@ -424,9 +425,9 @@ function DeleteCallbackInfo(callBackId, tenantId, companyId, callback) {
 
 }
 
-function GetCallBackReason(reasonId, tenantId, companyId, callBack) {
+function GetCallBackReason(tenantId, companyId, reasonId, callBack) {
     var jsonString;
-    DbConn.CampCallBackReasons.find({where: [{CompanyId: companyId}, {TenantId: tenantId}, {ReasonId: reasonId}]}).then(function (CamObject) {
+    DbConn.CampCallBackReasons.find({where: [{ReasonId: reasonId}]}).then(function (CamObject) {
 
         if (CamObject) {
             logger.info('[DVP-CampCallBackReasons.GetCallBackReason] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
@@ -448,7 +449,7 @@ function GetCallBackReason(reasonId, tenantId, companyId, callBack) {
 
 function GetAllCallBackReasons(tenantId, companyId, callBack) {
     var jsonString;
-    DbConn.CampCallBackReasons.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}]}).then(function (CamObject) {
+    DbConn.CampCallBackReasons.findAll().then(function (CamObject) {
 
         if (CamObject) {
             logger.info('[DVP-CampCallBackReasons.GetAllCallBackReason] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
