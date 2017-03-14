@@ -254,6 +254,9 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/State/:Comman
             case "create":
                 campaignHandler.GetPendingCampaign(tenantId, companyId, "create", count, res);
                 break;
+            case "ongoing":
+                campaignHandler.GetPendingCampaign(tenantId, companyId, "ongoing", count, res);
+                break;
             default :
                 campaignHandler.GetAllCampaignByCampaignState(tenantId, companyId, req.params.Command, res);
                 break;
