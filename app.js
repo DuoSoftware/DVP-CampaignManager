@@ -56,6 +56,7 @@ RestServer.use(jwt({secret: secret.Secret}));
 //-------------------------  Restify Server ------------------------- \\
 
 //-------------------------  CampaignHandler ------------------------- \\
+//-------------------------  CampaignHandler ------------------------- \\
 
 RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign', authorization({
     resource: "campaign",
@@ -253,6 +254,9 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/State/:Comman
                 break;
             case "create":
                 campaignHandler.GetPendingCampaign(tenantId, companyId, "create", count, res);
+                break;
+            case "ongoing":
+                campaignHandler.GetPendingCampaign(tenantId, companyId, "ongoing", count, res);
                 break;
             default :
                 campaignHandler.GetAllCampaignByCampaignState(tenantId, companyId, req.params.Command, res);
@@ -1729,7 +1733,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Session', aut
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
 
-        campaignDialoutInfo.CreateDialoutInfo(cmp.CampaignId, cmp.DialerId, cmp.DialerStatus, cmp.Dialtime, cmp.Reason, cmp.SessionId, cmp.TryCount, tenantId, companyId, res);
+        campaignDialoutInfo.CreateDialoutInfo(cmp.CampaignId, cmp.DialerId, cmp.DialerStatus, cmp.Dialtime, cmp.Reason, cmp.SessionId, cmp.TryCount, tenantId, companyId, cmp.CampaignName, cmp.Number, res);
 
     }
     catch (ex) {
@@ -1754,7 +1758,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Session/:Dialo
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
 
-        campaignDialoutInfo.EditDialoutInfo(req.params.DialoutId, cmp.CampaignId, cmp.DialerId, cmp.DialerStatus, cmp.Dialtime, cmp.Reason, cmp.SessionId, cmp.TryCount, tenantId, companyId, res);
+        campaignDialoutInfo.EditDialoutInfo(req.params.DialoutId, cmp.CampaignId, cmp.DialerId, cmp.DialerStatus, cmp.Dialtime, cmp.Reason, cmp.SessionId, cmp.TryCount, tenantId, companyId, cmp.CampaignName, cmp.Number, res);
 
     }
     catch (ex) {
