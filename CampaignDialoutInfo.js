@@ -6,19 +6,21 @@ var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJ
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('dvp-dbmodels');
 
-function CreateDialoutInfo(campaignId,dialerId,dialerStatus,dialtime,reason,sessionId,tryCount,tenantId, companyId, callBack){
+function CreateDialoutInfo(campaignId,dialerId,dialerStatus,dialtime,reason,sessionId,tryCount,tenantId, companyId, campaignName, dialNumber, callBack){
     var jsonString;
     DbConn.CampDialoutInfo
         .create(
         {
             CampaignId: campaignId,
             CompanyId: companyId,
+            CampaignName: campaignName,
             TenantId: tenantId,
             DialerId: dialerId,
             DialerStatus: dialerStatus,
             Dialtime: dialtime,
             Reason: reason,
             SessionId: sessionId,
+            DialNumber:dialNumber,
             TryCount:tryCount
         }
     ).then(function (results) {
@@ -34,19 +36,21 @@ function CreateDialoutInfo(campaignId,dialerId,dialerStatus,dialtime,reason,sess
         });
 }
 
-function EditDialoutInfo(dialoutId,campaignId,dialerId,dialerStatus,dialtime,reason,sessionId,tryCount,tenantId, companyId, callBack){
+function EditDialoutInfo(dialoutId,campaignId,dialerId,dialerStatus,dialtime,reason,sessionId,tryCount,tenantId, companyId, campaignName, dialNumber, callBack){
     var jsonString;
     DbConn.CampDialoutInfo
         .update(
         {
             CampaignId: campaignId,
             CompanyId: companyId,
+            CampaignName: campaignName,
             TenantId: tenantId,
             DialerId: dialerId,
             DialerStatus: dialerStatus,
             Dialtime: dialtime,
             Reason: reason,
             SessionId: sessionId,
+            DialNumber:dialNumber,
             TryCount:tryCount
         },
         {where:[{TenantId: tenantId}, { CompanyId:companyId},{CategoryID:categoryID},{DialoutId:dialoutId}]}
