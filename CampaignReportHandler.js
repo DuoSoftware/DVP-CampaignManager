@@ -42,7 +42,22 @@ module.exports.CampaignDispositionReportCount = function (req, res) {
     var companyId = req.user.company;
     var campaignId = req.params.CampaignId;
 
-    DbConn.CampDialoutInfo.count({CompanyId: companyId.toString()}, {TenantId: tenantId.toString()}, {CampaignId: campaignId})
+    var query = {
+        where: [{CompanyId: companyId.toString()}, {TenantId: tenantId.toString()}, {CampaignId: campaignId}]
+    };
+
+    if (req.params.TryCount && req.params.TryCount > 0) {
+        query.where.push({TryCount: req.params.TryCount});
+    }
+    if (req.params.DialerStatus && (req.params.DialerStatus != 'Dialer State')) {
+        query.where.push({DialerStatus: req.params.DialerStatus});
+    }
+    if (req.params.Reason && (req.params.Reason != 'Reason')) {
+        query.where.push({Reason: req.params.Reason});
+    }
+
+
+    DbConn.CampDialoutInfo.count(query)
         .then(function (CamObject) {
             jsonString = messageFormatter.FormatMessage(undefined, "EXCEPTION", true, CamObject);
             res.end(jsonString);
@@ -264,12 +279,24 @@ module.exports.CampaignDispositionReport = function (req, res) {
     var pageNo = req.params.pageNo;
     var rowCount = req.params.rowCount;
 
-    DbConn.CampDialoutInfo.findAll({
+    var query = {
         where: [{CompanyId: companyId.toString()}, {TenantId: tenantId.toString()}, {CampaignId: campaignId}],
         offset: ((pageNo - 1) * rowCount),
         limit: rowCount,
         order: '"DialoutId" DESC'
-    }).then(function (CamObject) {
+    };
+
+    if (req.params.TryCount && req.params.TryCount > 0) {
+        query.where.push({TryCount: req.params.TryCount});
+    }
+    if (req.params.DialerStatus) {
+        query.where.push({DialerStatus: req.params.DialerStatus});
+    }
+    if (req.params.Reason) {
+        query.where.push({Reason: req.params.Reason});
+    }
+
+    DbConn.CampDialoutInfo.findAll(query).then(function (CamObject) {
 
         if (CamObject) {
             jsonString = messageFormatter.FormatMessage(undefined, "EXCEPTION", true, CamObject);
@@ -300,6 +327,76 @@ module.exports.CampaignCallbackReport = function (req, res) {
 
         if (CamObject) {
             jsonString = messageFormatter.FormatMessage(undefined, "EXCEPTION", true, CamObject);
+        }
+        else {
+            jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+        }
+        res.end(jsonString);
+    }).error(function (err) {
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        res.end(jsonString);
+    });
+
+};
+
+module.exports.CampaignAttemptReport = function (req, res) {
+    var jsonString;
+    var campaignId = req.params.CampaignId;
+    var pageNo = req.params.pageNo;
+    var rowCount = req.params.rowCount;
+
+    var query = {
+        attributes: ['DialNumber',
+            [DbConn.SequelizeConn.fn('MAX', DbConn.SequelizeConn.col('"createdAt"')), 'createdAt'],
+            [DbConn.SequelizeConn.fn('COUNT', DbConn.SequelizeConn.col("TryCount")), 'TryCount'],
+            [DbConn.SequelizeConn.fn('COUNT', DbConn.SequelizeConn.literal(`case when "DialerStatus" = 'channel_answered' then "DialerStatus" end`)), 'answered']
+
+            //[DbConn.SequelizeConn.literal('(SELECT COUNT("DialerStatus") FROM "Orders" WHERE "Orders"."CustomerId" = "Customer"."id")'), 'totalAmount']
+            //[DbConn.SequelizeConn.fn('COUNT', sequelize.cast{DialerStatus:{$eq:"channel_answered"}}))]
+        ],
+        where: [{CampaignId: campaignId}],
+        group: ['DialNumber'],
+        offset: ((pageNo - 1) * rowCount),
+        limit: rowCount
+    };
+
+    if (req.params.DialNumber ) {
+        query.where.push({DialNumber: req.params.DialNumber});
+    }
+
+    DbConn.CampDialoutInfo.findAll(query).then(function (CamObject) {
+
+        if (CamObject) {
+            jsonString = messageFormatter.FormatMessage(undefined, "EXCEPTION", true, CamObject);
+        }
+        else {
+            jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+        }
+        res.end(jsonString);
+    }).error(function (err) {
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        res.end(jsonString);
+    });
+
+};
+
+module.exports.CampaignAttemptReportCount = function (req, res) {
+    var jsonString;
+    var campaignId = req.params.CampaignId;
+
+    var query = {
+        attributes: [[DbConn.SequelizeConn.literal('DISTINCT "DialNumber"'), 'DialNumber']],
+        where: [{CampaignId: campaignId}]
+    };
+
+    if (req.params.DialNumber ) {
+        query.where.push({DialNumber: req.params.DialNumber});
+    }
+
+    DbConn.CampDialoutInfo.findAll(query).then(function (CamObject) {
+
+        if (CamObject) {
+            jsonString = messageFormatter.FormatMessage(undefined, "EXCEPTION", true, CamObject.length);
         }
         else {
             jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
