@@ -436,15 +436,14 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Op
         var camId = req.params.CampaignId;
          if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         switch (req.params.Command) {
             case "stop":
                 campaignOperations.StopCampaign(camId, res);
                 break;
             case "pause":
-                campaignOperations.PauseCampaign(camId, res);
+                campaignOperations.PauseCampaign(camId,req, res);
                 break;
             case "resume":
                 campaignOperations.ResumeCampaign(camId, res);

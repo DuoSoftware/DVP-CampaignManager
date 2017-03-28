@@ -113,8 +113,10 @@ function StopCampaign(campaignId, callback) {
     });
 }
 
-function PauseCampaign(campaignId, callback) {
+function PauseCampaign(campaignId,req, callback) {
     var jsonString;
+    var tenantId = req.user.tenant;
+    var companyId = req.user.company;
     DbConn.CampOngoingCampaign
         .update(
             {
