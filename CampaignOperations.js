@@ -7,15 +7,39 @@ var DbConn = require('dvp-dbmodels');
 var Sequelize = require('sequelize');
 var campaignOperations = require('./CampaignOperations');
 
-function SetOperationalStatus(tenantId, companyId,value) {
-    campaignOperations.SetOperationalStatus(tenantId, companyId,value,function (err,obj) {
-        if(err){
-            logger.error('SetOperationalStatus - [%s] - [%s] -[%s] - failed', tenantId, companyId,value, err);
+function SetOperationalStatus(campaignId, value) {
+    /*campaignOperations.SetOperationalStatus(tenantId, companyId,value,function (err,obj) {
+     if(err){
+     logger.error('SetOperationalStatus - [%s] - [%s] -[%s] - failed', tenantId, companyId,value, err);
+     }
+     else{
+     logger.info('SetOperationalStatus - [%s] - [%s] -[%s]  - successfully',  tenantId, companyId,value);
+     }
+     });*/
+
+    DbConn.CampCampaignInfo
+        .update(
+            {
+                OperationalStatus: value
+            },
+            {
+                where: [{
+                    CampaignId: campaignId
+                }]
+            }
+        ).then(function (results) {
+        if (results) {
+            logger.info('SetOperationalStatus - [%s]-[%s]  - successfully', campaignId, value);
+
         }
-        else{
-            logger.info('SetOperationalStatus - [%s] - [%s] -[%s]  - successfully',  tenantId, companyId,value);
+        else {
+            logger.info('SetOperationalStatus - [%s] -[%s]  - failed', campaignId, value);
         }
+
+    }).error(function (err) {
+        logger.error('SetOperationalStatus - [%s]  - failed', campaignId, err);
     });
+
 }
 
 function StartCampaign(campaignId, dialerId, tenantId, companyId, callback) {
@@ -34,7 +58,7 @@ function StartCampaign(campaignId, dialerId, tenantId, companyId, callback) {
                         where: [{DialerId: dialerId}, {CampaignId: campaignId}]
                     }
                 ).then(function (cmp) {
-                SetOperationalStatus(tenantId, companyId,'start');
+                SetOperationalStatus(campaignId, 'start');
                 logger.info('[DVP-CampaignOperations.StartCampaign] - [%s] - [PGSQL] - StartCampaign successfully ', campaignId);
                 jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
                 callback.end(jsonString);
@@ -67,7 +91,7 @@ function StartCampaign(campaignId, dialerId, tenantId, companyId, callback) {
                             where: [{CampaignId: campaignId}]
                         }
                     ).then(function (cmp) {
-                    SetOperationalStatus(tenantId, companyId,'ongoing');
+                    SetOperationalStatus(campaignId, 'ongoing');
                     logger.info('[DVP-CampaignOperations.StartCampaign-create-update OperationalStatus] - [%s] - [PGSQL] - StartCampaign successfully ', campaignId);
                     jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
                     callback.end(jsonString);
@@ -91,7 +115,7 @@ function StartCampaign(campaignId, dialerId, tenantId, companyId, callback) {
 
 }
 
-function StopCampaign(campaignId,req, callback) {
+function StopCampaign(campaignId, req, callback) {
     var jsonString;
     var tenantId = req.user.tenant;
     var companyId = req.user.company;
@@ -105,7 +129,7 @@ function StopCampaign(campaignId,req, callback) {
             }
         ).then(function (cmp) {
 
-        SetOperationalStatus(tenantId, companyId,'stop');
+        SetOperationalStatus(campaignId, 'stop');
         logger.info('[DVP-CampaignOperations.StopCampaign] - [%s] - [PGSQL] - StopCampaign successfully ', campaignId);
         jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
         callback.end(jsonString);
@@ -116,7 +140,7 @@ function StopCampaign(campaignId,req, callback) {
     });
 }
 
-function PauseCampaign(campaignId,req, callback) {
+function PauseCampaign(campaignId, req, callback) {
     var jsonString;
     var tenantId = req.user.tenant;
     var companyId = req.user.company;
@@ -129,7 +153,7 @@ function PauseCampaign(campaignId,req, callback) {
                 where: [{CampaignId: campaignId}]
             }
         ).then(function (cmp) {
-        SetOperationalStatus(tenantId, companyId,'pause');
+        SetOperationalStatus(campaignId, 'pause');
         logger.info('[DVP-CampaignOperations.PauseCampaign] - [%s] - [PGSQL] - PauseCampaign successfully ', campaignId);
         jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
         callback.end(jsonString);
@@ -140,7 +164,7 @@ function PauseCampaign(campaignId,req, callback) {
     });
 }
 
-function ResumeCampaign(campaignId,req, callback) {
+function ResumeCampaign(campaignId, req, callback) {
 
     var jsonString;
     var tenantId = req.user.tenant;
@@ -157,7 +181,7 @@ function ResumeCampaign(campaignId,req, callback) {
                         where: {CampaignId: campaignId}
                     }
                 ).then(function (cmp) {
-                SetOperationalStatus(tenantId, companyId,'start');
+                SetOperationalStatus(campaignId, 'start');
                 logger.info('[DVP-CampaignOperations.PauseCampaign] - [%s] - [PGSQL] - ResumeCampaign successfully ', campaignId);
                 jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
                 callback.end(jsonString);
