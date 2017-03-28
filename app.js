@@ -440,16 +440,16 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Op
 
         switch (req.params.Command) {
             case "stop":
-                campaignOperations.StopCampaign(camId, res);
+                campaignOperations.StopCampaign(camId,req, res);
                 break;
             case "pause":
                 campaignOperations.PauseCampaign(camId,req, res);
                 break;
             case "resume":
-                campaignOperations.ResumeCampaign(camId, res);
+                campaignOperations.ResumeCampaign(camId,req, res);
                 break;
             case "end":
-                campaignOperations.EndCampaign(camId, res);
+                campaignOperations.EndCampaign(camId,req, res);
                 break;
         }
 

@@ -91,8 +91,10 @@ function StartCampaign(campaignId, dialerId, tenantId, companyId, callback) {
 
 }
 
-function StopCampaign(campaignId, callback) {
+function StopCampaign(campaignId,req, callback) {
     var jsonString;
+    var tenantId = req.user.tenant;
+    var companyId = req.user.company;
     DbConn.CampOngoingCampaign
         .update(
             {
@@ -102,6 +104,7 @@ function StopCampaign(campaignId, callback) {
                 where: [{CampaignId: campaignId}]
             }
         ).then(function (cmp) {
+
         SetOperationalStatus(tenantId, companyId,'stop');
         logger.info('[DVP-CampaignOperations.StopCampaign] - [%s] - [PGSQL] - StopCampaign successfully ', campaignId);
         jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
@@ -137,9 +140,11 @@ function PauseCampaign(campaignId,req, callback) {
     });
 }
 
-function ResumeCampaign(campaignId, callback) {
+function ResumeCampaign(campaignId,req, callback) {
 
     var jsonString;
+    var tenantId = req.user.tenant;
+    var companyId = req.user.company;
     DbConn.CampOngoingCampaign.find({where: [{CampaignState: 'pause'}, {CampaignId: campaignId}]}).then(function (resDev) {
         if (resDev) {
 
