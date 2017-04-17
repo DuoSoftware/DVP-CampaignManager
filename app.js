@@ -18,6 +18,7 @@ var campaignNumberUpload = require('./CampaignNumberUpload');
 var campaignSchedule = require('./CampaignSchedule');
 var campaignDialoutInfo = require('./CampaignDialoutInfo');
 var campaignCallBackHandler = require('./CampaignCallBackHandler');
+var campaignReportHandler = require('./CampaignReportHandler');
 var campaignDncInfo = require('./CampaignDncInfo');
 
 
@@ -54,6 +55,7 @@ RestServer.use(jwt({secret: secret.Secret}));
 
 //-------------------------  Restify Server ------------------------- \\
 
+//-------------------------  CampaignHandler ------------------------- \\
 //-------------------------  CampaignHandler ------------------------- \\
 
 RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign', authorization({
@@ -253,6 +255,9 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/State/:Comman
             case "create":
                 campaignHandler.GetPendingCampaign(tenantId, companyId, "create", count, res);
                 break;
+            case "ongoing":
+                campaignHandler.GetPendingCampaign(tenantId, companyId, "ongoing", count, res);
+                break;
             default :
                 campaignHandler.GetAllCampaignByCampaignState(tenantId, companyId, req.params.Command, res);
                 break;
@@ -431,21 +436,20 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Op
         var camId = req.params.CampaignId;
          if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+
 
         switch (req.params.Command) {
             case "stop":
-                campaignOperations.StopCampaign(camId, res);
+                campaignOperations.StopCampaign(camId,req, res);
                 break;
             case "pause":
-                campaignOperations.PauseCampaign(camId, res);
+                campaignOperations.PauseCampaign(camId,req, res);
                 break;
             case "resume":
-                campaignOperations.ResumeCampaign(camId, res);
+                campaignOperations.ResumeCampaign(camId,req, res);
                 break;
             case "end":
-                campaignOperations.EndCampaign(camId, res);
+                campaignOperations.EndCampaign(camId,req, res);
                 break;
         }
 
@@ -1728,7 +1732,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/Session', aut
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
 
-        campaignDialoutInfo.CreateDialoutInfo(cmp.CampaignId, cmp.DialerId, cmp.DialerStatus, cmp.Dialtime, cmp.Reason, cmp.SessionId, cmp.TryCount, tenantId, companyId, res);
+        campaignDialoutInfo.CreateDialoutInfo(cmp.CampaignId, cmp.DialerId, cmp.DialerStatus, cmp.Dialtime, cmp.Reason, cmp.SessionId, cmp.TryCount, tenantId, companyId, cmp.CampaignName, cmp.Number, res);
 
     }
     catch (ex) {
@@ -1753,7 +1757,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/Session/:Dialo
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
 
-        campaignDialoutInfo.EditDialoutInfo(req.params.DialoutId, cmp.CampaignId, cmp.DialerId, cmp.DialerStatus, cmp.Dialtime, cmp.Reason, cmp.SessionId, cmp.TryCount, tenantId, companyId, res);
+        campaignDialoutInfo.EditDialoutInfo(req.params.DialoutId, cmp.CampaignId, cmp.DialerId, cmp.DialerStatus, cmp.Dialtime, cmp.Reason, cmp.SessionId, cmp.TryCount, tenantId, companyId, cmp.CampaignName, cmp.Number, res);
 
     }
     catch (ex) {
@@ -2083,6 +2087,196 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Dnc', authorization({
 
 
 //------------------------- EndCampaignDncList ------------------------- \\
+
+
+
+// ------------------------- Campaign Reports------------------------- \\
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Report/summery', authorization({
+    resource: "campaign",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('CampaignSummeryReport');
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+
+        campaignReportHandler.CampaignSummeryReport(req,res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('CampaignSummeryReport : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Report/disposition', authorization({
+    resource: "campaign",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('CampaignSummeryReport');
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+
+        campaignReportHandler.CampaignDispositionReport(req,res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('CampaignSummeryReport : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Report/summery/count', authorization({
+    resource: "campaign",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('CampaignSummeryReport');
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+
+        campaignReportHandler.CampaignSummeryReportCount(req,res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('CampaignSummeryReport : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Report/disposition/count', authorization({
+    resource: "campaign",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('CampaignSummeryReport');
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+
+        campaignReportHandler.CampaignDispositionReportCount(req,res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('CampaignSummeryReport : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Report/Callback/count', authorization({
+    resource: "campaign",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('CampaignSummeryReport');
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+
+        campaignReportHandler.CampaignCallbackReportCount(req,res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('CampaignCallbackReport : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Report/Callback', authorization({
+    resource: "campaign",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('CampaignSummeryReport');
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+
+        campaignReportHandler.CampaignCallbackReport(req,res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('CampaignCallbackReport : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Report/Attempt', authorization({
+    resource: "campaign",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('CampaignSummeryReport');
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+
+        campaignReportHandler.CampaignAttemptReport(req,res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('CampaignAttemptReport : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Report/Attempt/count', authorization({
+    resource: "campaign",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('CampaignSummeryReport');
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+
+        campaignReportHandler.CampaignAttemptReportCount(req,res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('CampaignAttemptReport : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+//------------------------- End Campaign Reports ------------------------- \\
 
 
 //------------------------- Crossdomain ------------------------- \\
