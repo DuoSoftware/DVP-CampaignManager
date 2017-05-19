@@ -470,6 +470,37 @@ function GetAllCallBackReasons(tenantId, companyId, callBack) {
 
 }
 
+
+function SetCampaignStartDate(tenantId, companyId, configureId, campaignId, startDate, endDate, callBack) {
+
+    DbConn.CampConfigurations
+        .update(
+        {
+            StartDate: startDate,
+            EndDate: endDate
+        },
+        {
+            where: {
+                TenantId: tenantId,
+                CompanyId: companyId,
+                CampaignId: campaignId,
+                ConfigureId: configureId
+            }
+        }
+    ).then(function (results) {
+
+
+            logger.info('[DVP-CampConfigurations.SetCampaignStartDate] - [%s] - [PGSQL] - Updated successfully', campaignId);
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+            callBack.end(jsonString);
+
+        }).error(function (err) {
+            logger.error('[DVP-CampConfigurations.SetCampaignStartDate] - [%s] - [PGSQL] - Updation failed-[%s]', campaignId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callBack.end(jsonString);
+        });
+}
+
 module.exports.CreateCallbackConfiguration = CreateCallbackConfiguration;
 module.exports.EditCallbackConfiguration = EditCallbackConfiguration;
 module.exports.GetCallbackConfiguration = GetCallbackConfiguration;
@@ -489,3 +520,4 @@ module.exports.GetCallBackReason = GetCallBackReason;
 module.exports.GetAllCallBackReasons = GetAllCallBackReasons;
 module.exports.GetCallbackConfigurationByConfigID = GetCallbackConfigurationByConfigID;
 module.exports.DeleteCallbackConfigurationByID = DeleteCallbackConfigurationByID;
+module.exports.SetCampaignStartDate = SetCampaignStartDate;

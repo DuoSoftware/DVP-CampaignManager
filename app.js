@@ -592,6 +592,31 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Co
     return next();
 });
 
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Configuration/:ConfigureId/StartDate', authorization({
+    resource: "campaignconfiguration",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[DVP-CampaignConfigurations.SetCampaignStartDate] - [HTTP]  - Request received -  Data - %s %s ', JSON.stringify(req.params), JSON.stringify(req.body));
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var cmp = req.body;
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+
+
+        campaignConfigurations.SetCampaignStartDate(tenantId, companyId,req.params.ConfigureId, req.params.CampaignId, cmp.StartDate, cmp.EndDate, res);
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CampaignConfigurations.SetCampaignStartDate] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/Configuration/:ConfigureId', authorization({
     resource: "campaignconfiguration",
     action: "delete"
