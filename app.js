@@ -592,7 +592,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Co
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Configuration/:ConfigureId/StartDate', authorization({
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Configuration/:ConfigureId/StartDate/:startDate/EndDate/:endDate', authorization({
     resource: "campaignconfiguration",
     action: "write"
 }), function (req, res, next) {
@@ -606,7 +606,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Co
         var companyId = req.user.company;
 
 
-        campaignConfigurations.SetCampaignStartDate(tenantId, companyId,req.params.ConfigureId, req.params.CampaignId, cmp.StartDate, cmp.EndDate, res);
+        campaignConfigurations.SetCampaignStartDate(tenantId, companyId,req.params.ConfigureId, req.params.CampaignId, req.params.startDate, req.params.endDate, res);
     }
     catch (ex) {
 

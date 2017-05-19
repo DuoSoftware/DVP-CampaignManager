@@ -4,6 +4,7 @@
 var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('dvp-dbmodels');
+var moment = require('moment');
 
 
 function CreateConfiguration(campaignId, channelConcurrent, allowCallBack, tenantId, companyId, status, caller, startDate, endDate, callBack) {
@@ -473,11 +474,14 @@ function GetAllCallBackReasons(tenantId, companyId, callBack) {
 
 function SetCampaignStartDate(tenantId, companyId, configureId, campaignId, startDate, endDate, callBack) {
 
+    var convertedStartDate = moment(startDate);
+    var convertedEndDate = moment(endDate);
+
     DbConn.CampConfigurations
         .update(
         {
-            StartDate: startDate,
-            EndDate: endDate
+            StartDate: convertedStartDate,
+            EndDate: convertedEndDate
         },
         {
             where: {
