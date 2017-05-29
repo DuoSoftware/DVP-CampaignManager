@@ -243,7 +243,8 @@ module.exports.CampaignSummeryReport = function (req, res) {
                                         percentage: 0,
                                         status: item.OperationalStatus,
                                         campaignName: item.CampaignName,
-                                        durations: calculateDuration(results.startEndDate)
+                                        durations: 'N/A',// calculateDuration(results.startEndDate),
+                                        startEndDate:results.startEndDate
 
                                     };
                                     if (results) {
