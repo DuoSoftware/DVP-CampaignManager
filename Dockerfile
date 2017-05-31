@@ -8,8 +8,7 @@
 #EXPOSE 8827
 
 FROM node:5.10.0
-ARG VERSION_TAG
-RUN git clone -b $VERSION_TAG https://github.com/DuoSoftware/DVP-CampaignManager.git /usr/local/src/campaignmanager
+RUN git clone https://github.com/DuoSoftware/DVP-CampaignManager.git /usr/local/src/campaignmanager
 RUN cd /usr/local/src/campaignmanager;
 WORKDIR /usr/local/src/campaignmanager
 RUN npm install
