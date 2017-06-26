@@ -4,6 +4,7 @@
 var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('dvp-dbmodels');
+var moment = require('moment');
 
 
 function CreateConfiguration(campaignId, channelConcurrent, allowCallBack, tenantId, companyId, status, caller, startDate, endDate, callBack) {
@@ -470,6 +471,40 @@ function GetAllCallBackReasons(tenantId, companyId, callBack) {
 
 }
 
+
+function SetCampaignStartDate(tenantId, companyId, configureId, campaignId, startDate, endDate, callBack) {
+
+    var convertedStartDate = moment(startDate);
+    var convertedEndDate = moment(endDate);
+
+    DbConn.CampConfigurations
+        .update(
+        {
+            StartDate: convertedStartDate,
+            EndDate: convertedEndDate
+        },
+        {
+            where: {
+                TenantId: tenantId,
+                CompanyId: companyId,
+                CampaignId: campaignId,
+                ConfigureId: configureId
+            }
+        }
+    ).then(function (results) {
+
+
+            logger.info('[DVP-CampConfigurations.SetCampaignStartDate] - [%s] - [PGSQL] - Updated successfully', campaignId);
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+            callBack.end(jsonString);
+
+        }).error(function (err) {
+            logger.error('[DVP-CampConfigurations.SetCampaignStartDate] - [%s] - [PGSQL] - Updation failed-[%s]', campaignId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callBack.end(jsonString);
+        });
+}
+
 module.exports.CreateCallbackConfiguration = CreateCallbackConfiguration;
 module.exports.EditCallbackConfiguration = EditCallbackConfiguration;
 module.exports.GetCallbackConfiguration = GetCallbackConfiguration;
@@ -489,3 +524,4 @@ module.exports.GetCallBackReason = GetCallBackReason;
 module.exports.GetAllCallBackReasons = GetAllCallBackReasons;
 module.exports.GetCallbackConfigurationByConfigID = GetCallbackConfigurationByConfigID;
 module.exports.DeleteCallbackConfigurationByID = DeleteCallbackConfigurationByID;
+module.exports.SetCampaignStartDate = SetCampaignStartDate;

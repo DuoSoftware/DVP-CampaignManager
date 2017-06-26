@@ -112,18 +112,52 @@ module.exports.CampaignSummeryReport = function (req, res) {
                 CamObject.map(function (item) {
                     if (item) {
 
+                        function convertDate(date) {
+                            var tempdate = '';
+                            var yyyy = date._data.years;
+                            var mm = date._data.months;
+                            var dd = date._data.days;
+                            var hh = date._data.hours;
+                            var mi = date._data.minutes;
+                            /*var sec = date._data.seconds;*/
+                            if (yyyy > 0) {
+                                tempdate = yyyy + 'y:' + mm + 'm:' + dd + 'd:' + hh + 'h:' + mi + 'm'; //+ sec+'s';
+                            }
+                            else if (mm > 0) {
+                                tempdate =  mm + 'm:' + dd + 'd:' + hh + 'h:' + mi + 'm'; //+ sec+'s';
+                            }
+                            else if (dd > 0) {
+                                tempdate = dd + 'd:' + hh + 'h:' + mi + 'm'; //+ sec+'s';
+                            }
+                            else {
+                                tempdate = hh + 'h:' + mi + 'm'; //+ sec+'s';
+                            }
+
+                            return tempdate;
+                        }
+
                         function calculateDuration(camDate) {
                             try {
-                                var then = moment(camDate, "YYYY-MM-DD'T'HH:mm:ss:SSSZ");
+                                if (!camDate.dataValues.StartDate) {
+                                    return "N/A"; //0y:0m:0d:00h:00m:00s
+                                }
+                                var then = moment(camDate.dataValues.StartDate, "YYYY-MM-DD'T'HH:mm:ss:SSSZ");
                                 var now = moment();
 
-                                var diff = moment.duration(then.diff(now));
-                                if (diff < 0) {
-                                    diff = Math.abs(diff);
+                                var endDate = moment(camDate.dataValues.EndDate, "YYYY-MM-DD'T'HH:mm:ss:SSSZ");
+                                var diff = moment.duration(now.diff(endDate));
+                                if (diff > 0) {
+                                    now = endDate;
                                 }
-                                return moment.utc(diff).format("HH:mm:ss:SSS");
+
+                                return convertDate(moment.duration(now.diff(then)));
+                                /*var diff = moment.duration(now.diff(then));//.humanize()
+                                 if (diff > 0) {
+                                 diff = Math.abs(diff);
+                                 }
+                                 return moment.utc(diff).format("HH:mm:ss:SSS");// | date:'yyyy-MM-dd HH:mm:ss Z'*/
                             } catch (ex) {
-                                return "00:00:00:00";
+                                return "N/A";
                             }
 
                         }
@@ -184,7 +218,22 @@ module.exports.CampaignSummeryReport = function (req, res) {
                                             }).error(function (err) {
                                             callback(err, 0);
                                         });
+                                    },
+                                    startEndDate: function (callback) {
+                                        var query = {
+                                            attributes: ['StartDate', 'EndDate'],
+                                            where: [{
+                                                CampaignId: item.CampaignId.toString()
+                                            }]
+                                        };
+                                        DbConn.CampConfigurations.find(query)
+                                            .then(function (CamObject) {
+                                                callback(undefined, CamObject);
+                                            }).error(function (err) {
+                                            callback(err, 0);
+                                        });
                                     }
+
                                 }, function (err, results) {
                                     var rowData = {
                                         total_dial: 0,
@@ -194,7 +243,8 @@ module.exports.CampaignSummeryReport = function (req, res) {
                                         percentage: 0,
                                         status: item.OperationalStatus,
                                         campaignName: item.CampaignName,
-                                        durations: calculateDuration(moment())
+                                        durations: 'N/A',// calculateDuration(results.startEndDate),
+                                        startEndDate:results.startEndDate
 
                                     };
                                     if (results) {
@@ -360,7 +410,7 @@ module.exports.CampaignAttemptReport = function (req, res) {
         limit: rowCount
     };
 
-    if (req.params.DialNumber ) {
+    if (req.params.DialNumber) {
         query.where.push({DialNumber: req.params.DialNumber});
     }
 
@@ -389,7 +439,7 @@ module.exports.CampaignAttemptReportCount = function (req, res) {
         where: [{CampaignId: campaignId}]
     };
 
-    if (req.params.DialNumber ) {
+    if (req.params.DialNumber) {
         query.where.push({DialNumber: req.params.DialNumber});
     }
 
