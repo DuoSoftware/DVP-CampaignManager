@@ -350,6 +350,30 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/AdditinalData/
     return next();
 });
 
+RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/AdditinalData/:AdditionalDataId', authorization({
+    resource: "campaign",
+    action: "delete"
+}), function (req, res, next) {
+    try {
+        logger.info('[DVP-campaignmanager.DeleteAdditionalDataByID] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var cam = req.params;
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+
+        campaignHandler.DeleteAdditionalDataByID(cam.AdditionalDataId, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-campaignmanager.DeleteAdditionalDataByID] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditinalData', authorization({
     resource: "campaign",
     action: "read"
