@@ -274,7 +274,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/State/:Comman
     return next();
 });
 
-RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditinalData', authorization({
+RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditionalData', authorization({
     resource: "campaign",
     action: "write"
 }), function (req, res, next) {
@@ -300,7 +300,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/A
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditinalData/:AdditionalDataId', authorization({
+RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditionalData/:AdditionalDataId', authorization({
     resource: "campaign",
     action: "write"
 }), function (req, res, next) {
@@ -326,31 +326,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ad
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/AdditinalData/:AdditionalDataId', authorization({
-    resource: "campaign",
-    action: "read"
-}), function (req, res, next) {
-    try {
-        logger.info('[DVP-campaignmanager.GetAdditionalData] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
-         if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
-        var cam = req.params;
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
-
-        campaignHandler.GetAdditionalData(cam.AdditionalDataId, tenantId, companyId, res);
-
-    }
-    catch (ex) {
-
-        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
-        logger.error('[DVP-campaignmanager.GetAdditionalData] - Request response : %s ', jsonString);
-        res.end(jsonString);
-    }
-    return next();
-});
-
-RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/AdditinalData/:AdditionalDataId', authorization({
+RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/AdditionalData/:AdditionalDataId', authorization({
     resource: "campaign",
     action: "delete"
 }), function (req, res, next) {
@@ -374,7 +350,33 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/AdditinalData/
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditinalData', authorization({
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/AdditionalData/:AdditionalDataId', authorization({
+    resource: "campaign",
+    action: "read"
+}), function (req, res, next) {
+    try {
+        logger.info('[DVP-campaignmanager.GetAdditionalData] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
+         if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var cam = req.params;
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+
+        campaignHandler.GetAdditionalData(cam.AdditionalDataId, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-campaignmanager.GetAdditionalData] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditionalData', authorization({
     resource: "campaign",
     action: "read"
 }), function (req, res, next) {
@@ -398,7 +400,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Ad
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditinalData/:DataClass/:DataType/:DataCategory', authorization({
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/AdditionalData/:DataClass/:DataType/:DataCategory', authorization({
     resource: "campaign",
     action: "read"
 }), function (req, res, next) {
