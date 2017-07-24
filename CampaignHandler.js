@@ -533,7 +533,7 @@ function GetAdditionalDataByCampaignId(campaignId, tenantId, companyId, callBack
 
 function GetAdditionalDataByClassTypeCategory(campaignId, tenantId, companyId, dataClass, dataType, dataCategory, callBack) {
     var jsonString;
-    DbConn.CampAdditionalData.find({where: [{CampaignId: campaignId}, {TenantId: tenantId}, {CompanyId: companyId}, {Class: dataClass}, {Type: dataType}, {Category: dataCategory}]})
+    DbConn.CampAdditionalData.findAll({where: [{CampaignId: campaignId}, {TenantId: tenantId}, {CompanyId: companyId}, {Class: dataClass}, {Type: dataType}, {Category: dataCategory}]})
         .then(function (CamObject) {
 
             if (CamObject) {
