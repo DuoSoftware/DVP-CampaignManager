@@ -287,7 +287,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/A
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
 
-        campaignHandler.AddAdditionalData(cmp.DataClass, cmp.DataType, cmp.DataCategory, tenantId, companyId, cmp.AdditionalData, req.params.CampaignId, res);
+        campaignHandler.AddAdditionalData(cmp.Class, cmp.Type, cmp.Category, tenantId, companyId, cmp.AdditionalData, req.params.CampaignId, res);
 
     }
     catch (ex) {
