@@ -533,7 +533,7 @@ function GetAdditionalDataByCampaignId(campaignId, tenantId, companyId, callBack
 
 function GetAdditionalDataByClassTypeCategory(campaignId, tenantId, companyId, dataClass, dataType, dataCategory, callBack) {
     var jsonString;
-    DbConn.CampAdditionalData.find({where: [{CampaignId: campaignId}, {TenantId: tenantId}, {CompanyId: companyId}, {Class: dataClass}, {Type: dataType}, {Category: dataCategory}]})
+    DbConn.CampAdditionalData.findAll({where: [{CampaignId: campaignId}, {TenantId: tenantId}, {CompanyId: companyId}, {Class: dataClass}, {Type: dataType}, {Category: dataCategory}]})
         .then(function (CamObject) {
 
             if (CamObject) {
@@ -554,6 +554,28 @@ function GetAdditionalDataByClassTypeCategory(campaignId, tenantId, companyId, d
         });
 }
 
+function DeleteAdditionalDataByID(additionalDataId, tenantId, companyId, callBack) {
+    var jsonString;
+    DbConn.CampAdditionalData.destroy({where: [{AdditionalDataId: additionalDataId}]}).then(function (CamObject) {
+
+        if (CamObject) {
+            logger.info('[DVP-CampCallbackConfigurations.DeleteAdditionalDataByID] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
+            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+            callBack.end(jsonString);
+        }
+        else {
+            logger.error('[DVP-CampCallbackConfigurations.DeleteAdditionalDataByID] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+            jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+            callBack.end(jsonString);
+        }
+
+    }).error(function (err) {
+        logger.error('[DVP-CampCallbackConfigurations.DeleteAdditionalDataByID] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callBack.end(jsonString);
+    });
+}
+
 module.exports.CreateCampaign = CreateCampaign;
 module.exports.EditCampaign = EditCampaign;
 module.exports.StartCampaign = StartCampaign;
@@ -571,4 +593,5 @@ module.exports.GetAdditionalData = GetAdditionalData;
 module.exports.GetAdditionalDataByCampaignId = GetAdditionalDataByCampaignId;
 module.exports.GetAdditionalDataByCampaignId = GetAdditionalDataByCampaignId;
 module.exports.GetAdditionalDataByClassTypeCategory = GetAdditionalDataByClassTypeCategory;
+module.exports.DeleteAdditionalDataByID = DeleteAdditionalDataByID;
 module.exports.SetOperationalStatus = SetOperationalStatus;
