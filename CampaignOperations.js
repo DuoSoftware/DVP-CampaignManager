@@ -249,7 +249,7 @@ function UpdateOperationState(campaignId, dialerId, campaignState, callback) {
                 LastResponsTime: new Date()
             },
             {
-                where: [{CampaignId: campaignId}, {DialerId: dialerId}, {CampaignState: campaignState}]
+                where: [{CampaignId: campaignId}, {DialerId: dialerId}]
             }
         ).then(function (cmp) {
 
