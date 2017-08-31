@@ -1532,7 +1532,7 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/NumbersByOffset/:ScheduleId/:Offset/:PageNo', authorization({
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/NumbersByOffset/:ScheduleId/:RowCount/:Offset', authorization({
     resource: "campaignnumbers",
     action: "read"
 }), function (req, res, next) {
