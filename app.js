@@ -478,6 +478,11 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Op
             case "end":
                 campaignOperations.EndCampaign(camId,req, res);
                 break;
+            default :
+                var jsonString = messageFormatter.FormatMessage(new Error("invalid Command"), "EXCEPTION", false, undefined);
+                logger.error('[DVP-CampaignOperations.StopCampaign] - Request response : %s ', jsonString);
+                res.end(jsonString);
+                break;
         }
 
 
