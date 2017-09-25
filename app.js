@@ -478,6 +478,11 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Op
             case "end":
                 campaignOperations.EndCampaign(camId,req, res);
                 break;
+            default :
+                var jsonString = messageFormatter.FormatMessage(new Error("invalid Command"), "EXCEPTION", false, undefined);
+                logger.error('[DVP-CampaignOperations.StopCampaign] - Request response : %s ', jsonString);
+                res.end(jsonString);
+                break;
         }
 
 
@@ -1532,6 +1537,34 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/NumbersByOffset/:ScheduleId/:RowCount/:Offset', authorization({
+    resource: "campaignnumbers",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var campaignId = req.params.CampaignId;
+        var scheduleId = req.params.ScheduleId;
+        var rowCount = req.params.RowCount;
+        var offset = req.params.Offset;
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+
+
+        campaignNumberUpload.GetAllContactByCampaignIdScheduleIdOffset(campaignId, scheduleId, rowCount, offset, tenantId, companyId, res)
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
 //------------------------- End-CampaignNumberUpload ------------------------- \\
 
 //------------------------- CampaignSchedule ------------------------- \\
