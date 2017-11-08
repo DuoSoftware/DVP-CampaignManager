@@ -1136,6 +1136,31 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/N
     return next();
 });
 
+RestServer.post('/DVP/API/' + version + '/CampaignManager/CampaignNumbers/Contact/Category', authorization({
+    resource: "campaignnumbers",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[DVP-CampaignNumberUpload.CreateContactCategory] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+
+        var cmp = req.body;
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+
+        campaignNumberUpload.CreateContactCategory(cmp.CategoryName, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CampaignNumberUpload.CreateContactCategory] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.post('/DVP/API/' + version + '/CampaignManager/CampaignCategory', authorization({
     resource: "campaignnumbers",
     action: "write"
