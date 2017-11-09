@@ -99,8 +99,16 @@ function GetDncList(tenantId, companyId, res) {
         }
     }).then(function (dncObjects) {
         if (dncObjects) {
-            logger.info('[DVP-CampDncInfo.GetDncList] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(dncObjects));
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, dncObjects);
+
+            var dncNumberList = [];
+            dncObjects.forEach(function (dncObj) {
+                if(dncObj && dncObj.ContactId){
+                    dncNumberList.push(dncObj.ContactId);
+                }
+            });
+
+            logger.info('[DVP-CampDncInfo.GetDncList] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(dncNumberList));
+            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, dncNumberList);
 
             res.end(jsonString);
         }
