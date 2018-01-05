@@ -70,8 +70,10 @@ module.exports.CampaignDispositionReportCount = function (req, res) {
 module.exports.CampaignCallbackReportCount = function (req, res) {
     var jsonString;
     var campaignId = req.params.CampaignId;
-
-    DbConn.CampCallbackInfo.count({CampaignId: campaignId})
+    var query = {
+        where: [{CampaignId: campaignId}]
+    };
+    DbConn.CampCallbackInfo.count(query)
         .then(function (CamObject) {
             jsonString = messageFormatter.FormatMessage(undefined, "EXCEPTION", true, CamObject);
             res.end(jsonString);
