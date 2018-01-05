@@ -3,7 +3,7 @@
  */
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('dvp-dbmodels');
-var List = require("collections/list");
+//var List = require("collections/list"); --violate with sequelize library
 var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
 var async = require("async");
 
