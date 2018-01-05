@@ -235,7 +235,7 @@ function GetAllCampaignPage(tenantId, companyId, count, callback) {
         DbConn.CampCampaignInfo.findAll({
             where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}],
             limit: count,
-            order: '"CampaignId" DESC'
+            order: [['CampaignId','DESC']]
         }).then(function ( CamObject) {
 
             if (CamObject) {

@@ -70,10 +70,11 @@ module.exports.CampaignDispositionReportCount = function (req, res) {
 module.exports.CampaignCallbackReportCount = function (req, res) {
     var jsonString;
     var campaignId = req.params.CampaignId;
-    var query = {
-        where: [{CampaignId: campaignId}]
-    };
-    DbConn.CampCallbackInfo.count(query)
+    if(!req.params.CampaignId){
+        jsonString = messageFormatter.FormatMessage(new Error("Invalid CampaignID"), "EXCEPTION", false, undefined);
+        res.end(jsonString);
+    }
+    DbConn.CampCallbackInfo.count( { where: {'CampaignId': campaignId} })
         .then(function (CamObject) {
             jsonString = messageFormatter.FormatMessage(undefined, "EXCEPTION", true, CamObject);
             res.end(jsonString);
@@ -94,7 +95,7 @@ module.exports.CampaignSummeryReport = function (req, res) {
         where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}],
         offset: ((pageNo - 1) * rowCount),
         limit: rowCount,
-        order: '"CampaignId" DESC'
+        order:  [['CampaignId','DESC']]
     };
 
     if (req.params.Status) {
@@ -335,7 +336,7 @@ module.exports.CampaignDispositionReport = function (req, res) {
         where: [{CompanyId: companyId.toString()}, {TenantId: tenantId.toString()}, {CampaignId: campaignId}],
         offset: ((pageNo - 1) * rowCount),
         limit: rowCount,
-        order: '"DialoutId" DESC'
+        order: [['DialoutId','DESC']]
     };
 
     if (req.params.TryCount && req.params.TryCount > 0) {
@@ -374,7 +375,7 @@ module.exports.CampaignCallbackReport = function (req, res) {
         where: [{CampaignId: campaignId}],
         offset: ((pageNo - 1) * rowCount),
         limit: rowCount,
-        order: '"CallBackId" DESC'
+        order: [['CallBackId','DESC']]
     }).then(function (CamObject) {
 
         if (CamObject) {

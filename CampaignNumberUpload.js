@@ -508,7 +508,7 @@ function GetAllContactByCampaignIdScheduleId(campaignId, scheduleId, rowCount, p
             model: DbConn.CampContactInfo,
             as: "CampContactInfo",
             attributes: ['ContactId'],
-            order: '"CamContactId" DESC'
+            order: [['CamContactId','DESC']]
         }]
     }).then(function (CamObject) {
         if (CamObject) {
@@ -538,7 +538,7 @@ function GetAllContactByCampaignIdScheduleIdWithoutPaging(campaignId, scheduleId
             model: DbConn.CampContactInfo,
             as: "CampContactInfo",
             attributes: ['ContactId'],
-            order: '"CamContactId" DESC'
+            order: [['CamContactId','DESC']]
         }]
     }).then(function (CamObject) {
         if (CamObject) {
@@ -569,7 +569,7 @@ function GetExtraDataByContactId(campaignId, contactId, rowCount, pageNo, tenant
             model: DbConn.CampContactInfo,
             as: "CampContactInfo",
             attributes: ['ContactId'], where: [{'ContactId': contactId}],
-            order: '"CamContactId" DESC'
+            order: [['CamContactId','DESC']]
         }]
     }).then(function (CamObject) {
         if (CamObject) {
@@ -984,7 +984,7 @@ function GetAllContactByCampaignIdScheduleIdOffset(campaignId, scheduleId, rowCo
             model: DbConn.CampContactInfo,
             as: "CampContactInfo",
             attributes: ['ContactId'],
-            order: '"CamContactId" DESC'
+            order: [['CamContactId','DESC']]
         }]
     }).then(function (CamObject) {
         if (CamObject) {
