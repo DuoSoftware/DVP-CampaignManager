@@ -115,6 +115,7 @@ module.exports.CampaignSummeryReport = function (req, res) {
                 CamObject.map(function (item) {
                     if (item) {
 
+
                         function convertDate(date) {
                             var tempdate = '';
                             var yyyy = date._data.years;
@@ -166,121 +167,77 @@ module.exports.CampaignSummeryReport = function (req, res) {
                         }
 
                         taskList.push(function (callback) {
-                                async.parallel({
-                                    total_dial: function (callback) {
-                                        var query = {
-                                            attributes: [[DbConn.SequelizeConn.fn('COUNT', DbConn.SequelizeConn.col('*')), 'total_dial']],
-                                            where: [{CampaignId: item.CampaignId.toString()}]
-                                        };
-                                        DbConn.CampDialoutInfo.find(query)
-                                            .then(function (CamObject) {
-                                                callback(undefined, CamObject);
-                                            }).error(function (err) {
-                                            callback(err, 0);
-                                        });
-                                    },
-                                    channel_answered: function (callback) {
-                                        var query = {
-                                            attributes: [[DbConn.SequelizeConn.fn('COUNT', DbConn.SequelizeConn.col('*')), 'channel_answered']],
-                                            where: [{
-                                                CampaignId: item.CampaignId.toString(),
-                                                DialerStatus: 'channel_answered'
-                                            }]
-                                        };
-                                        DbConn.CampDialoutInfo.find(query)
-                                            .then(function (CamObject) {
-                                                callback(undefined, CamObject);
-                                            }).error(function (err) {
-                                            callback(err, 0);
-                                        });
-                                    },
-                                    dial_success: function (callback) {
-                                        var query = {
-                                            attributes: [[DbConn.SequelizeConn.fn('COUNT', DbConn.SequelizeConn.col('*')), 'dial_success']],
-                                            where: [{
-                                                CampaignId: item.CampaignId.toString(), DialerStatus: 'dial_success'
-                                            }]
-                                        };
-                                        DbConn.CampDialoutInfo.find(query)
-                                            .then(function (CamObject) {
-                                                callback(undefined, CamObject);
-                                            }).error(function (err) {
-                                            callback(err, 0);
-                                        });
-                                    },
-                                    dial_failed: function (callback) {
-                                        var query = {
-                                            attributes: [[DbConn.SequelizeConn.fn('COUNT', DbConn.SequelizeConn.col('*')), 'dial_failed']],
-                                            where: [{
-                                                CampaignId: item.CampaignId.toString(), DialerStatus: 'dial_failed'
-                                            }]
-                                        };
-                                        DbConn.CampDialoutInfo.find(query)
-                                            .then(function (CamObject) {
-                                                callback(undefined, CamObject);
-                                            }).error(function (err) {
-                                            callback(err, 0);
-                                        });
-                                    },
-                                    startEndDate: function (callback) {
-                                        var query = {
-                                            attributes: ['StartDate', 'EndDate'],
-                                            where: [{
-                                                CampaignId: item.CampaignId.toString()
-                                            }]
-                                        };
-                                        DbConn.CampConfigurations.find(query)
-                                            .then(function (CamObject) {
-                                                callback(undefined, CamObject);
-                                            }).error(function (err) {
-                                            callback(err, 0);
-                                        });
-                                    }
 
-                                }, function (err, results) {
-                                    var rowData = {
-                                        total_dial: 0,
-                                        channel_answered: 0,
-                                        dial_success: 0,
-                                        dial_failed: 0,
-                                        percentage: 0,
-                                        status: item.OperationalStatus,
-                                        campaignName: item.CampaignName,
-                                        durations: 'N/A',// calculateDuration(results.startEndDate),
-                                        startEndDate:results.startEndDate
 
+                            var query = {
+                                attributes: ['StartDate', 'EndDate'],
+                                where: [{
+                                    CampaignId: item.CampaignId.toString()
+                                }]
+                            };
+                            DbConn.CampConfigurations.find(query)
+                                .then(function (startEndDateObject) {
+                                    var query = {
+                                        attributes: [[DbConn.SequelizeConn.fn('COUNT', DbConn.SequelizeConn.col('CampaignId')), 'total_dial'],
+                                            [DbConn.SequelizeConn.fn('COUNT', DbConn.SequelizeConn.literal(`case when "DialerStatus" = 'channel_answered' then "DialerStatus" end`)), 'channel_answered'],
+                                            [DbConn.SequelizeConn.fn('COUNT', DbConn.SequelizeConn.literal(`case when "DialerStatus" = 'dial_success' then "DialerStatus" end`)), 'dial_success'],
+                                            [DbConn.SequelizeConn.fn('COUNT', DbConn.SequelizeConn.literal(`case when "DialerStatus" = 'dial_failed' then "DialerStatus" end`)), 'dial_failed']],
+                                        where: [{CampaignId: item.CampaignId.toString()}]
                                     };
-                                    if (results) {
+                                    DbConn.CampDialoutInfo.find(query)
+                                        .then(function (results) {
+                                            var rowData = {
+                                                total_dial: 0,
+                                                channel_answered: 0,
+                                                dial_success: 0,
+                                                dial_failed: 0,
+                                                percentage: 0,
+                                                status: item.OperationalStatus,
+                                                campaignName: item.CampaignName,
+                                                durations: 'N/A',// calculateDuration(results.startEndDate),
+                                                startEndDate:startEndDateObject ? startEndDateObject.dataValues:'N/A'
 
-                                        try {
-                                            var total_dial = (results.total_dial != undefined && results.total_dial.dataValues != undefined) ? parseInt(results.total_dial.dataValues.total_dial) : 0;
-                                            rowData.total_dial = total_dial;
+                                            };
+                                            if (results && results.dataValues) {
 
-                                            var channel_answered = (results.channel_answered != undefined && results.channel_answered.dataValues != undefined) ? parseInt(results.channel_answered.dataValues.channel_answered) : 0;
-                                            rowData.channel_answered = channel_answered;
+                                                try {
+                                                    var total_dial = results.dataValues.total_dial !== undefined ? parseInt(results.dataValues.total_dial) : 0;
+                                                    rowData.total_dial = total_dial;
 
-                                            var dial_success = (results.dial_success != undefined && results.dial_success.dataValues != undefined) ? parseInt(results.dial_success.dataValues.dial_success) : 0;
-                                            rowData.dial_success = dial_success;
+                                                    var channel_answered = (results.dataValues.channel_answered !== undefined) ? parseInt(results.dataValues.channel_answered) : 0;
+                                                    rowData.channel_answered = channel_answered;
 
-                                            var dial_failed = (results.dial_failed != undefined && results.dial_failed.dataValues != undefined) ? parseInt(results.dial_failed.dataValues.dial_failed) : 0;
-                                            rowData.dial_failed = dial_failed;
+                                                    var dial_success = ( results.dataValues.dial_success !== undefined) ? parseInt(results.dataValues.dial_success) : 0;
+                                                    rowData.dial_success = dial_success;
+
+                                                    var dial_failed = ( results.dataValues.dial_failed !== undefined) ? parseInt(results.dataValues.dial_failed) : 0;
+                                                    rowData.dial_failed = dial_failed;
 
 
-                                            rowData.percentage = total_dial === 0 ? 0 : (channel_answered / total_dial) * 100
-                                        }
-                                        catch (ex) {
-                                            console.log("asdasdasda");
-                                        }
+                                                    rowData.percentage = total_dial === 0 ? 0 : (channel_answered / total_dial) * 100;
+                                                }
+                                                catch (ex) {
+                                                    console.log("asdasdasda");
+                                                }
 
-                                    }
-                                    callback(err, rowData);
-                                });
+                                            }
+                                            callback(null, rowData);
+
+                                        }).error(function (err) {
+                                        callback(err, 0);
+                                    });
+                                }).error(function (err) {
+                                callback(err, 0);
+                            });
+
+
+
                             }
                         );
                     }
                 });
 
-                async.parallel(taskList, function (err, results) {
+                async.series(taskList, function (err, results) {
                     jsonString = messageFormatter.FormatMessage(undefined, "EXCEPTION", true, results);
                     if (err) {
                         jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
