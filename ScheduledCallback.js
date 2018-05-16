@@ -34,6 +34,11 @@ function CreateScheduledCallbackInfo(tenantId, companyId, reqBody, callback) {
         }
     ).then(function (cmp) {
 
+        if(cmp.CallbackData)
+        {
+            cmp.CallbackData = JSON.parse(cmp.CallbackData);
+        }
+
             jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
             logger.info('[DVP-CampCallbackInfo.CreateScheduledCallbackInfo] - [PGSQL] - inserted successfully. [%s] ', jsonString);
             callback.end(jsonString);
@@ -48,10 +53,6 @@ function CreateScheduledCallbackInfo(tenantId, companyId, reqBody, callback) {
 
 
 }
-
-
-
-
 
 function EditScheduledCallbackInfo(tenantId, companyId, sessionId, dispatchedTime, callback) {
 
@@ -87,8 +88,8 @@ function GetScheduledCallbackInfo(sessionId, tenantId, companyId, callBack) {
 
                 if(callbackObject.CallbackData)
                 {
-                    var dataObj = JSON.parse(callbackObject.CallbackData);
-                    callbackObject.CallbackData=dataObj;
+                    callbackObject.CallbackData = JSON.parse(callbackObject.CallbackData);
+
                 }
                 logger.info('[DVP-CampCallbackInfo.GetScheduledCallbackInfo] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(callbackObject));
                 jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, callbackObject);
@@ -110,8 +111,6 @@ function GetScheduledCallbackInfo(sessionId, tenantId, companyId, callBack) {
         });
 }
 
-
-
 function GetAllScheduledCallbackInfo(tenantId, companyId, callBack) {
     var jsonString;
     DbConn.ScheduledCallback.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}]}).then(function (callbackObject) {
@@ -122,8 +121,7 @@ function GetAllScheduledCallbackInfo(tenantId, companyId, callBack) {
 
                 if(item.CallbackData)
                 {
-                   var cbObj = JSON.parse(item.CallbackData);
-                   item.CallbackData=cbObj;
+                    item.CallbackData = JSON.parse(item.CallbackData);
                 }
 
                 return item;
@@ -158,8 +156,7 @@ function GetScheduledCallbackInfoByClassTypeCategory(tenantId, companyId, callba
 
                 if(item.CallbackData)
                 {
-                    var cbObj = JSON.parse(item.CallbackData);
-                    item.CallbackData=cbObj;
+                    item.CallbackData = JSON.parse(item.CallbackData);
                 }
 
                 return item;
