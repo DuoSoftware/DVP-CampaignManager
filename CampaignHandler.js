@@ -14,32 +14,31 @@ var moment = require('moment');
  */
 function CreateCampaign(campaignName, campaignMode, campaignChannel, dialoutMechanism, tenantId, companyId, campaignClass, campaignType, campaignCategory, extension, callback) {
     var jsonString;
-
     DbConn.CampCampaignInfo
         .create(
-        {
-            CampaignName: campaignName,
-            CampaignMode: campaignMode,
-            CampaignChannel: campaignChannel,
-            DialoutMechanism: dialoutMechanism,
-            TenantId: tenantId,
-            CompanyId: companyId,
-            Class: campaignClass,
-            Type: campaignType,
-            Category: campaignCategory,
-            Extensions: extension,
-            OperationalStatus: "create",
-            Status: true
-        }
-    ).then(function ( cmp) {
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            logger.info('[DVP-CampCampaignInfo.CreateCampaign] - [PGSQL] - inserted successfully. [%s] ', jsonString);
-            callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-CampCampaignInfo.CreateCampaign] - [%s] - [PGSQL] - insertion  failed-[%s]', campaignName, err);
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
+            {
+                CampaignName: campaignName,
+                CampaignMode: campaignMode,
+                CampaignChannel: campaignChannel,
+                DialoutMechanism: dialoutMechanism,
+                TenantId: tenantId,
+                CompanyId: companyId,
+                Class: campaignClass,
+                Type: campaignType,
+                Category: campaignCategory,
+                Extensions: extension,
+                OperationalStatus: "create",
+                Status: true
+            }
+        ).then(function ( cmp) {
+        jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+        logger.info('[DVP-CampCampaignInfo.CreateCampaign] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+        callback.end(jsonString);
+    }).catch(function (err) {
+        logger.error('[DVP-CampCampaignInfo.CreateCampaign] - [%s] - [PGSQL] - insertion  failed-[%s]', campaignName, err);
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
 }
 
 function StartCampaign(campaignId, tenantId, companyId, callback) {
@@ -61,7 +60,7 @@ function StartCampaign(campaignId, tenantId, companyId, callback) {
             logger.info('[DVP-CampCampaignInfo.StartCampaign] - [PGSQL] - Updated successfully.[%s] ', jsonString);
             callback.end(jsonString);
 
-        }).error(function (err) {
+        }).catch(function (err) {
             jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             logger.error('[DVP-CampCampaignInfo.StartCampaign] - [%s] - [PGSQL] - Updation failed-[%s]', campaignId, err);
             callback.end(jsonString);
@@ -84,7 +83,7 @@ function SetOperationalStatus(campaignId, tenantId, companyId,operationalStatus,
         ).then(function (results) {
         callback(undefined,results);
 
-    }).error(function (err) {
+    }).catch(function (err) {
         callback(err,undefined);
     });
 
@@ -134,14 +133,14 @@ function EditCampaign(campaignId, campaignName, campaignMode, campaignChannel, d
                     logger.info('[DVP-CampCampaignInfo.EditCampaign] - [PGSQL] - Updated successfully.[%s] ', jsonString);
                     callback.end(jsonString);
 
-                }).error(function (err) {
+                }).catch(function (err) {
                     jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
                     logger.error('[DVP-CampCampaignInfo.EditCampaign] - [%s] - [PGSQL] - Updation failed-[%s]', campaignId, err);
                     callback.end(jsonString);
                 });
 
 
-        }).error(function (err) {
+        }).catch(function (err) {
             logger.error('[DVP-CampCampaignInfo.EditCampaign] - [%s] - [PGSQL] - EditCampaign  failed', campaignId, err);
             jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
@@ -168,7 +167,7 @@ function DeleteCampaign(campaignId, tenantId, companyId, callback) {
                 jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
                 callback.end(jsonString);
 
-            }).error(function (err) {
+            }).catch(function (err) {
                 jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
                 logger.error('[DVP-CampCampaignInfo.DeleteCampaign] - [PGSQL] - Updation failed. [%s]-[%s]', jsonString, err);
                 callback.end(jsonString);
@@ -214,7 +213,7 @@ function GetAllCampaign(tenantId, companyId, callback) {
                 jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
                 callback.end(jsonString);
             }
-        }).error(function (err) {
+        }).catch(function (err) {
             logger.error('[DVP-CampCampaignInfo.GetAllCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
             jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
@@ -250,7 +249,7 @@ function GetAllCampaignPage(tenantId, companyId, count, callback) {
                 callback.end(jsonString);
             }
 
-        }).error(function (err) {
+        }).catch(function (err) {
             logger.error('[DVP-CampCampaignInfo.GetAllCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
             jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
@@ -281,7 +280,7 @@ function GetAllCampaignByCampaignId(tenantId, companyId, campaignId, callback) {
                 jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
                 callback.end(jsonString);
             }
-        }).error(function (err) {
+        }).catch(function (err) {
             logger.error('[DVP-CampCampaignInfo.GetAllCampaignByCampaignId] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
             jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
@@ -312,7 +311,7 @@ function GetOngoingCampaign(tenantId, companyId, callback) {
                 jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
                 callback.end(jsonString);
             }
-        }).error(function (err) {
+        }).catch(function (err) {
             logger.error('[DVP-CampCampaignInfo.GetOngoingCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
@@ -344,7 +343,7 @@ function GetAllCampaignByCampaignState(tenantId, companyId, campaignState, callb
                 jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
                 callback.end(jsonString);
             }
-        }).error(function (err) {
+        }).catch(function (err) {
             logger.error('[DVP-CampCampaignInfo.GetAllCampaignByCampaignState] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
             jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
@@ -382,7 +381,7 @@ function GetOfflineCampaign(tenantId, companyId, callback) {
             jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
             callback.end(jsonString);
         }
-    }).error(function (err) {
+    }).catch(function (err) {
         logger.error('[DVP-CampCampaignInfo.GetOfflineCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
         jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
         callback.end(jsonString);
@@ -415,7 +414,7 @@ function GetPendingCampaign(tenantId, companyId, operationalStatus, count, callb
                 jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
                 callback.end(jsonString);
             }
-        }).error(function (err) {
+        }).catch(function (err) {
             logger.error('[DVP-CampCampaignInfo.GetAllCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
             jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
@@ -447,7 +446,7 @@ function AddAdditionalData(dataClass, dataType, dataCategory, tenantId, companyI
             logger.info('[DVP-CampAdditionalData.AddAdditionalData] - [PGSQL] - inserted successfully. [%s] ', jsonString);
             callback.end(jsonString);
 
-        }).error(function (err) {
+        }).catch(function (err) {
             logger.error('[DVP-CampAdditionalData.AddAdditionalData] - [%s] - [PGSQL] - insertion  failed-[%s]', campaignId, err);
             jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
@@ -477,7 +476,7 @@ function EditAdditionalData(additionalDataId, dataClass, dataType, dataCategory,
             logger.info('[DVP-CampAdditionalData.EditAdditionalData] - [PGSQL] - inserted successfully. [%s] ', jsonString);
             callback.end(jsonString);
 
-        }).error(function (err) {
+        }).catch(function (err) {
             logger.error('[DVP-CampAdditionalData.EditAdditionalData] - [%s] - [PGSQL] - insertion  failed-[%s]', campaignId, err);
             jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
@@ -501,7 +500,7 @@ function GetAdditionalData(additionalDataId, tenantId, companyId, callBack) {
                 callBack.end(jsonString);
             }
 
-        }).error(function (err) {
+        }).catch(function (err) {
             logger.error('[DVP-CampAdditionalData.GetAdditionalData] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
             jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callBack.end(jsonString);
@@ -524,7 +523,7 @@ function GetAdditionalDataByCampaignId(campaignId, tenantId, companyId, callBack
                 callBack.end(jsonString);
             }
 
-        }).error(function (err) {
+        }).catch(function (err) {
             logger.error('[DVP-CampAdditionalData.GetAdditionalDataByCampaignId] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
             jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callBack.end(jsonString);
@@ -547,7 +546,7 @@ function GetAdditionalDataByClassTypeCategory(campaignId, tenantId, companyId, d
                 callBack.end(jsonString);
             }
 
-        }).error(function (err) {
+        }).catch(function (err) {
             logger.error('[DVP-CampAdditionalData.GetAdditionalDataByCampaignId] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
             jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callBack.end(jsonString);
@@ -569,7 +568,7 @@ function DeleteAdditionalDataByID(additionalDataId, tenantId, companyId, callBac
             callBack.end(jsonString);
         }
 
-    }).error(function (err) {
+    }).catch(function (err) {
         logger.error('[DVP-CampCallbackConfigurations.DeleteAdditionalDataByID] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
         jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
         callBack.end(jsonString);
