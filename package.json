@@ -7,7 +7,7 @@
     "config": "^1.19.0",
     "cors": "^2.7.1",
     "dvp-common": "^1.5.2",
-    "dvp-dbmodels": "^3.0.3",
+    "dvp-dbmodels": "3.3.0",
     "dvp-healthcheck": "^1.0.3",
     "moment": "^2.18.1",
     "redis": "^2.4.2",
