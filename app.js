@@ -10,6 +10,7 @@ var config = require('config');
 
 var port = config.Host.port || 3000;
 var version = config.Host.version;
+var dbmodels = require('dvp-dbmodels');
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var campaignHandler = require('./CampaignHandler');
 var campaignOperations = require('./CampaignOperations');
@@ -21,6 +22,7 @@ var campaignCallBackHandler = require('./CampaignCallBackHandler');
 var campaignReportHandler = require('./CampaignReportHandler');
 var campaignDncInfo = require('./CampaignDncInfo');
 var scheduledCallback = require('./ScheduledCallback');
+var healthcheck = require('dvp-healthcheck/DBHealthChecker');
 
 
 //-------------------------  Restify Server ------------------------- \\
@@ -56,7 +58,9 @@ RestServer.use(jwt({secret: secret.Secret}));
 
 //-------------------------  Restify Server ------------------------- \\
 
-//-------------------------  CampaignHandler ------------------------- \\
+//-------------------------  HealthCheck ------------------------- \\
+var hc = new healthcheck(RestServer, {pg: dbmodels.SequelizeConn});
+hc.Initiate();
 //-------------------------  CampaignHandler ------------------------- \\
 
 RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign', authorization({
