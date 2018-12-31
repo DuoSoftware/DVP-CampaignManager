@@ -34,7 +34,7 @@ function CreateConfiguration(campaignId, channelConcurrent, allowCallBack, tenan
 
 }
 
-function EditConfiguration(configureId, campaignId, channelConcurrency, allowCallBack, tenantId, companyId, status,  caller, startDate, endDate, callBack) {
+function EditConfiguration(configureId, campaignId, channelConcurrency, allowCallBack, tenantId, companyId, status,  caller, startDate, endDate, integrationData, callBack) {
 
     DbConn.CampConfigurations
         .update(
@@ -45,6 +45,7 @@ function EditConfiguration(configureId, campaignId, channelConcurrency, allowCal
             Caller: caller,
             StartDate: startDate,
             EndDate: endDate,
+            IntegrationData: integrationData,
             Status: Boolean(status)
         },
         {
