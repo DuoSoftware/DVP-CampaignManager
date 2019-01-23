@@ -7,7 +7,7 @@ var DbConn = require('dvp-dbmodels');
 var moment = require('moment');
 
 
-function CreateConfiguration(campaignId, channelConcurrent, allowCallBack, tenantId, companyId, status, caller, startDate, endDate, callBack) {
+function CreateConfiguration(campaignId, channelConcurrent, allowCallBack, tenantId, companyId, status, caller, startDate, endDate, NumberLoadingMethod, callBack) {
     DbConn.CampConfigurations
         .create(
         {
@@ -20,6 +20,7 @@ function CreateConfiguration(campaignId, channelConcurrent, allowCallBack, tenan
             Caller: caller,
             StartDate: startDate,
             EndDate: endDate,
+            NumberLoadingMethod: NumberLoadingMethod,
             Status: Boolean(status)
         }
     ).then(function (cmp) {
@@ -34,7 +35,7 @@ function CreateConfiguration(campaignId, channelConcurrent, allowCallBack, tenan
 
 }
 
-function EditConfiguration(configureId, campaignId, channelConcurrency, allowCallBack, tenantId, companyId, status,  caller, startDate, endDate, integrationData, callBack) {
+function EditConfiguration(configureId, campaignId, channelConcurrency, allowCallBack, tenantId, companyId, status,  caller, startDate, endDate, integrationData, NumberLoadingMethod, callBack) {
 
     DbConn.CampConfigurations
         .update(
@@ -46,6 +47,7 @@ function EditConfiguration(configureId, campaignId, channelConcurrency, allowCal
             StartDate: startDate,
             EndDate: endDate,
             IntegrationData: integrationData,
+            NumberLoadingMethod: NumberLoadingMethod,
             Status: Boolean(status)
         },
         {
