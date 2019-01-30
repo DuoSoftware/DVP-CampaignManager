@@ -591,7 +591,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/C
         var companyId = req.user.company;
 
 
-        campaignConfigurations.CreateConfiguration(req.params.CampaignId, cmp.ChannelConcurrency, cmp.AllowCallBack, tenantId, companyId, true, cmp.Caller, cmp.StartDate, cmp.EndDate, res);
+        campaignConfigurations.CreateConfiguration(req.params.CampaignId, cmp.ChannelConcurrency, cmp.AllowCallBack, tenantId, companyId, true, cmp.Caller, cmp.StartDate, cmp.EndDate, cmp.NumberLoadingMethod, res);
 
     }
     catch (ex) {
@@ -617,7 +617,7 @@ RestServer.put('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Co
         var companyId = req.user.company;
 
 
-        campaignConfigurations.EditConfiguration(req.params.ConfigureId, req.params.CampaignId, cmp.ChannelConcurrency, cmp.AllowCallBack, tenantId, companyId, true, cmp.Caller, cmp.StartDate, cmp.EndDate, res);
+        campaignConfigurations.EditConfiguration(req.params.ConfigureId, req.params.CampaignId, cmp.ChannelConcurrency, cmp.AllowCallBack, tenantId, companyId, true, cmp.Caller, cmp.StartDate, cmp.EndDate, cmp.IntegrationData, cmp.NumberLoadingMethod, res);
     }
     catch (ex) {
 
