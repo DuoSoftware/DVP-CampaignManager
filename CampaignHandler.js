@@ -398,7 +398,7 @@ function GetPendingCampaign(tenantId, companyId, operationalStatus, count, callb
             where: [{Status: true}, {OperationalStatus: operationalStatus}],
             include: [{model: DbConn.CampScheduleInfo, as: "CampScheduleInfo"}, {
                 model: DbConn.CampConfigurations,
-                attributes: ["CampaignId", "ConfigureId", "ChannelConcurrency", "AllowCallBack", "Caller", "Status", "TenantId", "CompanyId", "StartDate", "EndDate", "IntegrationData", "NumberLoadingMethod"],
+                attributes: ["CampaignId", "ConfigureId", "ChannelConcurrency", "AllowCallBack", "Caller", "Status", "TenantId", "CompanyId", "StartDate", "EndDate", "IntegrationData", "NumberLoadingMethod", "DuplicateNumTimeout"],
                 as: "CampConfigurations"
             }],
             limit: count
