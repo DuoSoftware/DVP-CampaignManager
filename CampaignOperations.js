@@ -58,7 +58,7 @@ function StartCampaign(campaignId, dialerId, tenantId, companyId, callback) {
                         where: [{DialerId: dialerId}, {CampaignId: campaignId}]
                     }
                 ).then(function (cmp) {
-                SetOperationalStatus(campaignId, 'start');
+                SetOperationalStatus(campaignId, 'ongoing');
                 logger.info('[DVP-CampaignOperations.StartCampaign] - [%s] - [PGSQL] - StartCampaign successfully ', campaignId);
                 jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
                 callback.end(jsonString);

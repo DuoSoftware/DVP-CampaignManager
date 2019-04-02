@@ -198,6 +198,20 @@ function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId,s
 
             result.forEach(function (item) {
                 if (item) {
+
+                    /////////////added extra data//////////////////////
+                    var extraData = {};
+                    if(typeof item === 'object' && item.CamContactId){
+
+                        if(item.ExtraData){
+                            extraData = item.ExtraData;
+                        }
+                        item = item.CamContactId;
+
+                    }
+
+                    /////////////////////////////////////////////////////////////////////////////////
+
                     CampScheduleTask.push(function createContact(CampScheduleCallback) {
                         DbConn.CampContactSchedule
                             .create(
@@ -205,7 +219,7 @@ function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId,s
                                     CampaignId: campaignId,
                                     CamContactId: item,
                                     CamScheduleId: camScheduleId,
-                                    ExtraData: extraData
+                                    ExtraData: JSON.stringify(extraData)
                                 }).then(function (cmp) {
                             CampScheduleCallback(null, cmp);
                         }).error(function (err) {
@@ -223,6 +237,21 @@ function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId,s
 
 
     items.forEach(function (item) {
+
+
+        /////////////added extra data//////////////////////
+        var extraData = {};
+        if(typeof item === 'object' && item.contact){
+
+            if(item.otherdata){
+                extraData = item.otherdata;
+            }
+            item = item.contact;
+
+        }
+
+        ///////////////////////////////////////////////////////
+
         task.push(function createContact(callback) {
             DbConn.CampContactInfo
                 .create(
@@ -231,10 +260,13 @@ function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId,s
                         Status: true,
                         TenantId: tenantId,
                         CompanyId: companyId,
-                        CategoryID: categoryID
+                        CategoryID: categoryID,
                     }).then(function (cmp) {
+
                 camContactId.push(cmp.CamContactId);
-                callback(null, cmp.CamContactId);
+                cmp.ExtraData = extraData;
+                callback(null, cmp);
+
             }).error(function (err) {
                 errList.push(item);
                 callback(null, null);
