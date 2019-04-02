@@ -252,7 +252,7 @@ function AddExistingContactsToCampaign(contactIds, campaignId, callBack) {
     var nos = [];
     var jsonString;
     for (var i = 0; i < contactIds.length; i++) {
-        var no = {CampaignId: campaignId, CamContactId: contactIds[0]};
+        var no = {CampaignId: campaignId, CamContactId: contactIds[i]};
         nos.add(no);
     }
 
@@ -1004,7 +1004,70 @@ function GetAllContactByCampaignIdScheduleIdOffset(campaignId, scheduleId, rowCo
     });
 }
 
+function addAbandonedCallToCampaign(req,res) {
 
+
+    try{
+        function AddtocontactSchedule(CamObject) {
+            var cam_schedule = {
+                CampaignId: req.params.CampaignId,
+                CamContactId: CamObject.CamContactId,
+                CamScheduleId: req.body.CamScheduleId,
+                BatchNo: req.body.CategoryID,
+                ExtraData: req.body.ExtraData
+            };
+
+            DbConn.CampContactSchedule.create(
+                cam_schedule
+            ).then(function (results) {
+
+                jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+                logger.info('[DVP-CampaignNumberUpload.addAbandonedCallToCampaign] - [PGSQL] - Updated successfully.[%s] ', jsonString);
+                res.end(jsonString);
+
+            }).error(function (err) {
+                jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                logger.error('[DVP-CampaignNumberUpload.addAbandonedCallToCampaign] - [%s] - [PGSQL] - Updation failed- [%s]', req.params.CampaignId, err);
+                res.end(jsonString);
+            });
+        }
+
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+
+
+        var jsonString;
+        DbConn.CampContactInfo.find({where: [{CompanyId: companyId}, {TenantId: tenantId},{ContactId:req.params.contact_no}]}).then(function (CamObject) {
+            if (CamObject) {
+                AddtocontactSchedule(CamObject);
+            }
+            else {
+                var no = {
+                    ContactId: req.params.contact_no,
+                    Status: true,
+                    TenantId: tenantId,
+                    CompanyId: companyId,
+                    CategoryID: req.body.CategoryID
+                };
+                DbConn.CampContactInfo.create(
+                    no
+                ).then(function (CamObject) {
+                    AddtocontactSchedule(CamObject);
+                }).error(function (err) {
+                    jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                    logger.error('[DVP-CampaignNumberUpload.addAbandonedCallToCampaign] - [%s] - [PGSQL] - Updation failed- [%s]', req.params.CampaignId, err);
+                    res.end(jsonString);
+                });
+            }
+        }).error(function (err) {
+            logger.error('[DVP-CampaignNumberUpload.addAbandonedCallToCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
+            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            res.end(jsonString);
+        });
+    }catch (ex){
+
+    }
+}
 
 module.exports.UploadContacts = UploadContacts;
 module.exports.UploadContactsToCampaign = UploadContactsToCampaign;
@@ -1028,4 +1091,5 @@ module.exports.MapScheduleToCampaign = mapScheduleToCampaign;
 module.exports.MapNumberAndScheduleToCampaign = mapNumberAndScheduleToCampaign;
 module.exports.GetAssignedCategory = getAssignedCategory;
 module.exports.GetAllContactByCampaignIdScheduleIdOffset = GetAllContactByCampaignIdScheduleIdOffset;
+module.exports.AddAbandonedCallToCampaign = addAbandonedCallToCampaign;
 
