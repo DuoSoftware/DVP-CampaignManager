@@ -1120,7 +1120,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/N
 
 
         if (cmp.ContactIds) {
-            campaignNumberUpload.AddExistingContactsToCampaign(cmp.ContactIds, req.params.CampaignId, res);
+            campaignNumberUpload.AddExistingContactsToCampaign(tenantId,companyId,cmp.ContactIds, req.params.CampaignId, res);
         }
         else if (cmp.CamScheduleIds) {
             campaignSchedule.AssigningScheduleToCampaign(req.params.CampaignId, cmp.CamScheduleIds, tenantId, companyId, res);
