@@ -5,6 +5,7 @@ var util = require("util");
 var logger = require("dvp-common/LogHandler/CommonLogHandler.js").logger;
 var request = require('request');
 let redis_handler = require('./redis_handler');
+let format = require('stringformat');
 
 function DoPost (companyInfo, eventName, serviceurl, postData, callback) {
     var jsonStr = JSON.stringify(postData);

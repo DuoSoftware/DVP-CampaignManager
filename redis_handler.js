@@ -2,7 +2,7 @@ let redis = require("ioredis");
 let Config = require('config');
 let logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 let notificationService = require('./notificationService');
-
+let format = require('stringformat');
 ////////////////////////////////redis////////////////////////////////////////
 let redisip = Config.Redis.ip;
 let redisport = Config.Redis.port;
