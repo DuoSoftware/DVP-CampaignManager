@@ -191,6 +191,7 @@ function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId,s
 
         AddMapData(campaignId,camScheduleId,categoryID,schedule,tenantId,companyId);
         var jsonString = messageFormatter.FormatMessage(err, "OPERATIONS COMPLETED", errList.length === 0, errList);
+        redis_handler.process_counters(tenantId,companyId,campaignId,camScheduleId,items.length,items.length);
         callBackm.end(jsonString);
     }
 
@@ -781,6 +782,7 @@ function mapNumberToCampaign(req, res) {
                         nos
                     ).then(function (results) {
                         AddMapData(req.params.CampaignId,req.body.camScheduleId,req.params.CategoryID,req.body.ScheduleName,tenantId,companyId);
+                        redis_handler.process_counters(tenantId,companyId,req.params.CampaignId,req.body.camScheduleId,nos.length,nos.length);
                         jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
                         logger.info('CampContactInfo - bulkCreate successfully.[%s] ', jsonString);
                         res.end(jsonString);
@@ -995,7 +997,7 @@ function AddMapData(campaignId, camScheduleId, categoryID,schedule, tenantId, co
                 }
             ).then(function (result) {
             console.log(messageFormatter.FormatMessage(undefined, "then", true, result));
-            redis_handler.process_counters(tenantId,companyId,campaignId,camScheduleId,1,1);
+
         }).error(function (err) {
             console.log(messageFormatter.FormatMessage(undefined, "error", false, err));
         });

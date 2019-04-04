@@ -13,7 +13,7 @@ module.exports = {
             "port": 6389,
             "password":"DuoS123",
             "db": 4,
-            "mode": "sentinel",
+            "mode": "instance",
             "sentinels":{
                 "hosts": "138.197.90.92,45.55.205.92,138.197.90.92",
                 "port":16389,
