@@ -294,6 +294,7 @@ function GetAllCampaignByCampaignId(tenantId, companyId, campaignId, callback) {
 }
 
 function GetAllCategoriesAssignedToCampaign(tenantId, companyId, campaignId, callback) {
+    var emptyArr = [];
     var jsonString;
     try {
         DbConn.CampMapContactSchedule.findAll({
@@ -313,7 +314,7 @@ function GetAllCategoriesAssignedToCampaign(tenantId, companyId, campaignId, cal
             }
             else {
                 logger.error('[DVP-CampCampaignInfo.GetAllCampaignByCampaignId] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
-                jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+                jsonString = messageFormatter.FormatMessage(null, "EXCEPTION", true, emptyArr);
                 callback.end(jsonString);
             }
         }).catch(function (err) {
@@ -331,6 +332,7 @@ function GetAllCategoriesAssignedToCampaign(tenantId, companyId, campaignId, cal
 
 function GetScheduleForCampaign(tenantId, companyId, campaignId, callback) {
     var jsonString;
+    var emptyArr = [];
     try {
         DbConn.CampScheduleInfo.findAll({
             where: [{CompanyId: companyId}, {TenantId: tenantId}, {CampaignId: campaignId}]
@@ -359,30 +361,30 @@ function GetScheduleForCampaign(tenantId, companyId, campaignId, callback) {
                         }
                     });
 
-                    jsonString = messageFormatter.FormatMessage(null, "SUCCESS", false, scheduleList);
+                    jsonString = messageFormatter.FormatMessage(null, "SUCCESS", true, scheduleList);
                     callback.end(jsonString);
 
                 }).catch(function(err){
                     logger.error('[DVP-CampCampaignInfo.GetAllCampaignByCampaignId] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
-                    jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                    jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, emptyArr);
                     callback.end(jsonString);
 
                 })
             }
             else {
                 logger.error('[DVP-CampCampaignInfo.GetAllCampaignByCampaignId] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
-                jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+                jsonString = messageFormatter.FormatMessage(null, "SUCCESS", true, emptyArr);
                 callback.end(jsonString);
             }
         }).catch(function (err) {
             logger.error('[DVP-CampCampaignInfo.GetAllCampaignByCampaignId] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, emptyArr);
             callback.end(jsonString);
         });
     }
     catch (ex) {
         logger.error('[DVP-CampCampaignInfo.GetAllCampaignByCampaignId] - [%s] - [PGSQL]  - Error %s -[%s]', tenantId, companyId, ex);
-        jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, emptyArr);
         callback.end(jsonString);
     }
 }
