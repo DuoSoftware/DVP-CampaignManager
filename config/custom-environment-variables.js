@@ -15,7 +15,20 @@ module.exports = {
         "hostpath":"HOST_PATH",
         "logfilepath": "LOG4JS_CONFIG"
     }
-,
+,"Redis":
+        {
+            "mode":"SYS_REDIS_MODE",
+            "ip": "SYS_REDIS_HOST",
+            "port": "SYS_REDIS_PORT",
+            "user": "SYS_REDIS_USER",
+            "password": "SYS_REDIS_PASSWORD",
+            "sentinels":{
+                "hosts": "SYS_REDIS_SENTINEL_HOSTS",
+                "port":"SYS_REDIS_SENTINEL_PORT",
+                "name":"SYS_REDIS_SENTINEL_NAME"
+            }
+
+        },
     "Security":
     {
       
@@ -30,6 +43,12 @@ module.exports = {
             "name":"SYS_REDIS_SENTINEL_NAME"
         }
 
+    },
+    "Services" : {
+        "accessToken": "HOST_TOKEN",
+        "notificationServiceHost": "SYS_NOTIFICATIONSERVICE_HOST",
+        "notificationServicePort": "SYS_NOTIFICATIONSERVICE_PORT",
+        "notificationServiceVersion": "SYS_NOTIFICATIONSERVICE_VERSION"
     }
 };
 

@@ -7,7 +7,7 @@ var DbConn = require('dvp-dbmodels');
 var moment = require('moment');
 
 
-function CreateConfiguration(campaignId, channelConcurrent, allowCallBack, tenantId, companyId, status, caller, startDate, endDate, NumberLoadingMethod, callBack) {
+function CreateConfiguration(campaignId, channelConcurrent, allowCallBack, tenantId, companyId, status, caller, startDate, endDate, NumberLoadingMethod, duplicateNumTimeout, callBack) {
     DbConn.CampConfigurations
         .create(
         {
@@ -21,7 +21,8 @@ function CreateConfiguration(campaignId, channelConcurrent, allowCallBack, tenan
             StartDate: startDate,
             EndDate: endDate,
             NumberLoadingMethod: NumberLoadingMethod,
-            Status: Boolean(status)
+            Status: Boolean(status),
+            DuplicateNumTimeout: duplicateNumTimeout
         }
     ).then(function (cmp) {
             logger.info('[DVP-CampConfigurations.CreateConfiguration] - [%s] - [PGSQL] - inserted successfully ', campaignId);
@@ -35,7 +36,7 @@ function CreateConfiguration(campaignId, channelConcurrent, allowCallBack, tenan
 
 }
 
-function EditConfiguration(configureId, campaignId, channelConcurrency, allowCallBack, tenantId, companyId, status,  caller, startDate, endDate, integrationData, NumberLoadingMethod, callBack) {
+function EditConfiguration(configureId, campaignId, channelConcurrency, allowCallBack, tenantId, companyId, status,  caller, startDate, endDate, integrationData, NumberLoadingMethod, duplicateNumTimeout, callBack) {
 
     DbConn.CampConfigurations
         .update(
@@ -48,7 +49,8 @@ function EditConfiguration(configureId, campaignId, channelConcurrency, allowCal
             EndDate: endDate,
             IntegrationData: integrationData,
             NumberLoadingMethod: NumberLoadingMethod,
-            Status: Boolean(status)
+            Status: Boolean(status),
+            DuplicateNumTimeout: duplicateNumTimeout
         },
         {
             where: {
