@@ -1172,7 +1172,7 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/N
 
 
         if (cmp.ContactIds) {
-            campaignNumberUpload.AddExistingContactsToCampaign(cmp.ContactIds, req.params.CampaignId, res);
+            campaignNumberUpload.AddExistingContactsToCampaign(tenantId,companyId,cmp.ContactIds, req.params.CampaignId, res);
         }
         else if (cmp.CamScheduleIds) {
             campaignSchedule.AssigningScheduleToCampaign(req.params.CampaignId, cmp.CamScheduleIds, tenantId, companyId, res);
@@ -1537,6 +1537,27 @@ RestServer.post('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/S
 
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
         logger.error('MapScheduleToCampaign - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.post('/DVP/API/' + version + '/CampaignManager/AbandonedCampaign/:CampaignId/Schedule/:CamScheduleId', authorization({
+    resource: "campaignnumbers",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('AbandonedCampaign - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+
+        campaignNumberUpload.AddAbandonedCallToCampaign(req, res);
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('AbandonedCampaign - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();

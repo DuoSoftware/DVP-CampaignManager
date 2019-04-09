@@ -6,6 +6,7 @@ var DbConn = require('dvp-dbmodels');
 //var List = require("collections/list"); --violate with sequelize library
 var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
 var async = require("async");
+let redis_handler = require('./redis_handler');
 
 
 function UploadContacts(contacts, tenantId, companyId, categoryID, callBack) {
@@ -82,7 +83,7 @@ function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, cat
                 }
             ).then(function (j) {
             logger.info('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - inserted[CampContactSchedule] successfully ', contacts[j - 1]);
-
+            redis_handler.process_counters(tenantId,companyId,campaignId,"0000",1,1);
         }).error(function (err) {
             logger.error('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - insertion[CampContactSchedule]  failed- [%s]', contacts[j - 1], err);
             ids.add(cmp.ContactId);
@@ -190,6 +191,7 @@ function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId,s
 
         AddMapData(campaignId,camScheduleId,categoryID,schedule,tenantId,companyId);
         var jsonString = messageFormatter.FormatMessage(err, "OPERATIONS COMPLETED", errList.length === 0, errList);
+        redis_handler.process_counters(tenantId,companyId,campaignId,camScheduleId,items.length,items.length);
         callBackm.end(jsonString);
     }
 
@@ -280,18 +282,18 @@ function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId,s
 }
 
 
-function AddExistingContactsToCampaign(contactIds, campaignId, callBack) {
+function AddExistingContactsToCampaign(tenantId,companyId,contactIds, campaignId, callBack) {
     var nos = [];
     var jsonString;
     for (var i = 0; i < contactIds.length; i++) {
-        var no = {CampaignId: campaignId, CamContactId: contactIds[0]};
+        var no = {CampaignId: campaignId, CamContactId: contactIds[i]};
         nos.add(no);
     }
 
     DbConn.CampContactSchedule.bulkCreate(
         nos
     ).then(function (results) {
-
+        redis_handler.process_counters(tenantId,companyId,campaignId,"0000",nos.length,nos.length);
         jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
         logger.info('[DVP-CampaignNumberUpload.AddExistingContactsToCampaign] - [PGSQL] - Updated successfully.[%s] ', jsonString);
         callBack.end(jsonString);
@@ -780,6 +782,7 @@ function mapNumberToCampaign(req, res) {
                         nos
                     ).then(function (results) {
                         AddMapData(req.params.CampaignId,req.body.camScheduleId,req.params.CategoryID,req.body.ScheduleName,tenantId,companyId);
+                        redis_handler.process_counters(tenantId,companyId,req.params.CampaignId,req.body.camScheduleId,nos.length,nos.length);
                         jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
                         logger.info('CampContactInfo - bulkCreate successfully.[%s] ', jsonString);
                         res.end(jsonString);
@@ -994,6 +997,7 @@ function AddMapData(campaignId, camScheduleId, categoryID,schedule, tenantId, co
                 }
             ).then(function (result) {
             console.log(messageFormatter.FormatMessage(undefined, "then", true, result));
+
         }).error(function (err) {
             console.log(messageFormatter.FormatMessage(undefined, "error", false, err));
         });
@@ -1036,7 +1040,70 @@ function GetAllContactByCampaignIdScheduleIdOffset(campaignId, scheduleId, rowCo
     });
 }
 
+function addAbandonedCallToCampaign(req,res) {
 
+
+    try{
+        function AddtocontactSchedule(CamObject) {
+            var cam_schedule = {
+                CampaignId: req.params.CampaignId,
+                CamContactId: CamObject.CamContactId,
+                CamScheduleId: req.body.CamScheduleId,
+                BatchNo: req.body.CategoryID,
+                ExtraData: req.body.ExtraData
+            };
+
+            DbConn.CampContactSchedule.create(
+                cam_schedule
+            ).then(function (results) {
+                redis_handler.process_counters(req.user.tenant,req.user.company,req.params.CampaignId,req.body.CamScheduleId,1,1);
+                jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+                logger.info('[DVP-CampaignNumberUpload.addAbandonedCallToCampaign] - [PGSQL] - Updated successfully.[%s] ', jsonString);
+                res.end(jsonString);
+
+            }).error(function (err) {
+                jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                logger.error('[DVP-CampaignNumberUpload.addAbandonedCallToCampaign] - [%s] - [PGSQL] - Updation failed- [%s]', req.params.CampaignId, err);
+                res.end(jsonString);
+            });
+        }
+
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+
+
+        var jsonString;
+        DbConn.CampContactInfo.find({where: [{CompanyId: companyId}, {TenantId: tenantId},{ContactId:req.params.contact_no}]}).then(function (CamObject) {
+            if (CamObject) {
+                AddtocontactSchedule(CamObject);
+            }
+            else {
+                var no = {
+                    ContactId: req.params.contact_no,
+                    Status: true,
+                    TenantId: tenantId,
+                    CompanyId: companyId,
+                    CategoryID: req.body.CategoryID
+                };
+                DbConn.CampContactInfo.create(
+                    no
+                ).then(function (CamObject) {
+                    AddtocontactSchedule(CamObject);
+                }).error(function (err) {
+                    jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                    logger.error('[DVP-CampaignNumberUpload.addAbandonedCallToCampaign] - [%s] - [PGSQL] - Updation failed- [%s]', req.params.CampaignId, err);
+                    res.end(jsonString);
+                });
+            }
+        }).error(function (err) {
+            logger.error('[DVP-CampaignNumberUpload.addAbandonedCallToCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
+            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            res.end(jsonString);
+        });
+    }catch (ex){
+
+    }
+}
 
 module.exports.UploadContacts = UploadContacts;
 module.exports.UploadContactsToCampaign = UploadContactsToCampaign;
@@ -1060,4 +1127,5 @@ module.exports.MapScheduleToCampaign = mapScheduleToCampaign;
 module.exports.MapNumberAndScheduleToCampaign = mapNumberAndScheduleToCampaign;
 module.exports.GetAssignedCategory = getAssignedCategory;
 module.exports.GetAllContactByCampaignIdScheduleIdOffset = GetAllContactByCampaignIdScheduleIdOffset;
+module.exports.AddAbandonedCallToCampaign = addAbandonedCallToCampaign;
 
