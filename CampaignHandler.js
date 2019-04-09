@@ -348,7 +348,18 @@ function GetScheduleForCampaign(tenantId, companyId, campaignId, callback) {
                     where: [{id: tempArr}]
                 }).then(function (schedules) {
 
-                    jsonString = messageFormatter.FormatMessage(null, "SUCCESS", false, schedules);
+                    let scheduleList = camSchedules.map(cs => {
+                        let matchingSchedule = schedules.find(s => {
+                            return s.id === cs.ScheduleId
+                        });
+
+                        if(matchingSchedule)
+                        {
+                            return {CamScheduleId: cs.CamScheduleId, ScheduleName: matchingSchedule.ScheduleName};
+                        }
+                    });
+
+                    jsonString = messageFormatter.FormatMessage(null, "SUCCESS", false, scheduleList);
                     callback.end(jsonString);
 
                 }).catch(function(err){
