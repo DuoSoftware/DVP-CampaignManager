@@ -1083,7 +1083,8 @@ function addAbandonedCallToCampaign(req,res) {
                     Status: true,
                     TenantId: tenantId,
                     CompanyId: companyId,
-                    CategoryID: req.body.CategoryID
+                    CategoryID: req.body.CategoryID,
+                    BusinessUnit: req.body.BusinessUnit
                 };
                 DbConn.CampContactInfo.create(
                     no
