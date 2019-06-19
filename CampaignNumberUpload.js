@@ -1019,7 +1019,7 @@ function GetAllContactByCampaignIdScheduleIdOffset(campaignId, scheduleId, rowCo
         include: [{
             model: DbConn.CampContactInfo,
             as: "CampContactInfo",
-            attributes: ['ContactId'],
+            attributes: ['ContactId','BusinessUnit'],
             order: [['CamContactId','DESC']]
         }]
     }).then(function (CamObject) {
