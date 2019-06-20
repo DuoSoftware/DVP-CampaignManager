@@ -1073,7 +1073,25 @@ function addAbandonedCallToCampaign(req,res) {
 
 
         var jsonString;
-        DbConn.CampContactInfo.find({where: [{CompanyId: companyId}, {TenantId: tenantId},{ContactId:req.params.contact_no}]}).then(function (CamObject) {
+
+        var no = {
+            ContactId: req.params.contact_no,
+            Status: true,
+            TenantId: tenantId,
+            CompanyId: companyId,
+            CategoryID: req.body.CategoryID,
+            BusinessUnit: req.body.BusinessUnit
+        };
+        DbConn.CampContactInfo.create(
+            no
+        ).then(function (CamObject) {
+            AddtocontactSchedule(CamObject);
+        }).error(function (err) {
+            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            logger.error('[DVP-CampaignNumberUpload.addAbandonedCallToCampaign] - [%s] - [PGSQL] - Updation failed- [%s]', req.params.CampaignId, err);
+            res.end(jsonString);
+        });
+        /*DbConn.CampContactInfo.find({where: [{CompanyId: companyId}, {TenantId: tenantId},{ContactId:req.params.contact_no}]}).then(function (CamObject) {
             if (CamObject) {
                 AddtocontactSchedule(CamObject);
             }
@@ -1100,7 +1118,7 @@ function addAbandonedCallToCampaign(req,res) {
             logger.error('[DVP-CampaignNumberUpload.addAbandonedCallToCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
             jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             res.end(jsonString);
-        });
+        });*/
     }catch (ex){
 
     }
