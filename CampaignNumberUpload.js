@@ -79,11 +79,12 @@ function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, cat
                 {
                     CampaignId: campaignId,
                     CamContactId: cmp.CamContactId,
-                    ExtraData: extraData
+                    ExtraData: extraData,
+                    DialerStatus: 'added'
                 }
             ).then(function (j) {
             logger.info('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - inserted[CampContactSchedule] successfully ', contacts[j - 1]);
-            redis_handler.process_counters(tenantId,companyId,campaignId,"0000",1,1);
+            redis_handler.process_counters(tenantId, companyId, campaignId, "0000", 1, 1);
         }).error(function (err) {
             logger.error('[DVP-CampContactInfo.UploadContactsToCampaign] - [%s] - [PGSQL] - insertion[CampContactSchedule]  failed- [%s]', contacts[j - 1], err);
             ids.add(cmp.ContactId);
@@ -179,7 +180,7 @@ function UploadContactsToCampaign(contacts, campaignId, tenantId, companyId, cat
 
  }*/
 
-function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId,schedule, tenantId, companyId, categoryID, extraData, callBackm) {
+function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId, schedule, tenantId, companyId, categoryID, extraData, callBackm) {
 
     var task = [];
     var CampScheduleTask = [];
@@ -189,9 +190,9 @@ function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId,s
 
     function CampScheduleCallback(err, result) {
 
-        AddMapData(campaignId,camScheduleId,categoryID,schedule,tenantId,companyId);
+        AddMapData(campaignId, camScheduleId, categoryID, schedule, tenantId, companyId);
         var jsonString = messageFormatter.FormatMessage(err, "OPERATIONS COMPLETED", errList.length === 0, errList);
-        redis_handler.process_counters(tenantId,companyId,campaignId,camScheduleId,items.length,items.length);
+        redis_handler.process_counters(tenantId, companyId, campaignId, camScheduleId, items.length, items.length);
         callBackm.end(jsonString);
     }
 
@@ -203,9 +204,9 @@ function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId,s
 
                     /////////////added extra data//////////////////////
                     var extraData = {};
-                    if(typeof item === 'object' && item.CamContactId){
+                    if (typeof item === 'object' && item.CamContactId) {
 
-                        if(item.ExtraData){
+                        if (item.ExtraData) {
                             extraData = item.ExtraData;
                         }
                         item = item.CamContactId;
@@ -221,7 +222,8 @@ function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId,s
                                     CampaignId: campaignId,
                                     CamContactId: item,
                                     CamScheduleId: camScheduleId,
-                                    ExtraData: JSON.stringify(extraData)
+                                    ExtraData: JSON.stringify(extraData),
+                                    DialerStatus: 'added'
                                 }).then(function (cmp) {
                             CampScheduleCallback(null, cmp);
                         }).error(function (err) {
@@ -243,9 +245,9 @@ function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId,s
 
         /////////////added extra data//////////////////////
         var extraData = {};
-        if(typeof item === 'object' && item.contact){
+        if (typeof item === 'object' && item.contact) {
 
-            if(item.otherdata){
+            if (item.otherdata) {
                 extraData = item.otherdata;
             }
             item = item.contact;
@@ -282,18 +284,18 @@ function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId,s
 }
 
 
-function AddExistingContactsToCampaign(tenantId,companyId,contactIds, campaignId, callBack) {
+function AddExistingContactsToCampaign(tenantId, companyId, contactIds, campaignId, callBack) {
     var nos = [];
     var jsonString;
     for (var i = 0; i < contactIds.length; i++) {
-        var no = {CampaignId: campaignId, CamContactId: contactIds[i]};
+        var no = {CampaignId: campaignId, CamContactId: contactIds[i], DialerStatus: 'added'};
         nos.add(no);
     }
 
     DbConn.CampContactSchedule.bulkCreate(
         nos
     ).then(function (results) {
-        redis_handler.process_counters(tenantId,companyId,campaignId,"0000",nos.length,nos.length);
+        redis_handler.process_counters(tenantId, companyId, campaignId, "0000", nos.length, nos.length);
         jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
         logger.info('[DVP-CampaignNumberUpload.AddExistingContactsToCampaign] - [PGSQL] - Updated successfully.[%s] ', jsonString);
         callBack.end(jsonString);
@@ -445,7 +447,7 @@ function DeleteContacts(contacts, campaignId, tenantId, companyId, callBack) {
 
 function GetAllContact(tenantId, companyId, callBack) {
     var jsonString;
-    DbConn.CampContactInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}]}).then(function (CamObject) {
+    DbConn.CampContactInfo.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {DialerStatus: 'added'}]}).then(function (CamObject) {
         if (CamObject) {
             logger.info('[DVP-CampaignNumberUpload.GetAllContact] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
             jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
@@ -467,11 +469,13 @@ function GetAllContactByCampaignId(campaignId, tenantId, companyId, callBack) {
 
     var jsonString;
     DbConn.CampContactSchedule.findAll({
-        where: [{CampaignId: campaignId}],
+        where: [{CampaignId: campaignId}, {DialerStatus: 'added'}],
         attributes: ['ExtraData'],
         include: [{model: DbConn.CampContactInfo, as: "CampContactInfo", attributes: ['ContactId']}]
     }).then(function (CamObject) {
         if (CamObject) {
+            //var values = {CampaignId:campaignId,CamScheduleId:scheduleId,RowCount:rowCount,Offset:-990099,PageNo:pageNo};
+            update_loaded_numbers(CamObject, campaignId, -8, null);
             logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignId] - [%s] - [PGSQL]  - Data found  - %s - [%s]', tenantId, companyId, JSON.stringify(CamObject));
             jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
             callBack.end(jsonString);
@@ -492,7 +496,7 @@ function GetAllContactByCategoryID(categoryId, tenantId, companyId, callBack) {
 
     var jsonString;
     var query = {
-        where: [{CategoryID: categoryId, TenantId: tenantId, CompanyId: companyId}],
+        where: [{CategoryID: categoryId, TenantId: tenantId, CompanyId: companyId, DialerStatus: 'added'}],
         include: [{
             model: DbConn.CampContactInfo,
             as: "CampContactInfo",
@@ -514,6 +518,8 @@ function GetAllContactByCategoryID(categoryId, tenantId, companyId, callBack) {
     }
     DbConn.CampContactCategory.find(query).then(function (CamObject) {
         if (CamObject) {
+
+            update_loaded_numbers(CamObject, -8, -8, null);
             logger.info('[DVP-CampaignNumberUpload.GetAllContactByCategoryID] - [%s] - [PGSQL]  - Data found  - %s - [%s]', tenantId, companyId, JSON.stringify(CamObject));
             jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
             callBack.end(jsonString);
@@ -532,50 +538,78 @@ function GetAllContactByCategoryID(categoryId, tenantId, companyId, callBack) {
 
 function GetAllContactByCampaignIdScheduleId(campaignId, scheduleId, rowCount, pageNo, tenantId, companyId, callBack) {
     var jsonString;
-    //DbConn.CampContactSchedule.findAll({where: [{CampaignId: campaignId},{CamScheduleId:scheduleId}],offset: ((pageNo - 1)*rowCount),limit: rowCount,attributes: [],include:[{model:DbConn.CampContactInfo, as :"CampContactInfo" ,attributes: ['ContactId']}]}).complete(function (err, CamObject) {
-    DbConn.CampContactSchedule.findAll({
-        where: [{CampaignId: campaignId}, {CamScheduleId: scheduleId}],
-        attributes: ['ExtraData'],
-        offset: ((pageNo - 1) * rowCount),
-        limit: rowCount,
-        include: [{
-            model: DbConn.CampContactInfo,
-            as: "CampContactInfo",
-            attributes: ['ContactId'],
-            order: [['CamContactId','DESC']]
-        }]
-    }).then(function (CamObject) {
-        if (CamObject) {
-            logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [%s] - [PGSQL]  - Data found  - %s- [%s]', tenantId, companyId, JSON.stringify(CamObject));
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+
+    function get_numbers() {
+        DbConn.CampContactSchedule.findAll({
+            where: [{CampaignId: campaignId}, {CamScheduleId: scheduleId}, {DialerStatus: 'added'}],
+            attributes: ['ExtraData'],
+            offset: ((pageNo - 1) * rowCount),
+            limit: rowCount,
+            include: [{
+                model: DbConn.CampContactInfo,
+                as: "CampContactInfo",
+                attributes: ['ContactId'],
+                order: [['CamContactId', 'DESC']]
+            }]
+        }).then(function (CamObject) {
+            if (CamObject) {
+                var values = {
+                    CampaignId: campaignId,
+                    CamScheduleId: scheduleId,
+                    RowCount: rowCount,
+                    Offset: -990099,
+                    PageNo: pageNo
+                };
+                update_loaded_numbers(CamObject, campaignId, scheduleId, values);
+                logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [%s] - [PGSQL]  - Data found  - %s- [%s]', tenantId, companyId, JSON.stringify(CamObject));
+                jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+                callBack.end(jsonString);
+            }
+            else {
+                logger.error('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+                jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+                callBack.end(jsonString);
+            }
+        }).error(function (err) {
+            logger.error('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [%s] - [%s] - [PGSQL]  - Error in searching.- [%s]', tenantId, companyId, err);
+            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callBack.end(jsonString);
-        }
-        else {
-            logger.error('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
-            jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+        });
+    }
+
+    if (pageNo < 0 && rowCount < 0) {
+        DbConn.CampNumberLoadInfo.findAll({
+            where: [{CampaignId: campaignId}, {CamScheduleId: scheduleId}]
+        }).then(function (CamObject) {
+            rowCount = CamObject.dataValues.RowCount;
+            pageNo = CamObject.dataValues.PageNo;
+            get_numbers();
+        }).error(function (err) {
+            logger.error('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [%s] - [%s] - [PGSQL]  - Error in searching.- [%s]', tenantId, companyId, err);
+            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callBack.end(jsonString);
-        }
-    }).error(function (err) {
-        logger.error('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [%s] - [%s] - [PGSQL]  - Error in searching.- [%s]', tenantId, companyId, err);
-        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-        callBack.end(jsonString);
-    });
+        });
+    } else {
+        get_numbers();
+    }
 }
 
 function GetAllContactByCampaignIdScheduleIdWithoutPaging(campaignId, scheduleId, tenantId, companyId, callBack) {
     var jsonString;
     //DbConn.CampContactSchedule.findAll({where: [{CampaignId: campaignId},{CamScheduleId:scheduleId}],offset: ((pageNo - 1)*rowCount),limit: rowCount,attributes: [],include:[{model:DbConn.CampContactInfo, as :"CampContactInfo" ,attributes: ['ContactId']}]}).complete(function (err, CamObject) {
     DbConn.CampContactSchedule.findAll({
-        where: [{CampaignId: campaignId}, {CamScheduleId: scheduleId}],
+        where: [{CampaignId: campaignId}, {CamScheduleId: scheduleId}, {DialerStatus: 'added'}],
         attributes: ['ExtraData'],
         include: [{
             model: DbConn.CampContactInfo,
             as: "CampContactInfo",
             attributes: ['ContactId'],
-            order: [['CamContactId','DESC']]
+            order: [['CamContactId', 'DESC']]
         }]
     }).then(function (CamObject) {
         if (CamObject) {
+
+            update_loaded_numbers(CamObject, campaignId, scheduleId, null);
             logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleIdWithoutPaging] - [%s] - [PGSQL]  - Data found  - %s- [%s]', tenantId, companyId, JSON.stringify(CamObject));
             jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
             callBack.end(jsonString);
@@ -595,7 +629,7 @@ function GetAllContactByCampaignIdScheduleIdWithoutPaging(campaignId, scheduleId
 function GetExtraDataByContactId(campaignId, contactId, rowCount, pageNo, tenantId, companyId, callBack) {
     var jsonString;
     DbConn.CampContactSchedule.findAll({
-        where: [{CampaignId: campaignId}],
+        where: [{CampaignId: campaignId}, {DialerStatus: 'added'}],
         attributes: ['ExtraData'],
         offset: ((pageNo - 1) * rowCount),
         limit: rowCount,
@@ -603,7 +637,7 @@ function GetExtraDataByContactId(campaignId, contactId, rowCount, pageNo, tenant
             model: DbConn.CampContactInfo,
             as: "CampContactInfo",
             attributes: ['ContactId'], where: [{'ContactId': contactId}],
-            order: [['CamContactId','DESC']]
+            order: [['CamContactId', 'DESC']]
         }]
     }).then(function (CamObject) {
         if (CamObject) {
@@ -757,7 +791,7 @@ function mapNumberToCampaign(req, res) {
             {where: [{CompanyId: companyId}, {TenantId: tenantId}, {CategoryID: req.params.CategoryID}]}).then(function (cmp) {
         if (cmp && Array.isArray(cmp) && cmp.length > 0) {
             var condition = [{CampaignId: req.params.CampaignId}, {BatchNo: cmp[0].BatchNo}];
-            if(req.body.camScheduleId){
+            if (req.body.camScheduleId) {
                 condition.push({CamScheduleId: req.body.camScheduleId})
             }
             DbConn.CampContactSchedule
@@ -774,15 +808,16 @@ function mapNumberToCampaign(req, res) {
                         return {
                             CampaignId: req.params.CampaignId,
                             CamContactId: item.CamContactId,
-                            BatchNo: cmp[0].BatchNo
+                            BatchNo: cmp[0].BatchNo,
+                            DialerStatus: 'added'
                         };
                     });
 
                     DbConn.CampContactSchedule.bulkCreate(
                         nos
                     ).then(function (results) {
-                        AddMapData(req.params.CampaignId,req.body.camScheduleId,req.params.CategoryID,req.body.ScheduleName,tenantId,companyId);
-                        redis_handler.process_counters(tenantId,companyId,req.params.CampaignId,req.body.camScheduleId,nos.length,nos.length);
+                        AddMapData(req.params.CampaignId, req.body.camScheduleId, req.params.CategoryID, req.body.ScheduleName, tenantId, companyId);
+                        redis_handler.process_counters(tenantId, companyId, req.params.CampaignId, req.body.camScheduleId, nos.length, nos.length);
                         jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
                         logger.info('CampContactInfo - bulkCreate successfully.[%s] ', jsonString);
                         res.end(jsonString);
@@ -839,7 +874,7 @@ function mapScheduleToCampaign(req, res) {
                         .create(
                             {
                                 CampaignId: req.params.CampaignId,
-                                CamScheduleId: cmp.CamScheduleId
+                                CamScheduleId: cmp.CamScheduleId, DialerStatus: 'added'
                             }
                         ).then(function (result) {
                         if (result) {
@@ -892,7 +927,7 @@ function mapNumberAndScheduleToCampaign(req, res) {
                         .create(
                             {
                                 CampaignId: req.params.CampaignId,
-                                CamScheduleId: CamObject.CamScheduleId
+                                CamScheduleId: CamObject.CamScheduleId, DialerStatus: 'added'
                             }
                         ).then(function (result) {
                         if (result) {
@@ -959,7 +994,7 @@ function mapNumberAndScheduleToCampaign(req, res) {
  */
 
 
-function getAssignedCategory(campaignId, tenantId, companyId,callBack) {
+function getAssignedCategory(campaignId, tenantId, companyId, callBack) {
 
     var jsonString;
     DbConn.CampMapContactSchedule.findAll({
@@ -983,80 +1018,167 @@ function getAssignedCategory(campaignId, tenantId, companyId,callBack) {
     });
 }
 
-function AddMapData(campaignId, camScheduleId, categoryID,schedule, tenantId, companyId) {
+function AddMapData(campaignId, camScheduleId, categoryID, schedule, tenantId, companyId) {
 
-    try{
+    try {
         DbConn.CampMapContactSchedule.create(
-                {
-                    CampaignId: campaignId,
-                    CamScheduleId: camScheduleId,
-                    CamSchedule: schedule,
-                    CategoryID: categoryID,
-                    TenantId: tenantId,
-                    CompanyId: companyId
-                }
-            ).then(function (result) {
+            {
+                CampaignId: campaignId,
+                CamScheduleId: camScheduleId,
+                CamSchedule: schedule,
+                CategoryID: categoryID,
+                TenantId: tenantId,
+                CompanyId: companyId
+            }
+        ).then(function (result) {
             console.log(messageFormatter.FormatMessage(undefined, "then", true, result));
 
         }).error(function (err) {
             console.log(messageFormatter.FormatMessage(undefined, "error", false, err));
         });
     }
-    catch (ex){
+    catch (ex) {
         console.log(ex);
     }
 }
 
+function upsert(values, condition) {
+    return Model
+        .findOne({where: condition})
+        .then(function (obj) {
+            if (obj) { // update
+                return obj.update(values);
+            }
+            else { // insert
+                return Model.create(values);
+            }
+        })
+}
+
+function update_loaded_numbers(Numbers, campaignId, camScheduleId, values) {
+
+    try {
+        let ids = Numbers.map(function (item) {
+            return item.dataValues.ContactScheduleId;
+        });
+
+        DbConn.CampContactSchedule.update({
+                DialerStatus: "pick"
+            },
+            {
+                where: [
+                    {
+                        ContactScheduleId: {$in: ids}
+                    }
+                ]
+            }
+        ).then(function (results) {
+            logger.error('update_loaded_numbers completed [%s]', results);
+        }).catch(function (err) {
+            logger.error('update_loaded_numbers ---.- [%s]', err);
+        });
+
+        if (values) {
+            DbConn.CampNumberLoadInfo.findOne(
+                {
+                    where: [{CampaignId: campaignId}, {CamScheduleId: camScheduleId}]
+                }
+            ).then(function (results) {
+                if (results) { // update
+                    return results.update(values);
+                }
+                else { // insert
+                    return DbConn.CampNumberLoadInfo.create(values);
+                }
+            }).catch(function (err) {
+                logger.error('CampNumberLoadInfo ---.- [%s]', err);
+            });
+        }
+
+
+    } catch (err) {
+        logger.error('update_loaded_numbers.- [%s]', err);
+    }
+}
 
 function GetAllContactByCampaignIdScheduleIdOffset(campaignId, scheduleId, rowCount, offset, tenantId, companyId, callBack) {
     var jsonString;
-    //DbConn.CampContactSchedule.findAll({where: [{CampaignId: campaignId},{CamScheduleId:scheduleId}],offset: ((pageNo - 1)*rowCount),limit: rowCount,attributes: [],include:[{model:DbConn.CampContactInfo, as :"CampContactInfo" ,attributes: ['ContactId']}]}).complete(function (err, CamObject) {
-    DbConn.CampContactSchedule.findAll({
-        where: [{CampaignId: campaignId}, {CamScheduleId: scheduleId}],
-        attributes: ['ExtraData'],
-        offset: offset,
-        limit: rowCount,
-        include: [{
-            model: DbConn.CampContactInfo,
-            as: "CampContactInfo",
-            attributes: ['ContactId'],
-            order: [['CamContactId','DESC']]
-        }]
-    }).then(function (CamObject) {
-        if (CamObject) {
-            logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [%s] - [PGSQL]  - Data found  - %s- [%s]', tenantId, companyId, JSON.stringify(CamObject));
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+
+    function get_numbers() {
+        DbConn.CampContactSchedule.findAll({
+            where: [{CampaignId: campaignId}, {CamScheduleId: scheduleId}, {DialerStatus: 'added'}],
+            attributes: ['ExtraData'],
+            offset: offset,
+            limit: rowCount,
+            include: [{
+                model: DbConn.CampContactInfo,
+                as: "CampContactInfo",
+                attributes: ['ContactId'],
+                order: [['CamContactId', 'DESC']]
+            }]
+        }).then(function (CamObject) {
+            if (CamObject) {
+                logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [%s] - [PGSQL]  - Data found  - %s- [%s]', tenantId, companyId, JSON.stringify(CamObject));
+                jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+                callBack.end(jsonString);
+            }
+            else {
+                var values = {
+                    CampaignId: campaignId,
+                    CamScheduleId: scheduleId,
+                    RowCount: rowCount,
+                    Offset: offset,
+                    PageNo: -990099
+                };
+                update_loaded_numbers(CamObject, campaignId, scheduleId, values);
+                logger.error('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+                jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+                callBack.end(jsonString);
+            }
+        }).error(function (err) {
+            logger.error('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [%s] - [%s] - [PGSQL]  - Error in searching.- [%s]', tenantId, companyId, err);
+            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callBack.end(jsonString);
-        }
-        else {
-            logger.error('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
-            jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+        });
+    }
+
+    if (rowCount < 0 && offset < 0) {
+        DbConn.CampNumberLoadInfo.findAll({
+            where: [{CampaignId: campaignId}, {CamScheduleId: scheduleId}]
+        }).then(function (CamObject) {
+            rowCount = CamObject.dataValues.RowCount;
+            offset = CamObject.dataValues.Offset;
+            get_numbers();
+        }).error(function (err) {
+            logger.error('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [%s] - [%s] - [PGSQL]  - Error in searching.- [%s]', tenantId, companyId, err);
+            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callBack.end(jsonString);
-        }
-    }).error(function (err) {
-        logger.error('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [%s] - [%s] - [PGSQL]  - Error in searching.- [%s]', tenantId, companyId, err);
-        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-        callBack.end(jsonString);
-    });
+        });
+
+    }else{
+        get_numbers();
+    }
+
 }
 
-function addAbandonedCallToCampaign(req,res) {
+function addAbandonedCallToCampaign(req, res) {
 
 
-    try{
+    try {
         function AddtocontactSchedule(CamObject) {
             var cam_schedule = {
                 CampaignId: req.params.CampaignId,
                 CamContactId: CamObject.CamContactId,
                 CamScheduleId: req.body.CamScheduleId,
                 BatchNo: req.body.CategoryID,
-                ExtraData: req.body.ExtraData
+                ExtraData: req.body.ExtraData,
+                DialerStatus: 'added'
             };
 
             DbConn.CampContactSchedule.create(
                 cam_schedule
             ).then(function (results) {
-                redis_handler.process_counters(req.user.tenant,req.user.company,req.params.CampaignId,req.body.CamScheduleId,1,1);
+                redis_handler.process_counters(req.user.tenant, req.user.company, req.params.CampaignId, req.body.CamScheduleId, 1, 1);
                 jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
                 logger.info('[DVP-CampaignNumberUpload.addAbandonedCallToCampaign] - [PGSQL] - Updated successfully.[%s] ', jsonString);
                 res.end(jsonString);
@@ -1073,7 +1195,7 @@ function addAbandonedCallToCampaign(req,res) {
 
 
         var jsonString;
-        DbConn.CampContactInfo.find({where: [{CompanyId: companyId}, {TenantId: tenantId},{ContactId:req.params.contact_no}]}).then(function (CamObject) {
+        DbConn.CampContactInfo.find({where: [{CompanyId: companyId}, {TenantId: tenantId}, {ContactId: req.params.contact_no}]}).then(function (CamObject) {
             if (CamObject) {
                 AddtocontactSchedule(CamObject);
             }
@@ -1100,7 +1222,7 @@ function addAbandonedCallToCampaign(req,res) {
             jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             res.end(jsonString);
         });
-    }catch (ex){
+    } catch (ex) {
 
     }
 }
