@@ -234,6 +234,58 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId', 
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Schedules', authorization({
+    resource: "campaign",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[DVP-campaignmanager.GetSchedulesForCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var cmpId = req.params.CampaignId;
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+
+        campaignHandler.GetScheduleForCampaign(tenantId, companyId, cmpId, res);
+
+    }
+    catch (ex) {
+
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-campaignmanager.GetSchedulesForCampaign] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Categories', authorization({
+    resource: "campaign",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[DVP-campaignmanager.GetCategoriesForCampaign] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var cmpId = req.params.CampaignId;
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+
+        campaignHandler.GetAllCategoriesAssignedToCampaign(tenantId, companyId, cmpId, res);
+
+    }
+    catch (ex) {
+
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-campaignmanager.GetCategoriesForCampaign] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaigns/State/:Command/:Count', authorization({
     resource: "campaign",
     action: "read"

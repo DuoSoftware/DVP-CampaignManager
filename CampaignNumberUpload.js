@@ -1113,7 +1113,7 @@ function GetAllContactByCampaignIdScheduleIdOffset(campaignId, scheduleId, rowCo
             include: [{
                 model: DbConn.CampContactInfo,
                 as: "CampContactInfo",
-                attributes: ['ContactId'],
+                attributes: ['ContactId','BusinessUnit'],
                 order: [['CamContactId', 'DESC']]
             }]
         }).then(function (CamObject) {
@@ -1205,7 +1205,8 @@ function addAbandonedCallToCampaign(req, res) {
                     Status: true,
                     TenantId: tenantId,
                     CompanyId: companyId,
-                    CategoryID: req.body.CategoryID
+                    CategoryID: req.body.CategoryID,
+                    BusinessUnit: req.body.BusinessUnit
                 };
                 DbConn.CampContactInfo.create(
                     no
