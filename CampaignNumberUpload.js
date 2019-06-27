@@ -254,6 +254,13 @@ function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId, 
 
         }
 
+        // split the number record by first colon, to seperate the preview data..
+        var num_PreviewData = item.split(/:(.+)/); 
+        
+        if(num_PreviewData.length > 1){
+            extraData = JSON.parse(num_PreviewData[1]);
+            item = num_PreviewData[0];
+        }
         ///////////////////////////////////////////////////////
 
         task.push(function createContact(callback) {
