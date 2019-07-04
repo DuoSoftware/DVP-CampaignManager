@@ -255,9 +255,9 @@ function UploadContactsToCampaignWithSchedule(items, campaignId, camScheduleId, 
         }
 
         // split the number record by first colon, to seperate the preview data..
-        var num_PreviewData = item.split(/:(.+)/); 
-        
-        if(num_PreviewData.length > 1){
+        var num_PreviewData = item.split(/:(.+)/);
+
+        if (num_PreviewData.length > 1) {
             extraData = JSON.parse(num_PreviewData[1]);
             item = num_PreviewData[0];
         }
@@ -483,10 +483,11 @@ function GetAllContactByCampaignId(campaignId, tenantId, companyId, callBack) {
         if (CamObject) {
             //var values = {CampaignId:campaignId,CamScheduleId:scheduleId,RowCount:rowCount,Offset:-990099,PageNo:pageNo};
             /*update_loaded_numbers(CamObject, campaignId, -8, null);*/
-            update_loaded_numbers(CamObject);
             logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignId] - [%s] - [PGSQL]  - Data found  - %s - [%s]', tenantId, companyId, JSON.stringify(CamObject));
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
-            callBack.end(jsonString);
+            update_loaded_numbers(CamObject,callBack);
+
+            /*jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+            callBack.end(jsonString);*/
         }
         else {
             logger.error('[DVP-CampaignNumberUpload.GetAllContactByCampaignId] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
@@ -528,10 +529,10 @@ function GetAllContactByCategoryID(categoryId, tenantId, companyId, callBack) {
         if (CamObject) {
 
             /*update_loaded_numbers(CamObject, -8, -8, null);*/
-            update_loaded_numbers(CamObject);
             logger.info('[DVP-CampaignNumberUpload.GetAllContactByCategoryID] - [%s] - [PGSQL]  - Data found  - %s - [%s]', tenantId, companyId, JSON.stringify(CamObject));
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
-            callBack.end(jsonString);
+            update_loaded_numbers(CamObject,callBack);
+            /*jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+            callBack.end(jsonString);*/
         }
         else {
             logger.error('[DVP-CampaignNumberUpload.GetAllContactByCategoryID] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
@@ -569,10 +570,11 @@ function GetAllContactByCampaignIdScheduleId(campaignId, scheduleId, rowCount, p
                 PageNo: pageNo
             };
             update_loaded_numbers(CamObject, campaignId, scheduleId, values);*/
-            update_loaded_numbers(CamObject);
             logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [%s] - [PGSQL]  - Data found  - %s- [%s]', tenantId, companyId, JSON.stringify(CamObject));
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
-            callBack.end(jsonString);
+            update_loaded_numbers(CamObject,callBack);
+
+            /*jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+            callBack.end(jsonString);*/
         }
         else {
             logger.error('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
@@ -657,10 +659,11 @@ function GetAllContactByCampaignIdScheduleIdWithoutPaging(campaignId, scheduleId
         if (CamObject) {
 
             /*update_loaded_numbers(CamObject, campaignId, scheduleId, null);*/
-            update_loaded_numbers(CamObject);
             logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleIdWithoutPaging] - [%s] - [PGSQL]  - Data found  - %s- [%s]', tenantId, companyId, JSON.stringify(CamObject));
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
-            callBack.end(jsonString);
+            update_loaded_numbers(CamObject,callBack);
+
+          /*  jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+            callBack.end(jsonString);*/
         }
         else {
             logger.error('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleIdWithoutPaging] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
@@ -1103,7 +1106,7 @@ function upsert(values, condition) {
         })
 }
 
-function update_loaded_numbers(Numbers) {
+function update_loaded_numbers(Numbers, callBack) {
 
     try {
         let ids = Numbers.map(function (item) {
@@ -1121,15 +1124,20 @@ function update_loaded_numbers(Numbers) {
                 ]
             }
         ).then(function (results) {
-            logger.error('update_loaded_numbers completed [%s]', results);
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, Numbers);
+            logger.info('update_loaded_numbers completed [%s]', results);
+            callBack.end(jsonString);
         }).catch(function (err) {
             logger.error('update_loaded_numbers ---.- [%s]', err);
+            var jsonString = messageFormatter.FormatMessage(err, "update_loaded_numbers", false, undefined);
+            callBack.end(jsonString);
         });
-
 
 
     } catch (err) {
         logger.error('update_loaded_numbers.- [%s]', err);
+        var jsonString = messageFormatter.FormatMessage(err, "update_loaded_numbers", false, undefined);
+        callBack.end(jsonString);
     }
 }
 
@@ -1190,16 +1198,13 @@ function GetAllContactByCampaignIdScheduleIdOffset(campaignId, scheduleId, rowCo
         include: [{
             model: DbConn.CampContactInfo,
             as: "CampContactInfo",
-            attributes: ['ContactId','BusinessUnit'],
+            attributes: ['ContactId', 'BusinessUnit'],
             order: [['CamContactId', 'DESC']]
         }]
     }).then(function (CamObject) {
         if (CamObject) {
+
             logger.info('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [%s] - [PGSQL]  - Data found  - %s- [%s]', tenantId, companyId, JSON.stringify(CamObject));
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
-            callBack.end(jsonString);
-        }
-        else {
             /*var values = {
                 CampaignId: campaignId,
                 CamScheduleId: scheduleId,
@@ -1208,7 +1213,11 @@ function GetAllContactByCampaignIdScheduleIdOffset(campaignId, scheduleId, rowCo
                 PageNo: -990099
             };
             update_loaded_numbers(CamObject, campaignId, scheduleId, values);*/
-            update_loaded_numbers(CamObject);
+            update_loaded_numbers(CamObject, callBack);
+
+        }
+        else {
+
             logger.error('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
             jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
             callBack.end(jsonString);
