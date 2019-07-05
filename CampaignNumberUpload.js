@@ -1192,7 +1192,6 @@ function GetAllContactByCampaignIdScheduleIdOffset(campaignId, scheduleId, rowCo
 
     DbConn.CampContactSchedule.findAll({
         where: [{CampaignId: campaignId}, {CamScheduleId: scheduleId}, {DialerStatus: 'added'}],
-        attributes: ['ExtraData'],
         //offset: offset, //dialer want only top requested items
         limit: rowCount,
         include: [{
