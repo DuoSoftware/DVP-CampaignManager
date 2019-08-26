@@ -1667,6 +1667,33 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
     }
     return next();
 });
+
+RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers', authorization({
+    resource: "campaignnumbers",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[DVP-CampaignNumberUpload.RemoveCampaignNumbers] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var campaignId = req.params.CampaignId;
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+
+
+        campaignNumberUpload.GetAllContactByCampaignIdScheduleIdOffset(campaignId, scheduleId, rowCount, offset, tenantId, companyId, res)
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.error('[DVP-CampaignNumberUpload.GetAllContactByCampaignIdScheduleId] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 //------------------------- End-CampaignNumberUpload ------------------------- \\
 
 //------------------------- CampaignSchedule ------------------------- \\

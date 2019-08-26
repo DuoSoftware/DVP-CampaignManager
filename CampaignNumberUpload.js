@@ -7,6 +7,7 @@ var DbConn = require('dvp-dbmodels');
 var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
 var async = require("async");
 let redis_handler = require('./redis_handler');
+let dialerRedisHandler = require('./DialerRedisHandler.js');
 
 
 function UploadContacts(contacts, tenantId, companyId, categoryID, callBack) {
@@ -1187,6 +1188,81 @@ function update_loaded_numbers(Numbers, callBack) {
     }
 }*/
 
+function RemoveCampaignNumbers(campaignId, tenantId, companyId, callback){
+
+    DbConn.CampConfigurations.find({where:[{CampaignId: campaignId, TenantId: tenantId, CompanyId: companyId}]}).then(function(campConf){
+        if(campConf){
+            if(campConf.NumberLoadingMethod === 'NUMBER'){
+
+                //Change state to removed
+
+                DbConn.CampContactSchedule
+                    .update(
+                        {
+                            DialerStatus: 'removed_by_api'
+                        },
+                        {
+                            where: {
+                                CampaignId: campaignId
+                            }
+                        }
+                    ).then(function(updateRes){
+
+                        //remove from redis
+                    let pattern = "CampaignNumbers:" + companyId + ":" + tenantId + ":" + campaignId + ":*";
+                    dialerRedisHandler.GetKeys(pattern, function(err, keys){
+
+                        keys.forEach(function(key){
+                            dialerRedisHandler.DeleteObject(key);
+                        })
+
+                    });
+                    callback(null, true);
+
+                }).catch(function(err){
+                    callback(err, false);
+
+                })
+
+            }
+            else if(campConf.NumberLoadingMethod === 'CONTACT')
+            {
+                DbConn.CampContactbaseNumbers
+                    .update(
+                        {
+                            DialerStatus: 'removed_by_api'
+                        },
+                        {
+                            where: {
+                                CampaignId: campaignId
+                            }
+                        }
+                    ).then(function(updateRes){
+
+                    //remove from redis
+                    let key = "CampaignContacts:" + companyId + ":" + tenantId + ":" + campaignId;
+                    dialerRedisHandler.DeleteObject(key);
+                    callback(null, true);
+
+                }).catch(function(err){
+                    callback(err, false);
+
+                })
+
+            }
+            else{
+                callback(new Error("Invalid number loading type"), false);
+            }
+
+        }else{
+            callback(new Error("Campaign not found"), false);
+        }
+
+    }).catch(function(err){
+        callback(err, false);
+    })
+}
+
 function GetAllContactByCampaignIdScheduleIdOffset(campaignId, scheduleId, rowCount, offset, tenantId, companyId, callBack) {
     var jsonString;
 
@@ -1359,6 +1435,7 @@ module.exports.AddExistingContactsToCampaign = AddExistingContactsToCampaign;
 module.exports.EditContacts = EditContacts;
 module.exports.EditContact = EditContact;
 module.exports.DeleteContacts = DeleteContacts;
+module.exports.RemoveCampaignNumbers = RemoveCampaignNumbers;
 
 module.exports.GetAllContact = GetAllContact;
 module.exports.GetAllContactByCampaignId = GetAllContactByCampaignId;
