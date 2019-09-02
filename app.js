@@ -1668,9 +1668,9 @@ RestServer.get('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
     return next();
 });
 
-RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Numbers', authorization({
+RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/RemoveNumbers', authorization({
     resource: "campaignnumbers",
-    action: "read"
+    action: "delete"
 }), function (req, res, next) {
     try {
 
@@ -1682,7 +1682,13 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Nu
         var companyId = req.user.company;
 
 
-        campaignNumberUpload.GetAllContactByCampaignIdScheduleIdOffset(campaignId, scheduleId, rowCount, offset, tenantId, companyId, res)
+        campaignNumberUpload.RemoveCampaignNumbers(campaignId, tenantId, companyId, function(err, res){
+
+            var jsonString = messageFormatter.FormatMessage(err, "Operation Complete", res, res);
+            logger.error('[DVP-CampaignNumberUpload.RemoveCampaignNumbers] - Request response : %s ', jsonString);
+            res.end(jsonString);
+
+        })
 
     }
     catch (ex) {
