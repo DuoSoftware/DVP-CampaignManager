@@ -1682,9 +1682,9 @@ RestServer.del('/DVP/API/' + version + '/CampaignManager/Campaign/:CampaignId/Re
         var companyId = req.user.company;
 
 
-        campaignNumberUpload.RemoveCampaignNumbers(campaignId, tenantId, companyId, function(err, res){
+        campaignNumberUpload.RemoveCampaignNumbers(campaignId, tenantId, companyId, function(err, resp){
 
-            var jsonString = messageFormatter.FormatMessage(err, "Operation Complete", res, res);
+            var jsonString = messageFormatter.FormatMessage(err, "Operation Complete", resp, resp);
             logger.error('[DVP-CampaignNumberUpload.RemoveCampaignNumbers] - Request response : %s ', jsonString);
             res.end(jsonString);
 
