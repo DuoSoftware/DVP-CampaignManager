@@ -1203,7 +1203,8 @@ function RemoveCampaignNumbers(campaignId, tenantId, companyId, callback){
                         },
                         {
                             where: {
-                                CampaignId: campaignId
+                                CampaignId: campaignId,
+                                DialerStatus: 'added'
                             }
                         }
                     ).then(function(updateRes){
@@ -1234,7 +1235,8 @@ function RemoveCampaignNumbers(campaignId, tenantId, companyId, callback){
                         },
                         {
                             where: {
-                                CampaignId: campaignId
+                                CampaignId: campaignId,
+                                DialerStatus: 'added'
                             }
                         }
                     ).then(function(updateRes){
