@@ -1,14 +1,14 @@
 /**
  * Created by Rajinda on 6/26/2015.
  */
-var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
-var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
-var DbConn = require('dvp-dbmodels');
-var Sequelize = require('sequelize');
-var campaignOperations = require('./CampaignOperations');
+var messageFormatter = require("dvp-common-lite/CommonMessageGenerator/ClientMessageJsonFormatter.js");
+var logger = require("dvp-common-lite/LogHandler/CommonLogHandler.js").logger;
+var DbConn = require("dvp-dbmodels");
+var Sequelize = require("sequelize");
+var campaignOperations = require("./CampaignOperations");
 
 function SetOperationalStatus(campaignId, value) {
-    /*campaignOperations.SetOperationalStatus(tenantId, companyId,value,function (err,obj) {
+  /*campaignOperations.SetOperationalStatus(tenantId, companyId,value,function (err,obj) {
      if(err){
      logger.error('SetOperationalStatus - [%s] - [%s] -[%s] - failed', tenantId, companyId,value, err);
      }
@@ -17,224 +17,397 @@ function SetOperationalStatus(campaignId, value) {
      }
      });*/
 
-    DbConn.CampCampaignInfo
-        .update(
-            {
-                OperationalStatus: value
-            },
-            {
-                where: [{
-                    CampaignId: campaignId
-                }]
-            }
-        ).then(function (results) {
-        if (results) {
-            logger.info('SetOperationalStatus - [%s]-[%s]  - successfully', campaignId, value);
-
-        }
-        else {
-            logger.info('SetOperationalStatus - [%s] -[%s]  - failed', campaignId, value);
-        }
-
-    }).error(function (err) {
-        logger.error('SetOperationalStatus - [%s]  - failed', campaignId, err);
+  DbConn.CampCampaignInfo.update(
+    {
+      OperationalStatus: value,
+    },
+    {
+      where: [
+        {
+          CampaignId: campaignId,
+        },
+      ],
+    }
+  )
+    .then(function (results) {
+      if (results) {
+        logger.info(
+          "SetOperationalStatus - [%s]-[%s]  - successfully",
+          campaignId,
+          value
+        );
+      } else {
+        logger.info(
+          "SetOperationalStatus - [%s] -[%s]  - failed",
+          campaignId,
+          value
+        );
+      }
+    })
+    .error(function (err) {
+      logger.error("SetOperationalStatus - [%s]  - failed", campaignId, err);
     });
-
 }
 
 function StartCampaign(campaignId, dialerId, tenantId, companyId, callback) {
-    var jsonString;
-    DbConn.CampOngoingCampaign.find({where: [{CampaignId: campaignId}, {DialerId: dialerId}]}).then(function (cmp) {
-        if (cmp) {
-            logger.info('[DVP-CampCampaignInfo.StartCampaign find exsiting item] - [%s] - [PGSQL]  - Data found  - %s', campaignId, dialerId, JSON.stringify(cmp));
+  var jsonString;
+  DbConn.CampOngoingCampaign.find({
+    where: [{ CampaignId: campaignId }, { DialerId: dialerId }],
+  })
+    .then(function (cmp) {
+      if (cmp) {
+        logger.info(
+          "[DVP-CampCampaignInfo.StartCampaign find exsiting item] - [%s] - [PGSQL]  - Data found  - %s",
+          campaignId,
+          dialerId,
+          JSON.stringify(cmp)
+        );
 
-            DbConn.CampOngoingCampaign
-                .update(
-                    {
-                        CampaignState: 'start',
-                        LastResponsTime: new Date()
-                    },
-                    {
-                        where: [{DialerId: dialerId}, {CampaignId: campaignId}]
-                    }
-                ).then(function (cmp) {
-                SetOperationalStatus(campaignId, 'ongoing');
-                logger.info('[DVP-CampaignOperations.StartCampaign] - [%s] - [PGSQL] - StartCampaign successfully ', campaignId);
-                jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-                callback.end(jsonString);
-            }).error(function (err) {
-                logger.error('[DVP-CampaignOperations.StartCampaign] - [%s] - [PGSQL] - StartCampaign  failed', campaignId, err);
-                jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-                callback.end(jsonString);
-            });
-        }
-        else {
-            logger.error('[DVP-CampCampaignInfo.GetAllCampaignByCampaignState] - [PGSQL]  - No record found for %s - %s  ', campaignId, dialerId);
+        DbConn.CampOngoingCampaign.update(
+          {
+            CampaignState: "start",
+            LastResponsTime: new Date(),
+          },
+          {
+            where: [{ DialerId: dialerId }, { CampaignId: campaignId }],
+          }
+        )
+          .then(function (cmp) {
+            SetOperationalStatus(campaignId, "ongoing");
+            logger.info(
+              "[DVP-CampaignOperations.StartCampaign] - [%s] - [PGSQL] - StartCampaign successfully ",
+              campaignId
+            );
+            jsonString = messageFormatter.FormatMessage(
+              undefined,
+              "SUCCESS",
+              true,
+              cmp
+            );
+            callback.end(jsonString);
+          })
+          .error(function (err) {
+            logger.error(
+              "[DVP-CampaignOperations.StartCampaign] - [%s] - [PGSQL] - StartCampaign  failed",
+              campaignId,
+              err
+            );
+            jsonString = messageFormatter.FormatMessage(
+              err,
+              "EXCEPTION",
+              false,
+              undefined
+            );
+            callback.end(jsonString);
+          });
+      } else {
+        logger.error(
+          "[DVP-CampCampaignInfo.GetAllCampaignByCampaignState] - [PGSQL]  - No record found for %s - %s  ",
+          campaignId,
+          dialerId
+        );
 
-            DbConn.CampOngoingCampaign
-                .create(
-                    {
-                        CampaignId: campaignId,
-                        DialerId: dialerId,
-                        LastResponsTime: new Date(),
-                        CampaignState: 'start'
-                    }
-                ).then(function (cmp) {
-                logger.info('[DVP-CampaignOperations.StartCampaign-create] - [%s] - [PGSQL] - StartCampaign successfully ', campaignId);
-                /*not sure reson to do this way*/
-                DbConn.CampCampaignInfo
-                    .update(
-                        {
-                            OperationalStatus: "ongoing"
-                        },
-                        {
-                            where: [{CampaignId: campaignId}]
-                        }
-                    ).then(function (cmp) {
-                    SetOperationalStatus(campaignId, 'ongoing');
-                    logger.info('[DVP-CampaignOperations.StartCampaign-create-update OperationalStatus] - [%s] - [PGSQL] - StartCampaign successfully ', campaignId);
-                    jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-                    callback.end(jsonString);
-                }).error(function (err) {
-                    logger.error('[DVP-CampaignOperations.StartCampaign-create-update OperationalStatus] - [%s] - [PGSQL] - StartCampaign  failed', campaignId, err);
-                    jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-                    callback.end(jsonString);
-                });
-            }).error(function (err) {
-                logger.error('[DVP-CampaignOperations.StartCampaign-create] - [%s] - [PGSQL] - StartCampaign  failed', campaignId, err);
-                jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        DbConn.CampOngoingCampaign.create({
+          CampaignId: campaignId,
+          DialerId: dialerId,
+          LastResponsTime: new Date(),
+          CampaignState: "start",
+        })
+          .then(function (cmp) {
+            logger.info(
+              "[DVP-CampaignOperations.StartCampaign-create] - [%s] - [PGSQL] - StartCampaign successfully ",
+              campaignId
+            );
+            /*not sure reson to do this way*/
+            DbConn.CampCampaignInfo.update(
+              {
+                OperationalStatus: "ongoing",
+              },
+              {
+                where: [{ CampaignId: campaignId }],
+              }
+            )
+              .then(function (cmp) {
+                SetOperationalStatus(campaignId, "ongoing");
+                logger.info(
+                  "[DVP-CampaignOperations.StartCampaign-create-update OperationalStatus] - [%s] - [PGSQL] - StartCampaign successfully ",
+                  campaignId
+                );
+                jsonString = messageFormatter.FormatMessage(
+                  undefined,
+                  "SUCCESS",
+                  true,
+                  cmp
+                );
                 callback.end(jsonString);
-            });
-        }
-    }).error(function (err) {
-        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-        logger.error('[DVP-GetOngoingCampaign.find] - [%s] - [%s] - [PGSQL]  - Error in searching.', campaignId, dialerId, err);
-        callback.end(jsonString);
+              })
+              .error(function (err) {
+                logger.error(
+                  "[DVP-CampaignOperations.StartCampaign-create-update OperationalStatus] - [%s] - [PGSQL] - StartCampaign  failed",
+                  campaignId,
+                  err
+                );
+                jsonString = messageFormatter.FormatMessage(
+                  err,
+                  "EXCEPTION",
+                  false,
+                  undefined
+                );
+                callback.end(jsonString);
+              });
+          })
+          .error(function (err) {
+            logger.error(
+              "[DVP-CampaignOperations.StartCampaign-create] - [%s] - [PGSQL] - StartCampaign  failed",
+              campaignId,
+              err
+            );
+            jsonString = messageFormatter.FormatMessage(
+              err,
+              "EXCEPTION",
+              false,
+              undefined
+            );
+            callback.end(jsonString);
+          });
+      }
+    })
+    .error(function (err) {
+      jsonString = messageFormatter.FormatMessage(
+        err,
+        "EXCEPTION",
+        false,
+        undefined
+      );
+      logger.error(
+        "[DVP-GetOngoingCampaign.find] - [%s] - [%s] - [PGSQL]  - Error in searching.",
+        campaignId,
+        dialerId,
+        err
+      );
+      callback.end(jsonString);
     });
-
-
 }
 
 function StopCampaign(campaignId, req, callback) {
-    var jsonString;
-    var tenantId = req.user.tenant;
-    var companyId = req.user.company;
-    DbConn.CampOngoingCampaign
-        .update(
-            {
-                CampaignState: 'stop'
-            },
-            {
-                where: [{CampaignId: campaignId}]
-            }
-        ).then(function (cmp) {
-
-        SetOperationalStatus(campaignId, 'stop');
-        logger.info('[DVP-CampaignOperations.StopCampaign] - [%s] - [PGSQL] - StopCampaign successfully ', campaignId);
-        jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-        callback.end(jsonString);
-    }).error(function (err) {
-        logger.error('[DVP-CampaignOperations.StopCampaign] - [%s] - [PGSQL] - StopCampaign  failed', campaignId, err);
-        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-        callback.end(jsonString);
+  var jsonString;
+  var tenantId = req.user.tenant;
+  var companyId = req.user.company;
+  DbConn.CampOngoingCampaign.update(
+    {
+      CampaignState: "stop",
+    },
+    {
+      where: [{ CampaignId: campaignId }],
+    }
+  )
+    .then(function (cmp) {
+      SetOperationalStatus(campaignId, "stop");
+      logger.info(
+        "[DVP-CampaignOperations.StopCampaign] - [%s] - [PGSQL] - StopCampaign successfully ",
+        campaignId
+      );
+      jsonString = messageFormatter.FormatMessage(
+        undefined,
+        "SUCCESS",
+        true,
+        cmp
+      );
+      callback.end(jsonString);
+    })
+    .error(function (err) {
+      logger.error(
+        "[DVP-CampaignOperations.StopCampaign] - [%s] - [PGSQL] - StopCampaign  failed",
+        campaignId,
+        err
+      );
+      jsonString = messageFormatter.FormatMessage(
+        err,
+        "EXCEPTION",
+        false,
+        undefined
+      );
+      callback.end(jsonString);
     });
 }
 
 function PauseCampaign(campaignId, req, callback) {
-    var jsonString;
-    var tenantId = req.user.tenant;
-    var companyId = req.user.company;
-    DbConn.CampOngoingCampaign
-        .update(
-            {
-                CampaignState: 'pause'
-            },
-            {
-                where: [{CampaignId: campaignId}]
-            }
-        ).then(function (cmp) {
-        SetOperationalStatus(campaignId, 'pause');
-        logger.info('[DVP-CampaignOperations.PauseCampaign] - [%s] - [PGSQL] - PauseCampaign successfully ', campaignId);
-        jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-        callback.end(jsonString);
-    }).error(function (err) {
-        logger.error('[DVP-CampaignOperations.PauseCampaign] - [%s] - [PGSQL] - PauseCampaign  failed', campaignId, err);
-        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-        callback.end(jsonString);
+  var jsonString;
+  var tenantId = req.user.tenant;
+  var companyId = req.user.company;
+  DbConn.CampOngoingCampaign.update(
+    {
+      CampaignState: "pause",
+    },
+    {
+      where: [{ CampaignId: campaignId }],
+    }
+  )
+    .then(function (cmp) {
+      SetOperationalStatus(campaignId, "pause");
+      logger.info(
+        "[DVP-CampaignOperations.PauseCampaign] - [%s] - [PGSQL] - PauseCampaign successfully ",
+        campaignId
+      );
+      jsonString = messageFormatter.FormatMessage(
+        undefined,
+        "SUCCESS",
+        true,
+        cmp
+      );
+      callback.end(jsonString);
+    })
+    .error(function (err) {
+      logger.error(
+        "[DVP-CampaignOperations.PauseCampaign] - [%s] - [PGSQL] - PauseCampaign  failed",
+        campaignId,
+        err
+      );
+      jsonString = messageFormatter.FormatMessage(
+        err,
+        "EXCEPTION",
+        false,
+        undefined
+      );
+      callback.end(jsonString);
     });
 }
 
 function ResumeCampaign(campaignId, req, callback) {
-
-    var jsonString;
-    var tenantId = req.user.tenant;
-    var companyId = req.user.company;
-    DbConn.CampOngoingCampaign.find({where: [{CampaignState: 'pause'}, {CampaignId: campaignId}]}).then(function (resDev) {
-        if (resDev) {
-
-            DbConn.CampOngoingCampaign
-                .update(
-                    {
-                        CampaignState: 'start'
-                    },
-                    {
-                        where: {CampaignId: campaignId}
-                    }
-                ).then(function (cmp) {
-                SetOperationalStatus(campaignId, 'start');
-                logger.info('[DVP-CampaignOperations.PauseCampaign] - [%s] - [PGSQL] - ResumeCampaign successfully ', campaignId);
-                jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-                callback.end(jsonString);
-            }).error(function (err) {
-                logger.error('[DVP-CampaignOperations.PauseCampaign] - [%s] - [PGSQL] - ResumeCampaign  failed', campaignId, err);
-                jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-                callback.end(jsonString);
-            });
-        }
-        else {
-            jsonString = messageFormatter.FormatMessage(new Error('Invalid Campaign ID'), "EXCEPTION", false, undefined);
+  var jsonString;
+  var tenantId = req.user.tenant;
+  var companyId = req.user.company;
+  DbConn.CampOngoingCampaign.find({
+    where: [{ CampaignState: "pause" }, { CampaignId: campaignId }],
+  })
+    .then(function (resDev) {
+      if (resDev) {
+        DbConn.CampOngoingCampaign.update(
+          {
+            CampaignState: "start",
+          },
+          {
+            where: { CampaignId: campaignId },
+          }
+        )
+          .then(function (cmp) {
+            SetOperationalStatus(campaignId, "start");
+            logger.info(
+              "[DVP-CampaignOperations.PauseCampaign] - [%s] - [PGSQL] - ResumeCampaign successfully ",
+              campaignId
+            );
+            jsonString = messageFormatter.FormatMessage(
+              undefined,
+              "SUCCESS",
+              true,
+              cmp
+            );
             callback.end(jsonString);
-        }
-    }).error(function (err) {
-        logger.error('[DVP-CampaignOperations.ResumeCampaign] - [PGSQL] - Error occurred find records of Campaing %s ', campaignId, err);
-        jsonString = messageFormatter.FormatMessage(errDev, "EXCEPTION", false, undefined);
+          })
+          .error(function (err) {
+            logger.error(
+              "[DVP-CampaignOperations.PauseCampaign] - [%s] - [PGSQL] - ResumeCampaign  failed",
+              campaignId,
+              err
+            );
+            jsonString = messageFormatter.FormatMessage(
+              err,
+              "EXCEPTION",
+              false,
+              undefined
+            );
+            callback.end(jsonString);
+          });
+      } else {
+        jsonString = messageFormatter.FormatMessage(
+          new Error("Invalid Campaign ID"),
+          "EXCEPTION",
+          false,
+          undefined
+        );
         callback.end(jsonString);
+      }
+    })
+    .error(function (err) {
+      logger.error(
+        "[DVP-CampaignOperations.ResumeCampaign] - [PGSQL] - Error occurred find records of Campaing %s ",
+        campaignId,
+        err
+      );
+      jsonString = messageFormatter.FormatMessage(
+        errDev,
+        "EXCEPTION",
+        false,
+        undefined
+      );
+      callback.end(jsonString);
     });
 }
 
 function EndCampaign(campaignId, callback) {
-    var jsonString;
-    DbConn.CampOngoingCampaign
-        .update(
-            {
-                CampaignState: 'done'
-            },
-            {
-                where: {CampaignId: campaignId}
-            }
-        ).then(function (cmp) {
-        logger.info('[DVP-CampaignOperations.EndCampaign] - [%s] - [PGSQL] - EndCampaign successfully ', campaignId);
-        DbConn.CampCampaignInfo
-            .update(
-                {
-                    OperationalStatus: "done"
-                },
-                {
-                    where: [{CampaignId: campaignId}]
-                }
-            ).then(function (cmp) {
-            logger.info('[DVP-CampaignOperations.EndCampaign-create-update OperationalStatus] - [%s] - [PGSQL] - EndCampaign successfully ', campaignId);
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-CampaignOperations.EndCampaign-create-update OperationalStatus] - [%s] - [PGSQL] - EndCampaign  failed', campaignId, err);
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
+  var jsonString;
+  DbConn.CampOngoingCampaign.update(
+    {
+      CampaignState: "done",
+    },
+    {
+      where: { CampaignId: campaignId },
+    }
+  )
+    .then(function (cmp) {
+      logger.info(
+        "[DVP-CampaignOperations.EndCampaign] - [%s] - [PGSQL] - EndCampaign successfully ",
+        campaignId
+      );
+      DbConn.CampCampaignInfo.update(
+        {
+          OperationalStatus: "done",
+        },
+        {
+          where: [{ CampaignId: campaignId }],
+        }
+      )
+        .then(function (cmp) {
+          logger.info(
+            "[DVP-CampaignOperations.EndCampaign-create-update OperationalStatus] - [%s] - [PGSQL] - EndCampaign successfully ",
+            campaignId
+          );
+          jsonString = messageFormatter.FormatMessage(
+            undefined,
+            "SUCCESS",
+            true,
+            cmp
+          );
+          callback.end(jsonString);
+        })
+        .error(function (err) {
+          logger.error(
+            "[DVP-CampaignOperations.EndCampaign-create-update OperationalStatus] - [%s] - [PGSQL] - EndCampaign  failed",
+            campaignId,
+            err
+          );
+          jsonString = messageFormatter.FormatMessage(
+            err,
+            "EXCEPTION",
+            false,
+            undefined
+          );
+          callback.end(jsonString);
         });
-    }).error(function (err) {
-        logger.error('[DVP-CampaignOperations.EndCampaign] - [%s] - [PGSQL] - EndCampaign  failed', campaignId, err);
-        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-        callback.end(jsonString);
+    })
+    .error(function (err) {
+      logger.error(
+        "[DVP-CampaignOperations.EndCampaign] - [%s] - [PGSQL] - EndCampaign  failed",
+        campaignId,
+        err
+      );
+      jsonString = messageFormatter.FormatMessage(
+        err,
+        "EXCEPTION",
+        false,
+        undefined
+      );
+      callback.end(jsonString);
     });
 }
 
@@ -242,159 +415,322 @@ function EndCampaign(campaignId, callback) {
  Dialer should call this method every 5 min
  */
 function UpdateOperationState(campaignId, dialerId, campaignState, callback) {
-    var jsonString;
-    DbConn.CampOngoingCampaign
-        .update(
-            {
-                LastResponsTime: new Date()
-            },
-            {
-                where: [{CampaignId: campaignId}, {DialerId: dialerId}]
-            }
-        ).then(function (cmp) {
-
-        logger.info('[DVP-CampaignOperations.UpdateOperationState] - [%s] - [PGSQL] - UpdateOperationState successfully ', campaignId);
-        DbConn.CampOngoingCampaign.find({
-            where: [{CampaignId: campaignId}, {DialerId: dialerId}],
-            attributes: ['CampaignId', 'DialerId', 'CampaignState']
-        }).then(function (sta) {
-            logger.info('[DVP-CampaignOperations.UpdateOperationState-findAll] - [%s] - [PGSQL] - UpdateOperationState successfully ', campaignId);
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, sta);
-            callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-CampaignOperations.UpdateOperationState-findAll] - [%s] - [PGSQL] - UpdateOperationState  failed', campaignId, err);
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
+  var jsonString;
+  DbConn.CampOngoingCampaign.update(
+    {
+      LastResponsTime: new Date(),
+    },
+    {
+      where: [{ CampaignId: campaignId }, { DialerId: dialerId }],
+    }
+  )
+    .then(function (cmp) {
+      logger.info(
+        "[DVP-CampaignOperations.UpdateOperationState] - [%s] - [PGSQL] - UpdateOperationState successfully ",
+        campaignId
+      );
+      DbConn.CampOngoingCampaign.find({
+        where: [{ CampaignId: campaignId }, { DialerId: dialerId }],
+        attributes: ["CampaignId", "DialerId", "CampaignState"],
+      })
+        .then(function (sta) {
+          logger.info(
+            "[DVP-CampaignOperations.UpdateOperationState-findAll] - [%s] - [PGSQL] - UpdateOperationState successfully ",
+            campaignId
+          );
+          jsonString = messageFormatter.FormatMessage(
+            undefined,
+            "SUCCESS",
+            true,
+            sta
+          );
+          callback.end(jsonString);
+        })
+        .error(function (err) {
+          logger.error(
+            "[DVP-CampaignOperations.UpdateOperationState-findAll] - [%s] - [PGSQL] - UpdateOperationState  failed",
+            campaignId,
+            err
+          );
+          jsonString = messageFormatter.FormatMessage(
+            err,
+            "EXCEPTION",
+            false,
+            undefined
+          );
+          callback.end(jsonString);
         });
-    }).error(function (err) {
-        logger.error('[DVP-CampaignOperations.UpdateOperationState] - [%s] - [PGSQL] - UpdateOperationState  failed', campaignId, err);
-        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-        callback.end(jsonString);
+    })
+    .error(function (err) {
+      logger.error(
+        "[DVP-CampaignOperations.UpdateOperationState] - [%s] - [PGSQL] - UpdateOperationState  failed",
+        campaignId,
+        err
+      );
+      jsonString = messageFormatter.FormatMessage(
+        err,
+        "EXCEPTION",
+        false,
+        undefined
+      );
+      callback.end(jsonString);
     });
 }
 
 function GetPendingCampaign(tenantId, companyId, callback) {
-
-    var jsonString;
-    try {
-
-
-        DbConn.CampOngoingCampaign.findAll({
-            where: [Sequelize.or({CampaignState: 'stop'}, {CampaignState: 'pause'}, {CampaignState: 'resume'})],
-            include: [{
-                model: DbConn.CampCampaignInfo,
-                as: "CampCampaignInfo", where: [{TenantId: tenantId}, {CompanyId: companyId}]
-            }]
-
-        }).then(function (CamObject) {
-            if (CamObject) {
-                logger.info('[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
-                jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
-                callback.end(jsonString);
-            }
-            else {
-                logger.error('[DVP-CampCampaignInfo.GetPendingCampaign] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
-                jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
-                callback.end(jsonString);
-            }
-        }).error(function (err) {
-            logger.error('[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
-    }
-    catch (ex) {
-        logger.error('[DVP-CampCampaignInfo.GetAllCampaignByCampaignState] - [%s] - [PGSQL]  - Error %s - %s  ', tenantId, companyId, ex);
-        jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+  var jsonString;
+  try {
+    DbConn.CampOngoingCampaign.findAll({
+      where: [
+        Sequelize.or(
+          { CampaignState: "stop" },
+          { CampaignState: "pause" },
+          { CampaignState: "resume" }
+        ),
+      ],
+      include: [
+        {
+          model: DbConn.CampCampaignInfo,
+          as: "CampCampaignInfo",
+          where: [{ TenantId: tenantId }, { CompanyId: companyId }],
+        },
+      ],
+    })
+      .then(function (CamObject) {
+        if (CamObject) {
+          logger.info(
+            "[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [PGSQL]  - Data found  - %s",
+            tenantId,
+            companyId,
+            JSON.stringify(CamObject)
+          );
+          jsonString = messageFormatter.FormatMessage(
+            undefined,
+            "SUCCESS",
+            true,
+            CamObject
+          );
+          callback.end(jsonString);
+        } else {
+          logger.error(
+            "[DVP-CampCampaignInfo.GetPendingCampaign] - [PGSQL]  - No record found for %s - %s  ",
+            tenantId,
+            companyId
+          );
+          jsonString = messageFormatter.FormatMessage(
+            new Error("No record"),
+            "EXCEPTION",
+            false,
+            undefined
+          );
+          callback.end(jsonString);
+        }
+      })
+      .error(function (err) {
+        logger.error(
+          "[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.",
+          tenantId,
+          companyId,
+          err
+        );
+        jsonString = messageFormatter.FormatMessage(
+          err,
+          "EXCEPTION",
+          false,
+          undefined
+        );
         callback.end(jsonString);
-    }
+      });
+  } catch (ex) {
+    logger.error(
+      "[DVP-CampCampaignInfo.GetAllCampaignByCampaignState] - [%s] - [PGSQL]  - Error %s - %s  ",
+      tenantId,
+      companyId,
+      ex
+    );
+    jsonString = messageFormatter.FormatMessage(
+      ex,
+      "EXCEPTION",
+      false,
+      undefined
+    );
+    callback.end(jsonString);
+  }
 }
 
 function GetPendingCampaignByDialerId(tenantId, companyId, dialerId, callback) {
-    var jsonString;
-    try {
-
-        DbConn.CampOngoingCampaign.findAll({
-            where: [{DialerId: dialerId}, Sequelize.or({CampaignState: 'stop'}, {CampaignState: 'pause'}, {CampaignState: 'resume'})],
-            include: [{
-                model: DbConn.CampCampaignInfo,
-                as: "CampCampaignInfo", where: [{TenantId: tenantId}, {CompanyId: companyId}]
-            }]
-        }).then(function (CamObject) {
-            if (CamObject) {
-                logger.info('[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
-                jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
-                callback.end(jsonString);
-            }
-            else {
-                logger.error('[DVP-CampCampaignInfo.GetPendingCampaign] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
-                jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
-                callback.end(jsonString);
-            }
-        }).error(function (err) {
-            logger.error('[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
-    }
-    catch (ex) {
-        logger.error('[DVP-CampCampaignInfo.GetAllCampaignByCampaignState] - [%s] - [PGSQL]  - Error %s - %s  ', tenantId, companyId, ex);
-        jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+  var jsonString;
+  try {
+    DbConn.CampOngoingCampaign.findAll({
+      where: [
+        { DialerId: dialerId },
+        Sequelize.or(
+          { CampaignState: "stop" },
+          { CampaignState: "pause" },
+          { CampaignState: "resume" }
+        ),
+      ],
+      include: [
+        {
+          model: DbConn.CampCampaignInfo,
+          as: "CampCampaignInfo",
+          where: [{ TenantId: tenantId }, { CompanyId: companyId }],
+        },
+      ],
+    })
+      .then(function (CamObject) {
+        if (CamObject) {
+          logger.info(
+            "[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [PGSQL]  - Data found  - %s",
+            tenantId,
+            companyId,
+            JSON.stringify(CamObject)
+          );
+          jsonString = messageFormatter.FormatMessage(
+            undefined,
+            "SUCCESS",
+            true,
+            CamObject
+          );
+          callback.end(jsonString);
+        } else {
+          logger.error(
+            "[DVP-CampCampaignInfo.GetPendingCampaign] - [PGSQL]  - No record found for %s - %s  ",
+            tenantId,
+            companyId
+          );
+          jsonString = messageFormatter.FormatMessage(
+            new Error("No record"),
+            "EXCEPTION",
+            false,
+            undefined
+          );
+          callback.end(jsonString);
+        }
+      })
+      .error(function (err) {
+        logger.error(
+          "[DVP-CampCampaignInfo.GetPendingCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.",
+          tenantId,
+          companyId,
+          err
+        );
+        jsonString = messageFormatter.FormatMessage(
+          err,
+          "EXCEPTION",
+          false,
+          undefined
+        );
         callback.end(jsonString);
-    }
+      });
+  } catch (ex) {
+    logger.error(
+      "[DVP-CampCampaignInfo.GetAllCampaignByCampaignState] - [%s] - [PGSQL]  - Error %s - %s  ",
+      tenantId,
+      companyId,
+      ex
+    );
+    jsonString = messageFormatter.FormatMessage(
+      ex,
+      "EXCEPTION",
+      false,
+      undefined
+    );
+    callback.end(jsonString);
+  }
 }
 
 function GetOngoingCampaign(tenantId, companyId, callback) {
-    var jsonString;
-    try {
-
-
-        DbConn.CampOngoingCampaign.findAll({
-            where: {
-                $or: [
-                    {
-                        CampaignState: {
-                            $eq: "start"
-                        }
-                    },
-                    {
-                        CampaignState: {
-                            $eq: "stop"
-                        }
-                    },
-                    {
-                        CampaignState: {
-                            $eq: "pause"
-                        }
-                    }
-                ]
+  var jsonString;
+  try {
+    DbConn.CampOngoingCampaign.findAll({
+      where: {
+        $or: [
+          {
+            CampaignState: {
+              $eq: "start",
             },
-            include: [{
-                model: DbConn.CampCampaignInfo,
-                as: "CampCampaignInfo", where: [{TenantId: tenantId}, {CompanyId: companyId}]
-            }]
-        }).then(function (CamObject) {
-            if (CamObject) {
-                logger.info('[DVP-CampCampaignInfo.GetOngoingCampaign] - [%s] - [PGSQL]  - Data found  - %s', tenantId, companyId, JSON.stringify(CamObject));
-                jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
-                callback.end(jsonString);
-            }
-            else {
-                logger.error('[DVP-CampCampaignInfo.GetOngoingCampaign] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
-                jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
-                callback.end(jsonString);
-            }
-        }).error(function (err) {
-            logger.error('[DVP-CampCampaignInfo.GetOngoingCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
-    }
-    catch (ex) {
-        logger.error('[DVP-CampCampaignInfo.GetOngoingCampaign] - [%s] - [PGSQL]  - Error %s - %s  ', tenantId, companyId, ex);
-        jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+          },
+          {
+            CampaignState: {
+              $eq: "stop",
+            },
+          },
+          {
+            CampaignState: {
+              $eq: "pause",
+            },
+          },
+        ],
+      },
+      include: [
+        {
+          model: DbConn.CampCampaignInfo,
+          as: "CampCampaignInfo",
+          where: [{ TenantId: tenantId }, { CompanyId: companyId }],
+        },
+      ],
+    })
+      .then(function (CamObject) {
+        if (CamObject) {
+          logger.info(
+            "[DVP-CampCampaignInfo.GetOngoingCampaign] - [%s] - [PGSQL]  - Data found  - %s",
+            tenantId,
+            companyId,
+            JSON.stringify(CamObject)
+          );
+          jsonString = messageFormatter.FormatMessage(
+            undefined,
+            "SUCCESS",
+            true,
+            CamObject
+          );
+          callback.end(jsonString);
+        } else {
+          logger.error(
+            "[DVP-CampCampaignInfo.GetOngoingCampaign] - [PGSQL]  - No record found for %s - %s  ",
+            tenantId,
+            companyId
+          );
+          jsonString = messageFormatter.FormatMessage(
+            new Error("No record"),
+            "EXCEPTION",
+            false,
+            undefined
+          );
+          callback.end(jsonString);
+        }
+      })
+      .error(function (err) {
+        logger.error(
+          "[DVP-CampCampaignInfo.GetOngoingCampaign] - [%s] - [%s] - [PGSQL]  - Error in searching.",
+          tenantId,
+          companyId,
+          err
+        );
+        jsonString = messageFormatter.FormatMessage(
+          err,
+          "EXCEPTION",
+          false,
+          undefined
+        );
         callback.end(jsonString);
-    }
+      });
+  } catch (ex) {
+    logger.error(
+      "[DVP-CampCampaignInfo.GetOngoingCampaign] - [%s] - [PGSQL]  - Error %s - %s  ",
+      tenantId,
+      companyId,
+      ex
+    );
+    jsonString = messageFormatter.FormatMessage(
+      ex,
+      "EXCEPTION",
+      false,
+      undefined
+    );
+    callback.end(jsonString);
+  }
 }
 
 module.exports.StartCampaign = StartCampaign;

@@ -2,136 +2,271 @@
  * Created by Heshan.i on 7/28/2017.
  */
 
-var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
-var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
-var DbConn = require('dvp-dbmodels');
-
+var messageFormatter = require("dvp-common-lite/CommonMessageGenerator/ClientMessageJsonFormatter.js");
+var logger = require("dvp-common-lite/LogHandler/CommonLogHandler.js").logger;
+var DbConn = require("dvp-dbmodels");
 
 function CreateScheduledCallbackInfo(tenantId, companyId, reqBody, callback) {
-    var jsonString;
+  var jsonString;
 
-    DbConn.ScheduledCallback
-        .create(
-        {
-            Class: reqBody.Class,
-            Type: reqBody.Type,
-            CompanyId: companyId,
-            TenantId: tenantId,
-            Category: reqBody.Category,
-            SessionId: reqBody.SessionId,
-            ContactId: reqBody.ContactId,
-            CallbackData: reqBody.CallbackData,
-            RequestedTime: reqBody.RequestedTime,
-            Duration: reqBody.Duration
-
-        }
-    ).then(function (cmp) {
-
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            logger.info('[DVP-CampCallbackInfo.CreateScheduledCallbackInfo] - [PGSQL] - inserted successfully. [%s] ', jsonString);
-            callback.end(jsonString);
-
-        }).error(function (err) {
-            logger.error('[DVP-CampCallbackInfo.CreateScheduledCallbackInfo] - [PGSQL] - insertion  failed-[%s]', err);
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
-
-
+  DbConn.ScheduledCallback.create({
+    Class: reqBody.Class,
+    Type: reqBody.Type,
+    CompanyId: companyId,
+    TenantId: tenantId,
+    Category: reqBody.Category,
+    SessionId: reqBody.SessionId,
+    ContactId: reqBody.ContactId,
+    CallbackData: reqBody.CallbackData,
+    RequestedTime: reqBody.RequestedTime,
+    Duration: reqBody.Duration,
+  })
+    .then(function (cmp) {
+      jsonString = messageFormatter.FormatMessage(
+        undefined,
+        "SUCCESS",
+        true,
+        cmp
+      );
+      logger.info(
+        "[DVP-CampCallbackInfo.CreateScheduledCallbackInfo] - [PGSQL] - inserted successfully. [%s] ",
+        jsonString
+      );
+      callback.end(jsonString);
+    })
+    .error(function (err) {
+      logger.error(
+        "[DVP-CampCallbackInfo.CreateScheduledCallbackInfo] - [PGSQL] - insertion  failed-[%s]",
+        err
+      );
+      jsonString = messageFormatter.FormatMessage(
+        err,
+        "EXCEPTION",
+        false,
+        undefined
+      );
+      callback.end(jsonString);
+    });
 }
 
-function EditScheduledCallbackInfo(tenantId, companyId, sessionId, dispatchedTime, callback) {
-
-
-    DbConn.ScheduledCallback
-        .update(
-        {
-            DispatchedTime: dispatchedTime
-        },
-        {
-            where: [{SessionId: sessionId}, {CompanyId: companyId}, {TenantId: tenantId}]
-        }
-    ).then(function (results) {
-
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
-            logger.info('[DVP-CampCallbackInfo.EditScheduledCallbackInfo] - [PGSQL] - Updated successfully.[%s] ', jsonString);
-            callback.end(jsonString);
-
-        }).error(function (err) {
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            logger.error('[DVP-CampCallbackInfo.EditScheduledCallbackInfo] - [PGSQL] - Updation failed-[%s]', err);
-            callback.end(jsonString);
-        });
-
+function EditScheduledCallbackInfo(
+  tenantId,
+  companyId,
+  sessionId,
+  dispatchedTime,
+  callback
+) {
+  DbConn.ScheduledCallback.update(
+    {
+      DispatchedTime: dispatchedTime,
+    },
+    {
+      where: [
+        { SessionId: sessionId },
+        { CompanyId: companyId },
+        { TenantId: tenantId },
+      ],
+    }
+  )
+    .then(function (results) {
+      var jsonString = messageFormatter.FormatMessage(
+        undefined,
+        "SUCCESS",
+        true,
+        results
+      );
+      logger.info(
+        "[DVP-CampCallbackInfo.EditScheduledCallbackInfo] - [PGSQL] - Updated successfully.[%s] ",
+        jsonString
+      );
+      callback.end(jsonString);
+    })
+    .error(function (err) {
+      var jsonString = messageFormatter.FormatMessage(
+        err,
+        "EXCEPTION",
+        false,
+        undefined
+      );
+      logger.error(
+        "[DVP-CampCallbackInfo.EditScheduledCallbackInfo] - [PGSQL] - Updation failed-[%s]",
+        err
+      );
+      callback.end(jsonString);
+    });
 }
 
 function GetScheduledCallbackInfo(sessionId, tenantId, companyId, callBack) {
-    var jsonString;
-    DbConn.ScheduledCallback.find({where: [{SessionId: sessionId}, {CompanyId: companyId}, {TenantId: tenantId}]})
-        .then(function (callbackObject) {
-
-            if (callbackObject) {
-                logger.info('[DVP-CampCallbackInfo.GetScheduledCallbackInfo] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(callbackObject));
-                jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, callbackObject);
-                callBack.end(jsonString);
-            }
-            else {
-                logger.error('[DVP-CampCallbackInfo.GetScheduledCallbackInfo] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
-                jsonString = messageFormatter.FormatMessage(undefined, "EXCEPTION", false, undefined);
-                callBack.end(jsonString);
-            }
-
-        }).error(function (err) {
-            logger.error('[DVP-CampCallbackInfo.GetScheduledCallbackInfo] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
-            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callBack.end(jsonString);
-        });
+  var jsonString;
+  DbConn.ScheduledCallback.find({
+    where: [
+      { SessionId: sessionId },
+      { CompanyId: companyId },
+      { TenantId: tenantId },
+    ],
+  })
+    .then(function (callbackObject) {
+      if (callbackObject) {
+        logger.info(
+          "[DVP-CampCallbackInfo.GetScheduledCallbackInfo] - [%s] - [PGSQL]  - Data found  - %s-[%s]",
+          tenantId,
+          companyId,
+          JSON.stringify(callbackObject)
+        );
+        jsonString = messageFormatter.FormatMessage(
+          undefined,
+          "SUCCESS",
+          true,
+          callbackObject
+        );
+        callBack.end(jsonString);
+      } else {
+        logger.error(
+          "[DVP-CampCallbackInfo.GetScheduledCallbackInfo] - [PGSQL]  - No record found for %s - %s  ",
+          tenantId,
+          companyId
+        );
+        jsonString = messageFormatter.FormatMessage(
+          undefined,
+          "EXCEPTION",
+          false,
+          undefined
+        );
+        callBack.end(jsonString);
+      }
+    })
+    .error(function (err) {
+      logger.error(
+        "[DVP-CampCallbackInfo.GetScheduledCallbackInfo] - [%s] - [%s] - [PGSQL]  - Error in searching.",
+        tenantId,
+        companyId,
+        err
+      );
+      jsonString = messageFormatter.FormatMessage(
+        err,
+        "EXCEPTION",
+        false,
+        undefined
+      );
+      callBack.end(jsonString);
+    });
 }
 
 function GetAllScheduledCallbackInfo(tenantId, companyId, callBack) {
-    var jsonString;
-    DbConn.ScheduledCallback.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}]}).then(function (callbackObject) {
-
-        if (callbackObject) {
-            logger.info('[DVP-CampCallbackInfo.GetAllScheduledCallbackInfo] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(callbackObject));
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, callbackObject);
-            callBack.end(jsonString);
-        }
-        else {
-            logger.error('[DVP-CampCallbackInfo.GetAllScheduledCallbackInfo] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
-            jsonString = messageFormatter.FormatMessage(undefined, "EXCEPTION", false, undefined);
-            callBack.end(jsonString);
-        }
-
-    }).error(function (err) {
-        logger.error('[DVP-CampCallbackInfo.GetAllScheduledCallbackInfo] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
-        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+  var jsonString;
+  DbConn.ScheduledCallback.findAll({
+    where: [{ CompanyId: companyId }, { TenantId: tenantId }],
+  })
+    .then(function (callbackObject) {
+      if (callbackObject) {
+        logger.info(
+          "[DVP-CampCallbackInfo.GetAllScheduledCallbackInfo] - [%s] - [PGSQL]  - Data found  - %s-[%s]",
+          tenantId,
+          companyId,
+          JSON.stringify(callbackObject)
+        );
+        jsonString = messageFormatter.FormatMessage(
+          undefined,
+          "SUCCESS",
+          true,
+          callbackObject
+        );
         callBack.end(jsonString);
+      } else {
+        logger.error(
+          "[DVP-CampCallbackInfo.GetAllScheduledCallbackInfo] - [PGSQL]  - No record found for %s - %s  ",
+          tenantId,
+          companyId
+        );
+        jsonString = messageFormatter.FormatMessage(
+          undefined,
+          "EXCEPTION",
+          false,
+          undefined
+        );
+        callBack.end(jsonString);
+      }
+    })
+    .error(function (err) {
+      logger.error(
+        "[DVP-CampCallbackInfo.GetAllScheduledCallbackInfo] - [%s] - [%s] - [PGSQL]  - Error in searching.",
+        tenantId,
+        companyId,
+        err
+      );
+      jsonString = messageFormatter.FormatMessage(
+        err,
+        "EXCEPTION",
+        false,
+        undefined
+      );
+      callBack.end(jsonString);
     });
-
 }
 
-function GetScheduledCallbackInfoByClassTypeCategory(tenantId, companyId, callbackClass, callbackType, callbackCategory, callBack) {
-    var jsonString;
-    DbConn.ScheduledCallback.findAll({where: [{CompanyId: companyId}, {TenantId: tenantId}, {Class: callbackClass}, {Type: callbackType}, {Category: callbackCategory}]}).then(function (callbackObject) {
-
-        if (callbackObject) {
-            logger.info('[DVP-CampCallbackInfo.GetScheduledCallbackInfoByClassTypeCategory] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(callbackObject));
-            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
-            callBack.end(jsonString);
-        }
-        else {
-            logger.error('[DVP-CampCallbackInfo.GetScheduledCallbackInfoByClassTypeCategory] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
-            jsonString = messageFormatter.FormatMessage(undefined, "EXCEPTION", false, undefined);
-            callBack.end(jsonString);
-        }
-
-    }).error(function (err) {
-        logger.error('[DVP-CampCallbackInfo.GetScheduledCallbackInfoByClassTypeCategory] - [%s] - [%s] - [PGSQL]  - Error in searching.', tenantId, companyId, err);
-        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+function GetScheduledCallbackInfoByClassTypeCategory(
+  tenantId,
+  companyId,
+  callbackClass,
+  callbackType,
+  callbackCategory,
+  callBack
+) {
+  var jsonString;
+  DbConn.ScheduledCallback.findAll({
+    where: [
+      { CompanyId: companyId },
+      { TenantId: tenantId },
+      { Class: callbackClass },
+      { Type: callbackType },
+      { Category: callbackCategory },
+    ],
+  })
+    .then(function (callbackObject) {
+      if (callbackObject) {
+        logger.info(
+          "[DVP-CampCallbackInfo.GetScheduledCallbackInfoByClassTypeCategory] - [%s] - [PGSQL]  - Data found  - %s-[%s]",
+          tenantId,
+          companyId,
+          JSON.stringify(callbackObject)
+        );
+        jsonString = messageFormatter.FormatMessage(
+          undefined,
+          "SUCCESS",
+          true,
+          CamObject
+        );
         callBack.end(jsonString);
+      } else {
+        logger.error(
+          "[DVP-CampCallbackInfo.GetScheduledCallbackInfoByClassTypeCategory] - [PGSQL]  - No record found for %s - %s  ",
+          tenantId,
+          companyId
+        );
+        jsonString = messageFormatter.FormatMessage(
+          undefined,
+          "EXCEPTION",
+          false,
+          undefined
+        );
+        callBack.end(jsonString);
+      }
+    })
+    .error(function (err) {
+      logger.error(
+        "[DVP-CampCallbackInfo.GetScheduledCallbackInfoByClassTypeCategory] - [%s] - [%s] - [PGSQL]  - Error in searching.",
+        tenantId,
+        companyId,
+        err
+      );
+      jsonString = messageFormatter.FormatMessage(
+        err,
+        "EXCEPTION",
+        false,
+        undefined
+      );
+      callBack.end(jsonString);
     });
-
 }
 
 module.exports.CreateScheduledCallbackInfo = CreateScheduledCallbackInfo;
