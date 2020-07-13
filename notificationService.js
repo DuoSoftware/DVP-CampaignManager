@@ -44,7 +44,10 @@ var requestToNotify = function (company, tenant, roomName, eventName, msgData) {
       config.Services.notificationServiceVersion,
       roomName
     );
-    if (validator.isIP(config.Services.notificationServiceHost)) {
+    if (
+      validator.isIP(config.Services.notificationServiceHost) ||
+      config.Services.dynamicPort === true
+    ) {
       notificationUrl = util.format(
         "http://%s:%s/DVP/API/%s/NotificationService/Notification/initiate/%s",
         config.Services.notificationServiceHost,
